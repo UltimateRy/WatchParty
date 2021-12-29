@@ -12,6 +12,27 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+
+    public function following()
+    {
+        return $this->belongsToMany(User::class, "user_following", 'user_id', 'following_id');
+    }
+
+    public function isFollowing(User $user)
+    {
+        return !! $this->following()->where('following_id', $user->id)->count();
+    }
+
+    public function follow(User $user)
+    {
+        $this->following()->attach($user->id);
+    }
+
+    public function unfollow(User $user)
+    {
+        $this->following()->detach($user->id);
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -19,6 +40,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
     ];
