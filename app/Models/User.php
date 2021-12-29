@@ -12,7 +12,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-
     public function following()
     {
         return $this->belongsToMany(User::class, "user_following", 'user_id', 'following_id');
