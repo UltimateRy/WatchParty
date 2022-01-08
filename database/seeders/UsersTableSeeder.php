@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\User;
 
 class UsersTableSeeder extends Seeder
 {
@@ -27,7 +28,7 @@ class UsersTableSeeder extends Seeder
         $a->name = "Abby Thomas";
         $a->email = "a.thomas@gmail.com";
         $a->password = "newpassword";
-        $a->role = "User";
+        $a->role = "Member";
         $a->save();
 
         $a = new User;
@@ -35,7 +36,7 @@ class UsersTableSeeder extends Seeder
         $a->name = "Bradley Smith";
         $a->email = "bradsmith.new@aol.com";
         $a->password = "newpassword";
-        $a->role = "User";
+        $a->role = "Member";
         $a->save();
 
         $users = User::factory()->count(10)->create();
