@@ -5,19 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Party extends Model
+class MovieImage extends Model
 {
     use HasFactory;
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function movie()
     {
-        return $this->hasOne(Movie::class);
+        return $this->belongsTo(Movie::class);
     }
 
+    protected $fillable = [
+        "id",
+        "file_path", 
+        "created_at", 
+        "updated_at"
+    ];
 
 }

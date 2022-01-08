@@ -16,11 +16,14 @@ class CreatePartiesTable extends Migration
         Schema::create('parties', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('host_id')->unsigned();
-            $table->string('movie_title');
+            $table->bigInteger('movie_id')->unsigned();
             $table->boolean('invite_only');
             $table->timestamps();
 
             $table->foreign('host_id')->references('id')->on('users')
+                ->onDelete('cascade')->onUpdate('cascade');
+
+            $table->foreign('movie_id')->references('id')->on('movies')
                 ->onDelete('cascade')->onUpdate('cascade');
         });
     }
