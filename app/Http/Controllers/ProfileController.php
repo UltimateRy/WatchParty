@@ -16,14 +16,14 @@ class ProfileController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show($id)
     {
         $user = User::findOrFail($id);
 
-        $isFriend = (boolean) Auth::user()->friends()->where('users.id', $id)->count();
+        $isFollowed = (boolean) Auth::user()->follows()->where('users.id', $id)->count();
 
         return view('users.show', [
-            'profile' => $user, 'posts' => $user->posts()->paginate(3), 'isFriend' => $isFriend,
+            'profile' => $user, 'isFollowed' => $isFollowed,
         ]);
     }
 

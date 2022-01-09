@@ -32,7 +32,7 @@ Route::get('/dashboard', function () {
 
 //FOLLOWING & FOLLOWERS
 
-Route::get('/following', [FollowersController::class, 'index'])
+Route::get('/following', [FollowsController::class, 'index'])
     ->name('following')->middleware(['auth']);
 
 Route::get('/followers', [FollowersController::class, 'index'])
@@ -59,6 +59,15 @@ Route::get('/movies', [MovieController::class, 'index'])
 
 Route::get('/movies/{id}', [MovieController::class, 'show'])
     ->name('movies.show')->middleware('auth');
+
+
+//PARTY ROUTES
+
+Route::get('/party', [PartyController::class, 'index']) //ADMINS ONLY
+    ->name('parties.index')->middleware('auth');//, 'role']);
+
+Route::get('/party', [PartyController::class, 'show']) //HERE THE USER WILL BE PROMPTED TO SELECT THEIR MOVIE FILE FOR THE PARTY AND
+    ->name('parties.index')->middleware('auth');//, 'role']); NEED TO MAKE SURE THE USER IS ALLOWED IN THE PARTY
 
 
 require __DIR__.'/auth.php';
