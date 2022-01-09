@@ -12,9 +12,9 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    public function following()
+    public function follows()
     {
-        return $this->belongsToMany(User::class, "user_following", 'user_id', 'following_id');
+        return $this->belongsToMany(User::class, "user_follows", 'user_id', 'follow_id');
     }
 
     public function isFollowing(User $user)

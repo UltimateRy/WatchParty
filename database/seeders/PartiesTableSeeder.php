@@ -32,5 +32,8 @@ class PartiesTableSeeder extends Seeder
         $p->invite_only = 1;
         $p->save();
 
+
+        $users = Party::factory()->count(4)->create();
+
     }
 }
