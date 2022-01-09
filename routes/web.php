@@ -2,6 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FollowsController;
+use App\Http\Controllers\FollowersController;
+use App\Http\Controllers\MovieController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +19,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+//DASHBOARD AND FRIENDS ROUTES
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -20,5 +29,36 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
+
+//FOLLOWING & FOLLOWERS
+
+Route::get('/following', [FollowersController::class, 'index'])
+    ->name('following')->middleware(['auth']);
+
+Route::get('/followers', [FollowersController::class, 'index'])
+    ->name('followers')->middleware(['auth']);
+
+//USER ROUTE (ADMIN ONLY)
+
+Route::get('/users', [UserController::class, 'index'])
+    ->name('users.index')->middleware(['auth']);//, 'role']);
+
+//PROFILES ROUTES
+
+Route::get('/profiles/{id}', [ProfileController::class, 'show'])
+    ->name('profiles.show')->middleware('auth');
+
+Route::get('/profiles/{id}/follow', [ProfileController::class, 'follow'])
+    ->name('profiles.follow')->middleware('auth');
+
+
+//MOVIE ROUTES
+
+Route::get('/movies', [MovieController::class, 'index'])
+    ->name('movies.index')->middleware('auth');
+
+Route::get('/movies/{id}', [MovieController::class, 'show'])
+    ->name('movies.show')->middleware('auth');
+
 
 require __DIR__.'/auth.php';

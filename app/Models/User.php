@@ -17,6 +17,11 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, "user_follows", 'user_id', 'follow_id');
     }
 
+    public function followedBy()
+    {
+        return  $this->belongsToMany(User::class, 'user_follows', 'follow_id', 'user_id');
+    }
+
     public function isFollowing(User $user)
     {
         return !! $this->following()->where('following_id', $user->id)->count();
@@ -24,12 +29,12 @@ class User extends Authenticatable
 
     public function follow(User $user)
     {
-        $this->following()->attach($user->id);
+        $this->follows()->attach($user->id);
     }
 
     public function unfollow(User $user)
     {
-        $this->following()->detach($user->id);
+        $this->follows()->detach($user->id);
     }
 
     /**

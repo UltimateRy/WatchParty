@@ -18,7 +18,6 @@ class PartyFactory extends Factory
     public function definition()
     {
         return [
-            //
             'host_id' => $this->faker->unique->numberBetween(1, 11),
             'movie_id' => $this->faker->numberBetween(1, 11),
             'invite_only' => $this->faker->numberBetween(0, 1),
