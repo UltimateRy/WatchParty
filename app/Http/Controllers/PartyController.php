@@ -50,9 +50,13 @@ class PartyController extends Controller
      * @param  \App\Models\Party  $party
      * @return \Illuminate\Http\Response
      */
-    public function show(Party $party)
+    public function show($id)
     {
-        //
+        $party = Party::findOrFail($id);
+
+        return view('parties.show', [
+            'party' => $party
+        ]);
     }
 
     /**

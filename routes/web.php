@@ -7,6 +7,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FollowsController;
 use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\PartyController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -54,7 +56,7 @@ Route::get('/profiles/{id}/follow', [ProfileController::class, 'follow'])
 
 //MOVIE ROUTES
 
-Route::get('/movies', [MovieController::class, 'index'])
+Route::get('/movies', [MovieController::class, 'index']) //ADMINS ONLY???
     ->name('movies.index')->middleware('auth');
 
 Route::get('/movies/{id}', [MovieController::class, 'show'])
@@ -63,11 +65,11 @@ Route::get('/movies/{id}', [MovieController::class, 'show'])
 
 //PARTY ROUTES
 
-Route::get('/party', [PartyController::class, 'index']) //ADMINS ONLY
+Route::get('/watchparty', [PartyController::class, 'index']) //ADMINS ONLY
     ->name('parties.index')->middleware('auth');//, 'role']);
 
-Route::get('/party', [PartyController::class, 'show']) //HERE THE USER WILL BE PROMPTED TO SELECT THEIR MOVIE FILE FOR THE PARTY AND
-    ->name('parties.index')->middleware('auth');//, 'role']); NEED TO MAKE SURE THE USER IS ALLOWED IN THE PARTY
+Route::get('/watchparty/{id}', [PartyController::class, 'show']) //HERE THE USER WILL BE PROMPTED TO SELECT THEIR MOVIE FILE FOR THE PARTY AND
+    ->name('parties.show')->middleware('auth');//, 'role']); NEED TO MAKE SURE THE USER IS ALLOWED IN THE PARTY
 
 
 require __DIR__.'/auth.php';
