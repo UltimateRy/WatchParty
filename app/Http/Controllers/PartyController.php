@@ -40,7 +40,7 @@ class PartyController extends Controller
     public function store(Request $request)
     {
         //
-
+        //$party = Party::create([])
         
     }
 
