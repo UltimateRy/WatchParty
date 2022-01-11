@@ -31,6 +31,13 @@ class PartyCreated
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+
+        $channels = [];
+
+        foreach ($this->party->users as $user) {
+            array_push($channels, new PrivateChannel('users.' . $user->id));
+        }
+
+        return $channels;
     }
 }

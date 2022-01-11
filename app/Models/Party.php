@@ -9,15 +9,19 @@ class Party extends Model
 {
     use HasFactory;
 
-    public function user()
+    public function host()
     {
         return $this->belongsTo(User::class);
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, "party_users", 'id', 'party_id');
+    }
+    
     public function movie()
     {
         return $this->hasOne(Movie::class);
     }
-
 
 }
