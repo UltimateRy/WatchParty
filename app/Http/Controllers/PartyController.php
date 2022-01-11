@@ -43,14 +43,17 @@ class PartyController extends Controller
     {
         $party = new Party;
         $party->host = Auth::user()->id;
-        $party->movie_id = $request->movie_id
-        $users = $request->users; //NOT FINISHED
-        
-        //$users->push(auth()->user()->id); //LINE NOT NEEDED BECAUSE THE HOST IS KEPT IN THE PARTY 
+        $party->movie_id = $request->movie_id;
+        $party->invite_only - $request->invite_only;
+
+        $users = $request->users;
         $party->users()->attach($users);
+        $party->save();
+
+        //$users->push(auth()->user()->id); //LINE NOT NEEDED BECAUSE THE HOST IS KEPT IN THE PARTY 
     
-        broadcast(new GroupCreated($group))->toOthers(); //THE BROADCASTED CHANNELS
-        return $group;
+        broadcast(new GroupCreated($party))->toOthers(); //THE BROADCASTED CHANNELS
+        return $party;
     }
 
     /**

@@ -1,7 +1,16 @@
 require('./bootstrap');
 
-import Alpine from 'alpinejs';
+//import Alpine from 'alpinejs';
 
-window.Alpine = Alpine;
+//window.Alpine = Alpine;
 
-Alpine.start();
+//Alpine.start();
+
+window.Vue = require('vue');
+window.Bus = new Vue();
+
+
+const app = new Vue({
+    el: '#app'
+});
+
