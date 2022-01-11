@@ -1,6 +1,6 @@
 <template>
     <div>
-        <party v-for="party in parties" :party="party" :key="party.id"> </party>
+       
     </div>
 </template>
 
@@ -9,12 +9,13 @@
         props: ['initialParties', 'user'],
         data() {
             return {
-                parties: []
+                parties: [],
+                message:'Hello World'
             }
         },
         mounted() {
             this.parties = this.initialParties;
-            Bus.$on('groupCreated', (party) => {
+            Bus.$on('partyCreated', (party) => {
                 this.parties.push(party);
             });
             this.listenForNewParties();

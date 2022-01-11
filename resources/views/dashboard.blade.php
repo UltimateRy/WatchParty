@@ -13,5 +13,10 @@
                 </div>
             </div>
         </div>
+
+        <div id="test">
+            <test></test>
+        </div>
+
     </div>
 </x-app-layout>
