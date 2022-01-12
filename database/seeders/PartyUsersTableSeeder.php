@@ -15,6 +15,22 @@ class PartyUsersTableSeeder extends Seeder
      */
     public function run()
     {
+
+        DB::table('party_users')->insert([
+            'party_id' => 1,
+            'user_id' => 1,
+        ]);
+
+        DB::table('party_users')->insert([
+            'party_id' => 2,
+            'user_id' => 1,
+        ]);
+
+        DB::table('party_users')->insert([
+            'party_id' => 3,
+            'user_id' => 1,
+        ]);
+
         DB::table('party_users')->insert([
             'party_id' => 1,
             'user_id' => 2,

@@ -2070,13 +2070,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 var default_layout = "default";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ['initialParties', 'user'],
   computed: {},
   data: function data() {
     return {
+      parties: [],
       message: 'Hello World'
     };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.parties = this.initialParties;
+    Bus.$on('PartyCreated', function (party) {
+      _this.parties.push(party);
+    });
   }
 });
 
@@ -2099,9 +2114,10 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); //import 
 
 
 
-window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js"); //Vue.component('parties', require('./components/Parties.vue'));
+window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+window.Bus = new vue__WEBPACK_IMPORTED_MODULE_1__["default"](); //Vue.component('parties', require('./components/Parties.vue'));
 
-vue__WEBPACK_IMPORTED_MODULE_1__["default"].component('test', __webpack_require__(/*! ./components/Test.vue */ "./resources/js/components/Test.vue"));
+vue__WEBPACK_IMPORTED_MODULE_1__["default"].component('test', _components_Test_vue__WEBPACK_IMPORTED_MODULE_0__["default"])["default"];
 var test = new vue__WEBPACK_IMPORTED_MODULE_1__["default"]({
   el: '#test',
   components: {
@@ -25809,7 +25825,18 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n  " + _vm._s(_vm.message) + "\n")])
+  return _c(
+    "div",
+    [
+      _vm._l(_vm.parties, function (party) {
+        return _c("div", { key: party.id, attrs: { party: party } }, [
+          _vm._v("\n        This is a party\n    "),
+        ])
+      }),
+      _vm._v("\n\n    " + _vm._s(_vm.message) + "\n"),
+    ],
+    2
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

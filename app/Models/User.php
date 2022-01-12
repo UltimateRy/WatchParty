@@ -37,6 +37,11 @@ class User extends Authenticatable
         $this->follows()->detach($user->id);
     }
 
+    public function parties() 
+    {
+        return $this->belongsToMany(Party::class, "party_users", 'user_id', 'party_id');
+    }
+
     /**
      * The attributes that are mass assignable.
      *

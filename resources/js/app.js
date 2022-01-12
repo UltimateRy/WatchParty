@@ -12,9 +12,10 @@ import Test from './components/Test.vue'
 
 
 window.Vue = require('vue');
+window.Bus = new Vue();
 
 //Vue.component('parties', require('./components/Parties.vue'));
-Vue.component('test', require('./components/Test.vue'));
+Vue.component('test', Test).default;
 
 
 const test = new Vue({

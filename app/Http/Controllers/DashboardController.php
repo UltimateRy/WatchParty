@@ -13,7 +13,9 @@ class DashboardController extends Controller
     {
         $parties = auth()->user()->parties;
 
-        $users = User::where('id', '<>', auth()->user()->id)->get();
+       // $users = User::where('id', '<>', auth()->user()->id)->get();
+        $users = Auth::user()->follows()->pluck('id');
+
         $user = auth()->user();
 
         return view('dashboard', ['parties' => $parties, 'users' => $users, 'user' => $user]);

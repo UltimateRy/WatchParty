@@ -1,6 +1,7 @@
 <template>
     <div>
-       
+        <party v-for="party in parties" :party="party" :key="party.id"> </party>
+        {{message}}
     </div>
 </template>
 

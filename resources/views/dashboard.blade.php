@@ -13,10 +13,9 @@
                 </div>
             </div>
         </div>
-
-        <div id="test">
-            <test></test>
-        </div>
-
+    </div>
+    
+    <div id="test">
+        <test :initial-parties="{{ $parties }}" :user="{{ $user }}"></test>
     </div>
 </x-app-layout>
