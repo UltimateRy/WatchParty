@@ -21,7 +21,7 @@
     <br>
     <br>
 
-    <div id="root">
+    <div id="app">
         <div class="video-inner-container">
 
             <video-js 
@@ -42,7 +42,6 @@
     <script>
         new Vue({
             el: '#app',
-            template: '#custom-component',
 
             mounted: function() {
 

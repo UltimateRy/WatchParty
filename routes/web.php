@@ -68,8 +68,13 @@ Route::get('/movies/{id}', [MovieController::class, 'show'])
 Route::get('/watchparty', [PartyController::class, 'index']) //ADMINS ONLY
     ->name('parties.index')->middleware('auth');//, 'role']);
 
+Route::get('/watchparty/create', [PartyController::class, 'create'])
+    ->name('parties.create')->middleware('auth');//, 'role']);
+
+Route::get('/watchparty', [PartyController::class, 'store'])
+    ->name('parties.store')->middleware('auth');//, 'role']);
+
 Route::get('/watchparty/{id}', [PartyController::class, 'show']) //HERE THE USER WILL BE PROMPTED TO SELECT THEIR MOVIE FILE FOR THE PARTY AND
     ->name('parties.show')->middleware('auth');//, 'role']); NEED TO MAKE SURE THE USER IS ALLOWED IN THE PARTY
-
 
 require __DIR__.'/auth.php';

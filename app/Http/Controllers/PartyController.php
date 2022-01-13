@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use App\Models\User;
 use App\Models\Party;
-use App\Events\GroupCreated;
+use App\Events\PartyCreated;
 use Illuminate\Http\Request;
 
 class PartyController extends Controller
@@ -31,6 +32,10 @@ class PartyController extends Controller
     {
         //
         //ALLOW THE USER TO CREATE A NEW PARTY HERE
+
+        return view('parties.create', [
+            'user' => Auth::user()
+        ]);
     }
 
     /**
@@ -41,6 +46,7 @@ class PartyController extends Controller
      */
     public function store(Request $request)
     {
+        /*
         $party = new Party;
         $party->host = Auth::user()->id;
         $party->movie_id = $request->movie_id;
@@ -49,11 +55,24 @@ class PartyController extends Controller
         $users = $request->users;
         $party->users()->attach($users);
         $party->save();
+        */
 
+        $p = new Party;
+        $p->host_id = Auth::user()->id;
+        $p->movie_id = "5";
+        $p->invite_only = 0;
+
+        $p->save();
+
+        $p->addToParty(User::findOrFail('1'));
         //$users->push(auth()->user()->id); //LINE NOT NEEDED BECAUSE THE HOST IS KEPT IN THE PARTY 
     
-        broadcast(new GroupCreated($party))->toOthers(); //THE BROADCASTED CHANNELS
-        return $party;
+        broadcast(new PartyCreated($p))->toOthers();
+
+        session()->flash('message', 'Post Successfully Created.');
+        return redirect()->route('parties.show', [
+            'id' => $p->id
+        ]);
     }
 
     /**
@@ -67,7 +86,7 @@ class PartyController extends Controller
         $party = Party::findOrFail($id);
 
         return view('parties.show', [
-            'party' => $party
+            'id' => $party->id
         ]);
     }
 

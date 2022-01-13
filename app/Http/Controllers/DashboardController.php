@@ -11,13 +11,19 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $parties = auth()->user()->parties;
+        $parties = auth()->user()->parties->load('host');
+
+        //$parties = Party::with('host')->where('party_id', )
 
        // $users = User::where('id', '<>', auth()->user()->id)->get();
-        $users = Auth::user()->follows()->pluck('id');
+        $following = Auth::user()->follows()->pluck('id');
 
-        $user = auth()->user();
+        $user = Auth::user();
 
-        return view('dashboard', ['parties' => $parties, 'users' => $users, 'user' => $user]);
+        return view('dashboard', [
+            'parties' => $parties, 
+            'following' => $following, 
+            'user' => $user
+        ]);
     }
 }

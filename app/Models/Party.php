@@ -16,12 +16,30 @@ class Party extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, "party_users", 'id', 'party_id');
+        return $this->belongsToMany(User::class, "party_users", 'party_id', 'user_id');
     }
     
     public function movie()
     {
         return $this->hasOne(Movie::class);
+    }
+
+    public function addToParty(User $user) {
+
+        $this->users()->attach($user->id);
+
+    }
+
+    public function hasUser($user_id)
+    {
+        foreach ($this->users as $user) {
+            if($user->id == $user_id) {
+                return true;
+            }
+        }
+
+        return false;
+
     }
 
 }
