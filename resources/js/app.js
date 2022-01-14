@@ -6,16 +6,15 @@ Alpine.start();
 
 import Vue from 'vue'
 import PartyList from './components/PartyList.vue'
-import Player from './components/Player.vue'
-import VideoPlayer from './components/videoPlayer.vue'
+//import Player from './components/Player.vue'
+//import VideoPlayer from './components/videoPlayer.vue'
 
 
 window.Vue = require('vue');
 window.Bus = new Vue();
 
 Vue.component('partylist', PartyList).default;
-Vue.component('player', Player).default;
-Vue.component('videoPlayer', VideoPlayer).default;
+//Vue.component('videoplayer', VideoPlayer).default;
 
 
 const app = new Vue({
@@ -23,8 +22,7 @@ const app = new Vue({
 
     components: {
         PartyList,
-        Player,
-        VideoPlayer
+        //VideoPlayer
     }
 });
 

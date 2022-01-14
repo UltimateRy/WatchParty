@@ -10,21 +10,13 @@
 </head>
 
 <body>  
-
-    <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
    
     <h1> Video Player </h1>
-
     <div id="message"></div>
-
-    <input type="file" accept="video/*"/>
     <br>
-    <br>
-
     <div id="app">
-       <player> </player>
+       <videoplayer> </videoplayer>
     </div>
-
 
 </body>
 

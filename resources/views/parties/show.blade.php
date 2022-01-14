@@ -1,4 +1,4 @@
-   
+<!DOCTYPE html>
 <head>
     <link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet" />
 </head>
@@ -20,7 +20,7 @@
     <div id="app">
         <div class="video-inner-container">
 
-            <video-js 
+            <video 
                 id="my-video" 
                 class="video-js"
                 controls
@@ -30,14 +30,15 @@
                 height="720" 
                 data-setup="{}"
             >
-            </video-js>
+            </video>
         </div>
     </div>
 
     <script>
+        
         new Vue({
+            
             el: '#app',
-
             mounted: function() {
 
                 (function startVideoPlayer() {

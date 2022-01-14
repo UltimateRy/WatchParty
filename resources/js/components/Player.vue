@@ -1,11 +1,13 @@
 <template>
   <div>
+
+        <input type="file" accept="video/*"/>
+
 		<video-player :options="videoOptions"></video-player>
 	</div>
 </template>
     
 <script>
-    import videojs from 'video.js';
     import VideoPlayer from './videoPlayer.vue'
     const default_layout = "default";
     export default {
@@ -29,7 +31,7 @@
                     
                     var fileURL = URL.createObjectURL(file)
 
-                    VideoPlayer.player.src({src: fileURL, type: type});
+                    player.src({src: fileURL, type: type});
 
                     return {
                         videoOptions: {
@@ -51,7 +53,6 @@
                     preload: "auto",
                     width: "1280" ,
                     height: "720" 
-             
                    // sources: [
                     //    {
                    //         src:
