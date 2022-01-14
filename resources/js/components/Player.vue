@@ -8,7 +8,6 @@
 </template>
     
 <script>
-    import VideoPlayer from './videoPlayer.vue'
     const default_layout = "default";
     export default {
         name: "VideoExample",

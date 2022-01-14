@@ -64,9 +64,13 @@ class PartyController extends Controller
 
         $p->save();
 
-        $p->addToParty(User::findOrFail('1'));
+        $p->addToParty(User::findOrFail('1')); //Adding ryan morgans to the party just as an example
+
         //$users->push(auth()->user()->id); //LINE NOT NEEDED BECAUSE THE HOST IS KEPT IN THE PARTY 
     
+        $p->load('host');
+        $p->load('movie');
+
         broadcast(new PartyCreated($p))->toOthers();
 
         session()->flash('message', 'Post Successfully Created.');

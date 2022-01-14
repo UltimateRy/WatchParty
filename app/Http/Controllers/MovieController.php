@@ -76,14 +76,14 @@ class MovieController extends Controller
      * @param  \App\Models\Movie  $movie
      * @return \Illuminate\Http\Response
      */
-    public function show(Movie $movie)
+    public function show($id)
     {
         $movie = Movie::findOrFail($id);
-        $movieImage = MovieImage::find($post->id);
+        //$movieImage = MovieImage::find($movie->id);
 
          return view('movies.show', [
               'movie' => $movie, 
-              'image' => $movieImage,
+          //    'image' => $movieImage,
          ]);
 
     }

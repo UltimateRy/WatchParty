@@ -13,6 +13,8 @@ class DashboardController extends Controller
     {
         $parties = auth()->user()->parties->load('host');
 
+        $parties->load('movie');
+        
         //$parties = Party::with('host')->where('party_id', )
 
        // $users = User::where('id', '<>', auth()->user()->id)->get();
