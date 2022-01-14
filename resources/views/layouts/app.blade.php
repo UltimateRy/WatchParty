@@ -12,6 +12,7 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        <link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet" />
 
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>

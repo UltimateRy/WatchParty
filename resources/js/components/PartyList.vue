@@ -1,7 +1,14 @@
 <template>
     <div>
         <div v-for="party in parties" :party="party" :key="party.id">
-            This is a party for movie: {{party.movie_id}} hosted by user {{party.host_id}}
+            <br>
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-gray overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 bg-blue-100 border-b border-gray-200">
+                        Movie: {{party.movie_id}} hosted by user {{party.host_id}}
+                    </div>
+                </div>
+            </div>
         </div>
 
         {{message}}

@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-
-<html >
-    
+   
 <head>
     <link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet" />
 </head>
@@ -11,7 +8,6 @@
     <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
-
 
     <h1> Video Player </h1>
 
@@ -35,7 +31,6 @@
                 data-setup="{}"
             >
             </video-js>
-
         </div>
     </div>
 
@@ -59,7 +54,7 @@
                         var fileURL = URL.createObjectURL(file)
                         player.src({src: fileURL, type: type});
 
-                        player.currentTime(35);
+                        //player.currentTime(35);
                     }
                     var inputNode = document.querySelector('input')
                     inputNode.addEventListener('change', playSelectedFile, false)
@@ -70,4 +65,3 @@
     </script>
 </body>
 
-</html>

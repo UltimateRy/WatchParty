@@ -5,23 +5,26 @@ window.Alpine = Alpine;
 Alpine.start();
 
 import Vue from 'vue'
-import Test from './components/Test.vue'
+import PartyList from './components/PartyList.vue'
 import Player from './components/Player.vue'
+import VideoPlayer from './components/videoPlayer.vue'
 
 
 window.Vue = require('vue');
 window.Bus = new Vue();
 
-Vue.component('test', Test).default;
+Vue.component('partylist', PartyList).default;
 Vue.component('player', Player).default;
+Vue.component('videoPlayer', VideoPlayer).default;
 
 
-const test = new Vue({
-    el: '#test',
+const app = new Vue({
+    el: '#app',
 
     components: {
-        Test,
-        Player
+        PartyList,
+        Player,
+        VideoPlayer
     }
 });
 
