@@ -11384,6 +11384,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -11426,6 +11429,12 @@ __webpack_require__.r(__webpack_exports__);
     //    console.log('onPlayerReady', this);
     //})
 
+  },
+  methods: {
+    presetVid: function presetVid(event) {
+      this.player = (0,video_js__WEBPACK_IMPORTED_MODULE_0__["default"])(this.$refs['video-player']);
+      this.player.src("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4");
+    }
   },
   //methods: {
   //    fileChange(event) {
@@ -98720,35 +98729,53 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("input", {
-      attrs: { type: "file", accept: "video/*", id: "uploadedFile" },
-    }),
-    _vm._v(" "),
-    _c("br"),
-    _vm._v(" "),
-    _c(
-      "video",
-      {
-        ref: "video-player",
-        staticClass: "video-js vjs-big-play-centered",
-        attrs: {
-          id: "my-video",
-          controls: "",
-          autoplay: "",
-          preload: "auto",
-          width: "1280",
-          height: "720",
-          "data-setup": "{}",
+    _c("div", { staticClass: "py-6" }, [
+      _c("input", {
+        attrs: { type: "file", accept: "video/*", id: "uploadedFile" },
+      }),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "float-right text-right bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full",
+          on: { click: _vm.presetVid },
         },
-      },
-      [
-        _c("source", {
+        [_vm._v("Join Party")]
+      ),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c(
+        "video",
+        {
+          ref: "video-player",
+          staticClass: "video-js vjs-big-play-centered",
           attrs: {
-            src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            id: "my-video",
+            controls: "",
+            autoplay: "",
+            preload: "auto",
+            width: "1280",
+            height: "720",
+            "data-setup": "{}",
           },
-        }),
-      ]
-    ),
+        },
+        [
+          _c("source", {
+            attrs: {
+              src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            },
+          }),
+        ]
+      ),
+    ]),
   ])
 }
 var staticRenderFns = []

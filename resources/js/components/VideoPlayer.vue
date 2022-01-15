@@ -1,25 +1,28 @@
 <template>
     <div>
-        <input type="file" accept="video/*" id="uploadedFile"/>
-        <br>
+        <div class="py-6">
+            <input type="file" accept="video/*" id="uploadedFile"/>
+            <br>
+            <br>
+            <button v-on:click="presetVid" class="float-right text-right bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full" >Join Party</button>
+            <br>
+            <br>
+            <video ref="video-player" 
+                    class="video-js vjs-big-play-centered"
+                    id="my-video" 
+                    controls
+                    autoplay
+                    preload="auto"
+                    width="1280" 
+                    height="720" 
+                    data-setup='{}'>
 
-        <video ref="video-player" 
-                class="video-js vjs-big-play-centered"
-                id="my-video" 
-                controls
-                autoplay
-                preload="auto"
-                width="1280" 
-                height="720" 
-                data-setup='{}'>
+                    <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"/>
 
-                <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"/>
-
-        </video>
+            </video>
+        </div>
     </div>
 </template>
-
-
 
 <script>
 import videojs from 'video.js';
@@ -74,6 +77,12 @@ export default {
         //})
     },
 
+    methods: {
+        presetVid: function (event) {
+            this.player = videojs(this.$refs['video-player']);
+            this.player.src("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4");
+        }
+    },
     //methods: {
     //    fileChange(event) {
     //        alert('Did something!')
