@@ -11469,6 +11469,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -11476,6 +11481,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['party'],
   data: function data() {
     return {
+      messages: [],
       player: null,
       party_id: this.party.id
     };
@@ -11534,26 +11540,27 @@ __webpack_require__.r(__webpack_exports__);
     pause: function pause() {
       axios.post("/api/pausevideo", {
         user: this.user,
-        party: this.party,
-        action: "pause"
+        party: this.party
       });
       this.player.pause();
     },
     play: function play() {
       axios.post("/api/playvideo", {
         user: this.user,
-        party: this.party,
-        action: "pause"
+        party: this.party
       });
       this.player.play();
     },
     setTime: function setTime(t) {
+      var _this2 = this;
+
       axios.post("/api/scrubvideo", {
         user: this.user,
         party: this.party,
         time: t
-      });
-      this.player.currentTime(t);
+      }).then(function (response) {
+        _this2.messages.push(response.data);
+      }); //this.player.currentTime(t);
     }
   },
   //methods: {
@@ -99048,6 +99055,21 @@ var render = function () {
       _c("br"),
       _vm._v(" "),
       _c("br"),
+      _vm._v(" "),
+      _c(
+        "ul",
+        { staticClass: "chat" },
+        _vm._l(_vm.messages, function (message) {
+          return _c("div", { key: message.id, attrs: { message: message } }, [
+            _vm._v(
+              "\n                " +
+                _vm._s(message) +
+                "\n                \n            "
+            ),
+          ])
+        }),
+        0
+      ),
       _vm._v(" "),
       _c(
         "video",

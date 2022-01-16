@@ -6,7 +6,12 @@
             <br>
             <button v-on:click="presetVid" class="float-right text-right bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full" >Select File</button>
             <br>
-            <br>
+            <br> <ul class="chat">
+                <div v-for="message in messages" :message="message" :key="message.id">
+                    {{message}}
+                    
+                </div>
+            </ul>
             <video ref="video-player" 
                     class="video-js vjs-big-play-centered"
                     id="my-video" 
@@ -32,6 +37,7 @@ export default {
     props: ['party'],
     data() {
         return {
+            messages: [],
             player: null,
             party_id: this.party.id
         }
@@ -101,7 +107,6 @@ export default {
                 {
                     user: this.user, 
                     party: this.party, 
-                    action: "pause"
                 })
             this.player.pause();
         },
@@ -110,7 +115,6 @@ export default {
                 {
                     user: this.user, 
                     party: this.party, 
-                    action: "pause"
                 })
             this.player.play();
         },
@@ -121,7 +125,10 @@ export default {
                     party: this.party, 
                     time: t
                 })
-            this.player.currentTime(t);
+                .then((response) => {
+                    this.messages.push(response.data);
+                });
+            //this.player.currentTime(t);
         }
     },
     //methods: {
