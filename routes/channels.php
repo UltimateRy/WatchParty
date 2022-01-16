@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Broadcast;
+
+use App\Models\User;
 use App\Models\Party;
 
 /*
@@ -15,11 +17,11 @@ use App\Models\Party;
 */
 
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    //return (int) $user->id === (int) $id;
-    return true;
+    return (int) $user->id === (int) $id;
+    //return true;
 });
 
 Broadcast::channel('parties.{party}', function ($user, Party $party) {
-    //return $party->hasUser($user->id);
-    return true;
+    return $party->hasUser($user->id);
+    //return true;
 });

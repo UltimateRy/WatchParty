@@ -35,7 +35,7 @@
                         Parties                
                     </div>
                     <div id="app">
-                        <partylist :initial-parties="{{ $parties }}" :user="{{ $user }}"></partylist>
+                        <party-list :initial-parties="{{ $parties }}" :user="{{ $user }}"></party-list>
                     </div>
                 </div>
             </div>

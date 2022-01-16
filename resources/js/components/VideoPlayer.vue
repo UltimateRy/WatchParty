@@ -4,7 +4,7 @@
             <input type="file" accept="video/*" id="uploadedFile"/>
             <br>
             <br>
-            <button v-on:click="presetVid" class="float-right text-right bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full" >Join Party</button>
+            <button v-on:click="presetVid" class="float-right text-right bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full" >Select File</button>
             <br>
             <br>
             <video ref="video-player" 

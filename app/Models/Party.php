@@ -32,14 +32,14 @@ class Party extends Model
 
     public function hasUser($user_id)
     {
-        foreach ($this->users as $user) {
+        $party_users = $this->users;
+
+        foreach ($party_users as $user) {
             if($user->id == $user_id) {
                 return true;
             }
         }
-
+        
         return false;
-
     }
-
 }

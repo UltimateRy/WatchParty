@@ -7,6 +7,8 @@ Alpine.start();
 import Vue from 'vue';
 import PartyList from './components/PartyList.vue';
 import VideoPlayer from './components/VideoPlayer.vue';
+import PartyChat from './components/PartyChat.vue';
+
 //import Player from './components/Player.vue'
 
 
@@ -20,7 +22,8 @@ const app = new Vue({
     el: '#app',
     components: {
         PartyList,
-        VideoPlayer
+        VideoPlayer,
+        PartyChat
     }
 });
 

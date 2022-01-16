@@ -90,7 +90,9 @@ class PartyController extends Controller
         $party = Party::findOrFail($id);
 
         return view('parties.show', [
-            'id' => $party->id
+            'p' => $party,
+            'id' => $party->id,
+            'user' => Auth::User()
         ]);
     }
 

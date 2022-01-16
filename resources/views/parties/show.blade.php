@@ -7,22 +7,20 @@
 <head>
 </head>
 
-<body>  
-    <div class="relative min-h-screen">
-        <div class="px-3">
-            <div class="max-w-7xl sm:px-3 lg:px-5">
-                <div id="message"></div>
-                <div id="app">
-                <video-player> </video-player>
-                </div>
+<body>     
+    <div id="app">
+        <div class=" px-4 py-4 grid gap-4 grid-cols-5 grid-rows-1">
+            <div class="px-4 bg-blue-100 col-span-4">
+                <video-player> </video-player> 
+            </div>
+            <div class="bg-green-200">
+                <br>
+                <p class="px-4"> Chat </p>
+                <br>
+                <party-chat :party="{{$p}}" :key="{{$id}}" :user="{{$user}}" class="px-4">></party-chat>
             </div>
         </div>
-        <div class="bg-blue-200 text-white w-64">
-            <br>
-            <p> Chat </p>
-        </div>
     </div>
-
 </body>
 
 </x-app-layout>

@@ -1,28 +1,31 @@
 <template>
     <div>
-        <ul class="chat">
-            <div v-for="message in messages" :message="message" :key="message.id">
-                {{message.id}}
-            </div>
-        </ul>
-
+        
         <div class="panel-footer">
             <div class="input-group">
-                <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." v-model="newMessage" @keyup.enter="store()" autofocus />
+                <input id="btn-input" type="text" class="px-10 form-control input-sm bg-blue-100 max-width-32" placeholder="Message..." v-model="newMessage" @keyup.enter="store()" autofocus />
+                <br>
+                <br>
                 <span class="input-group-btn">
-                    <button class="btn btn-warning btn-sm" id="btn-chat" @click.prevent="store()"> Send </button>
+                    <button class="bg-green-500 text-white font-bold w-1/4 rounded-full" id="btn-chat" @click.prevent="store()"> Send </button>
                 </span>
             </div>
         </div>
-
+        <br>
+        <ul class="chat">
+            <div v-for="message in messages" :message="message" :key="message.id">
+                {{message}}
+                
+            </div>
+        </ul>
     </div>
 </template>
 
 <script>
+    import axios from 'axios';
     const default_layout = "default";
     export default {
-        props: ['party'],
-        computed: {},
+        props: ['party', 'user'],
         data() {
             return {
                 messages: [],
@@ -34,18 +37,29 @@
             this.listenForNewMessage();
         },
         methods: {
+            
             store() {
-                axios.post('/messages', {newMessage: this.newMessage, party_id: this.party.id})
+                //console.log(this.user);
+                //console.log(this.party);
+                //console.log(this.newMessage);
+
+                axios.post("/api/sendmessage", 
+                {
+                    user: this.user, 
+                    party: this.party, 
+                    message: this.newMessage
+                })
                 .then((response) => {
                     this.newMessage = '';
                     this.messages.push(response.data);
+                    //console.log(response.data);
                 });
             },
             listenForNewMessage() {
                 Echo.private('parties.' + this.party.id)
                     .listen('NewMessage', (e) => {
-                        // console.log(e);
-                        this.messages.push(e);
+                         console.log(e);
+                        this.messages.push(e.message);
                     });
             }
         }

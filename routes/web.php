@@ -10,6 +10,13 @@ use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\PartyController;
 
+use App\Events\NewMessage;
+use App\Models\User;
+use App\Models\Party;
+
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,5 +83,36 @@ Route::get('/watchparty', [PartyController::class, 'store'])
 
 Route::get('/watchparty/{id}', [PartyController::class, 'show']) //HERE THE USER WILL BE PROMPTED TO SELECT THEIR MOVIE FILE FOR THE PARTY AND
     ->name('parties.show')->middleware('auth');//, 'role']); NEED TO MAKE SURE THE USER IS ALLOWED IN THE PARTY
+
+    /*
+Route::post('/send-message', function (Request $request){
+    
+    
+    //return 1;
+    //return response()->json($request->all());
+    //return  response()->json($request->input('user.username'));
+
+    //$user = User::findOrFail($id);
+    //$party = Party::findOrFail($id);
+    $message = $request->input('message');
+
+    //return $user_id . " : " . $party_id;
+
+    event(
+        new NewMessage(
+            $request->input('user.id'),
+            $request->input('party.id'),
+            $request->input('message')
+        )
+    );
+
+    return ["success" => true];
+    /*
+    return  response()->json($request->input('user.username'));
+
+    //return $request;
+    
+});
+*/
 
 require __DIR__.'/auth.php';
