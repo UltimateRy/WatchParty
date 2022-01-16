@@ -29,10 +29,11 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css'
 export default {
     name: "VideoPlayer",
-    
+    props: ['party'],
     data() {
         return {
-            player: null
+            player: null,
+            party_id: this.party.id
         }
     },
 
@@ -71,16 +72,56 @@ export default {
             inputNode.addEventListener('change', playSelectedFile, false)
         })()
             
+        this.listenForControl();
         //this.player.src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
         //this.player = videojs(this.$refs['video-player'], this.options, function onPlayerReady() {
         //    console.log('onPlayerReady', this);
         //})
+
+
+
     },
 
     methods: {
         presetVid: function (event) {
             this.player = videojs(this.$refs['video-player']);
             this.player.src("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4");
+        },
+        listenForControl() {
+            Echo.private('parties.' + this.party.id)
+                .listen('PlayerControl', (e) => {
+                        console.log(e);
+                    this.messages.push(e.message);
+                });
+            console.log(this.party.id);
+            this.setTime(200);
+        },
+        pause() {
+            axios.post("/api/pausevideo", 
+                {
+                    user: this.user, 
+                    party: this.party, 
+                    action: "pause"
+                })
+            this.player.pause();
+        },
+        play() {
+            axios.post("/api/playvideo", 
+                {
+                    user: this.user, 
+                    party: this.party, 
+                    action: "pause"
+                })
+            this.player.play();
+        },
+        setTime(t) {
+            axios.post("/api/scrubvideo", 
+                {
+                    user: this.user, 
+                    party: this.party, 
+                    time: t
+                })
+            this.player.currentTime(t);
         }
     },
     //methods: {

@@ -17,11 +17,9 @@ class NewMessage implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-
     public $user;
     public $party;
     public $message;
-
 
     /**
      * Create a new event instance.
@@ -45,16 +43,4 @@ class NewMessage implements ShouldBroadcast
     {
         return new PrivateChannel('parties.' . $this->party);
     }
-
-  
-    /*
-    public function broadcastWith()
-    {
-        return [
-            'party' => $this->party,
-            'message' => $this->message,
-            'user' =>  $this->user,
-        ];
-    }
-    */
 }

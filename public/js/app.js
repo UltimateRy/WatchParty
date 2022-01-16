@@ -11473,9 +11473,11 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "VideoPlayer",
+  props: ['party'],
   data: function data() {
     return {
-      player: null
+      player: null,
+      party_id: this.party.id
     };
   },
   mounted: function mounted() {
@@ -11506,16 +11508,52 @@ __webpack_require__.r(__webpack_exports__);
 
       var inputNode = document.getElementById('uploadedFile');
       inputNode.addEventListener('change', playSelectedFile, false);
-    })(); //this.player.src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
+    })();
+
+    this.listenForControl(); //this.player.src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
     //this.player = videojs(this.$refs['video-player'], this.options, function onPlayerReady() {
     //    console.log('onPlayerReady', this);
     //})
-
   },
   methods: {
     presetVid: function presetVid(event) {
       this.player = (0,video_js__WEBPACK_IMPORTED_MODULE_0__["default"])(this.$refs['video-player']);
       this.player.src("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4");
+    },
+    listenForControl: function listenForControl() {
+      var _this = this;
+
+      Echo["private"]('parties.' + this.party.id).listen('PlayerControl', function (e) {
+        console.log(e);
+
+        _this.messages.push(e.message);
+      });
+      console.log(this.party.id);
+      this.setTime(200);
+    },
+    pause: function pause() {
+      axios.post("/api/pausevideo", {
+        user: this.user,
+        party: this.party,
+        action: "pause"
+      });
+      this.player.pause();
+    },
+    play: function play() {
+      axios.post("/api/playvideo", {
+        user: this.user,
+        party: this.party,
+        action: "pause"
+      });
+      this.player.play();
+    },
+    setTime: function setTime(t) {
+      axios.post("/api/scrubvideo", {
+        user: this.user,
+        party: this.party,
+        time: t
+      });
+      this.player.currentTime(t);
     }
   },
   //methods: {

@@ -19,6 +19,15 @@ use App\Http\Controllers\MessageController;
 Route::post('/sendmessage', [MessageController::class, 'apiSend'])
     ->name('api.message.send');
 
+Route::post('/pausevideo', [VideoPlayerController::class, 'apiPause'])
+    ->name('api.video.pause');
+
+Route::post('/playvideo', [VideoPlayerController::class, 'apiPlay'])
+    ->name('api.video.play');
+
+Route::post('/scrubvideo', [VideoPlayerController::class, 'apiScrub'])
+    ->name('api.video.scrub');
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

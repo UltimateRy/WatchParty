@@ -11,7 +11,7 @@
     <div id="app">
         <div class=" px-4 py-4 grid gap-4 grid-cols-5 grid-rows-1">
             <div class="px-4 bg-blue-100 col-span-4">
-                <video-player> </video-player> 
+                <video-player :party="{{$p}}"> </video-player> 
             </div>
             <div class="bg-green-200">
                 <br>
