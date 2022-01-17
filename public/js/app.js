@@ -11478,7 +11478,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "VideoPlayer",
-  props: ['party'],
+  props: ['party', 'user'],
   data: function data() {
     return {
       messages: [],
@@ -11487,6 +11487,8 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
+    var _this = this;
+
     var element = this.$refs['video-player'];
     console.log({
       element: element
@@ -11516,6 +11518,9 @@ __webpack_require__.r(__webpack_exports__);
       inputNode.addEventListener('change', playSelectedFile, false);
     })();
 
+    element.addEventListener('play', function () {
+      _this.videoSetTime(400);
+    });
     this.listenForControl(); //this.player.src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
     //this.player = videojs(this.$refs['video-player'], this.options, function onPlayerReady() {
     //    console.log('onPlayerReady', this);
@@ -11527,52 +11532,50 @@ __webpack_require__.r(__webpack_exports__);
       this.player.src("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4");
     },
     listenForControl: function listenForControl() {
-      var _this = this;
+      var _this2 = this;
 
-      Echo["private"]('parties.' + this.party.id).listen('PlayerControl', function (e) {
-        console.log(e);
+      this.videoSetTime(200);
+      Echo["private"]('parties.' + this.party.id).listen('PlayerAction', function (e) {
+        console.log(e); //this.messages.push(e);
 
-        _this.messages.push(e.message);
-      });
-      console.log(this.party.id);
-      this.setTime(200);
+        _this2.player.currentTime(e.action);
+      }); //console.log(this.party.id);
     },
-    pause: function pause() {
+    videopause: function videopause() {
       axios.post("/api/pausevideo", {
         user: this.user,
         party: this.party
       });
       this.player.pause();
     },
-    play: function play() {
+    videoplay: function videoplay() {
       axios.post("/api/playvideo", {
         user: this.user,
         party: this.party
       });
       this.player.play();
     },
-    setTime: function setTime(t) {
-      var _this2 = this;
+    videoSetTime: function videoSetTime(t) {
+      var _this3 = this;
 
       axios.post("/api/scrubvideo", {
         user: this.user,
         party: this.party,
         time: t
       }).then(function (response) {
-        _this2.messages.push(response.data);
+        //this.messages.push(response.data);
+        _this3.player.currentTime(t);
       }); //this.player.currentTime(t);
     }
   },
-  //methods: {
-  //    fileChange(event) {
-  //        alert('Did something!')
-  //        var file = document.getElementById('#uploadedFile');
-  //        const element = this.$refs['video-player'];
-  //        player = videojs(element);
-  //        player.srcObject = file
-  //this.$refs.videoPlayer.src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-  //    }
-  //},
+  //  fileChange(event) {
+  //      alert('Did something!')
+  //      var file = document.getElementById('#uploadedFile');
+  //      const element = this.$refs['video-player'];
+  //      player = videojs(element);
+  //      player.srcObject = file
+  //      this.$refs.videoPlayer.src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+  //  }
   beforeDestroy: function beforeDestroy() {
     if (this.player) {
       this.player.dispose();
