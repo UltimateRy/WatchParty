@@ -16,13 +16,12 @@
                     class="video-js vjs-big-play-centered"
                     id="my-video" 
                     controls
-                    autoplay
                     preload="auto"
                     width="1280" 
                     height="720" 
                     data-setup='{}'>
 
-                    <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"/>
+                    <!-- <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"/> -->
 
             </video>
         </div>
@@ -51,14 +50,16 @@ export default {
 
         this.player = videojs(element, {
             fluid: true,
-            autoplay: true
         });
 
         this.player.volume(0.5);
 
+        var playToggle = 0;
+
         (function startVideoPlayer() {
 
             var URL = window.URL || window.webkitURL;
+
 
             var playSelectedFile = function (event) {
                 alert('Did something!');
@@ -79,50 +80,137 @@ export default {
     
         })()
             
-        element.addEventListener('play', () => {
-            this.videoSetTime(400);
+        //THIS LINE DISABLES THE PLAY BUTTON
+        //COULD BE USED WHEN HOST PRIVILGES IS IMPLEMENTED
+        //this.player.controlBar.playToggle.off("click");
+
+        this.player.controlBar.playToggle.on("click" , function() {
+
+            if (playToggle == 0) {
+                playToggle = 1;
+                console.log("clicked pause lol");
+                videoPauseAll();
+            } else if (playToggle == 1) {
+                playToggle = 0;
+                console.log("clicked play lol");
+                videoPlayAll();
+            }
+            
         });
+
+       // element.addEventListener('play', event=> {
+        //        console.log("Clicked Play");
+        //        this.videoPlayAll();
+        //});
+
+        //element.addEventListener('pause', event => {
+        //        console.log("Clicked Pause");
+        //        this.videoPauseAll();
+        //});
 
         this.listenForControl();
         //this.player.src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
         //this.player = videojs(this.$refs['video-player'], this.options, function onPlayerReady() {
         //    console.log('onPlayerReady', this);
         //})
-
-
-
     },
-
     methods: {
         presetVid: function (event) {
             this.player = videojs(this.$refs['video-player']);
-            this.player.src("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4");
+            this.player.src("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4");
+
+
         },
         listenForControl() {
-            this.videoSetTime(200);
+            //this.videoSetTime(200);
+            
+            //Listen for external commands:
+
             Echo.private('parties.' + this.party.id)
-                .listen('PlayerAction', (e) => {
+                .listen('VideoScrub', (e) => {
                     console.log(e);
                     //this.messages.push(e);
-                    this.player.currentTime(e.action);
-                });
+                    this.player.currentTime(e.time);
+                }
+            );
+            Echo.private('parties.' + this.party.id)
+                .listen('VideoAction', (e) => {
+                    console.log(e);
+                    
+                    //NEED TO DISABLE EVENT LISTENERS HERE
+
+                    const element = this.$refs['video-player']
+                   // element.removeEventListener('play', event => {
+                    //    this.videoPlayAll();
+                    //});
+                   // element.removeEventListener('pause', event => {
+                   //     this.videoPauseAll();
+                   // });
+
+                    
+                    if (e.action == "play") {
+                        console.log("Recieved play command");
+
+                        if (this.player.paused()) {
+                            console.log("Began playing Video");
+                            this.player.play();
+                        } else {
+                            console.log("Video was already playing");
+                        }
+                    }
+                    if (e.action == "pause") {
+                        console.log("Recieved pause command");
+
+                        if (this.player.paused()) {
+                            console.log("Video was already paused");
+                        } else {
+                            console.log("Paused the Video");
+                            this.player.pause();
+                            
+                        }
+                    }
+
+                    //RE_ENABLE EVENT LISTENERS
+
+                   // element.addEventListener('play', event => {
+                    //    this.videoPlayAll();
+                        //this.videoSetTime(400);
+                    //});
+
+                   // element.addEventListener('pause', event => {
+                   //     this.videoPauseAll();
+                        //this.videoSetTime(400);
+                   // });
+
+                }
+            );
             //console.log(this.party.id);
         },
-        videopause() {
+        videoPauseAll() {
+            console.log("Sending pause command");
             axios.post("/api/pausevideo", 
                 {
                     user: this.user, 
                     party: this.party, 
+                    action: "pause",
                 })
-            this.player.pause();
+                .then((response) => {
+                    //this.messages.push(response.data);
+                    //this.player.pause();
+                });
         },
-        videoplay() {
+        videoPlayAll() {
+            console.log("Sending play command");
             axios.post("/api/playvideo", 
                 {
                     user: this.user, 
                     party: this.party, 
+                    action: "play",
                 })
-            this.player.play();
+                .then((response) => {
+                    //this.messages.push(response.data);
+                    //this.player.play();
+                });
         },
         videoSetTime(t) {
             axios.post("/api/scrubvideo", 

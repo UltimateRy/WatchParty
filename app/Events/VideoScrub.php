@@ -13,24 +13,24 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PlayerAction implements ShouldBroadcast
+class VideoScrub implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $user;
     public $party;
-    public $action;
+    public $time;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($user, $party, $action)
+    public function __construct($user, $party, $time)
     {
         $this->party = $party;
         $this->user = $user;
-        $this->action = $action;
+        $this->time = $time;
     }
 
     /**
