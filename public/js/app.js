@@ -11473,8 +11473,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
+var playToggle = 0;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "VideoPlayer",
   props: ['party', 'user'],
@@ -11486,6 +11491,8 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
+    var _this = this;
+
     var element = this.$refs['video-player'];
     console.log({
       element: element
@@ -11494,7 +11501,6 @@ __webpack_require__.r(__webpack_exports__);
       fluid: true
     });
     this.player.volume(0.5);
-    var playToggle = 0;
 
     (function startVideoPlayer() {
       var URL = window.URL || window.webkitURL;
@@ -11518,17 +11524,24 @@ __webpack_require__.r(__webpack_exports__);
     //this.player.controlBar.playToggle.off("click");
 
 
-    this.player.controlBar.playToggle.on("click", function () {
+    this.player.controlBar.playToggle.on("click", function (event) {
       if (playToggle == 0) {
         playToggle = 1;
         console.log("clicked pause lol");
-        videoPauseAll();
+
+        _this.videoPauseAll();
+
+        _this.videoSetTime(_this.player.currentTime());
       } else if (playToggle == 1) {
         playToggle = 0;
         console.log("clicked play lol");
-        videoPlayAll();
+
+        _this.videoPlayAll();
+
+        _this.videoSetTime(_this.player.currentTime());
       }
-    }); // element.addEventListener('play', event=> {
+    }); // this.player.controlBar.
+    // element.addEventListener('play', event=> {
     //        console.log("Clicked Play");
     //        this.videoPlayAll();
     //});
@@ -11548,32 +11561,26 @@ __webpack_require__.r(__webpack_exports__);
       this.player.src("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4");
     },
     listenForControl: function listenForControl() {
-      var _this = this;
+      var _this2 = this;
 
       //this.videoSetTime(200);
       //Listen for external commands:
       Echo["private"]('parties.' + this.party.id).listen('VideoScrub', function (e) {
         console.log(e); //this.messages.push(e);
 
-        _this.player.currentTime(e.time);
+        _this2.player.currentTime(e.time);
       });
       Echo["private"]('parties.' + this.party.id).listen('VideoAction', function (e) {
         console.log(e); //NEED TO DISABLE EVENT LISTENERS HERE
 
-        var element = _this.$refs['video-player']; // element.removeEventListener('play', event => {
-        //    this.videoPlayAll();
-        //});
-        // element.removeEventListener('pause', event => {
-        //     this.videoPauseAll();
-        // });
-
         if (e.action == "play") {
           console.log("Recieved play command");
 
-          if (_this.player.paused()) {
+          if (_this2.player.paused()) {
+            playToggle = 0;
             console.log("Began playing Video");
 
-            _this.player.play();
+            _this2.player.play();
           } else {
             console.log("Video was already playing");
           }
@@ -11582,12 +11589,13 @@ __webpack_require__.r(__webpack_exports__);
         if (e.action == "pause") {
           console.log("Recieved pause command");
 
-          if (_this.player.paused()) {
+          if (_this2.player.paused()) {
             console.log("Video was already paused");
           } else {
+            playToggle = 1;
             console.log("Paused the Video");
 
-            _this.player.pause();
+            _this2.player.pause();
           }
         } //RE_ENABLE EVENT LISTENERS
         // element.addEventListener('play', event => {
@@ -11622,15 +11630,12 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     videoSetTime: function videoSetTime(t) {
-      var _this2 = this;
-
       axios.post("/api/scrubvideo", {
         user: this.user,
         party: this.party,
         time: t
-      }).then(function (response) {
-        //this.messages.push(response.data);
-        _this2.player.currentTime(t);
+      }).then(function (response) {//this.messages.push(response.data);
+        //this.player.currentTime(t);
       }); //this.player.currentTime(t);
     }
   },
@@ -11672,12 +11677,9 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].start();
 
 
 
- //import Player from './components/Player.vue'
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-window.Bus = new vue__WEBPACK_IMPORTED_MODULE_4__["default"](); //Vue.component('partylist', PartyList).default;
-//Vue.component('videoplayer', VideoPlayer).default;
-
+window.Bus = new vue__WEBPACK_IMPORTED_MODULE_4__["default"]();
 var app = new vue__WEBPACK_IMPORTED_MODULE_4__["default"]({
   el: '#app',
   components: {

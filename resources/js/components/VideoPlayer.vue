@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="py-6">
-            <input type="file" accept="video/*" id="uploadedFile"/>
+            <input type="file" accept="video/*" id="uploadedFile" />
             <br>
             <br>
             <button v-on:click="presetVid" class="float-right text-right bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full" >Select File</button>
@@ -23,6 +23,10 @@
 
                     <!-- <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"/> -->
 
+
+
+
+
             </video>
         </div>
     </div>
@@ -31,6 +35,7 @@
 <script>
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css'
+var playToggle = 0;
 export default {
     name: "VideoPlayer",
     props: ['party', 'user'],
@@ -39,6 +44,7 @@ export default {
             messages: [],
             player: null,
             party_id: this.party.id
+            
         }
     },
 
@@ -54,12 +60,9 @@ export default {
 
         this.player.volume(0.5);
 
-        var playToggle = 0;
 
         (function startVideoPlayer() {
-
             var URL = window.URL || window.webkitURL;
-
 
             var playSelectedFile = function (event) {
                 alert('Did something!');
@@ -77,26 +80,29 @@ export default {
             }
             var inputNode = document.getElementById('uploadedFile')
             inputNode.addEventListener('change', playSelectedFile, false)
-    
         })()
             
         //THIS LINE DISABLES THE PLAY BUTTON
         //COULD BE USED WHEN HOST PRIVILGES IS IMPLEMENTED
         //this.player.controlBar.playToggle.off("click");
 
-        this.player.controlBar.playToggle.on("click" , function() {
+        this.player.controlBar.playToggle.on("click" , event => {
 
             if (playToggle == 0) {
                 playToggle = 1;
                 console.log("clicked pause lol");
-                videoPauseAll();
+                this.videoPauseAll();
+                this.videoSetTime(this.player.currentTime());
             } else if (playToggle == 1) {
                 playToggle = 0;
                 console.log("clicked play lol");
-                videoPlayAll();
+                this.videoPlayAll();
+                this.videoSetTime(this.player.currentTime());
             }
             
         });
+
+       // this.player.controlBar.
 
        // element.addEventListener('play', event=> {
         //        console.log("Clicked Play");
@@ -139,19 +145,11 @@ export default {
                     
                     //NEED TO DISABLE EVENT LISTENERS HERE
 
-                    const element = this.$refs['video-player']
-                   // element.removeEventListener('play', event => {
-                    //    this.videoPlayAll();
-                    //});
-                   // element.removeEventListener('pause', event => {
-                   //     this.videoPauseAll();
-                   // });
-
-                    
                     if (e.action == "play") {
                         console.log("Recieved play command");
 
                         if (this.player.paused()) {
+                            playToggle = 0;
                             console.log("Began playing Video");
                             this.player.play();
                         } else {
@@ -164,6 +162,7 @@ export default {
                         if (this.player.paused()) {
                             console.log("Video was already paused");
                         } else {
+                            playToggle = 1;
                             console.log("Paused the Video");
                             this.player.pause();
                             
@@ -221,7 +220,7 @@ export default {
                 })
                 .then((response) => {
                     //this.messages.push(response.data);
-                    this.player.currentTime(t);
+                    //this.player.currentTime(t);
                 });
             //this.player.currentTime(t);
         }

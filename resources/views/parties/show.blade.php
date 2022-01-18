@@ -10,10 +10,10 @@
 <body>     
     <div id="app">
         <div class=" px-4 py-4 grid gap-4 grid-cols-5 grid-rows-1">
-            <div class="px-4 bg-blue-100 col-span-4">
+            <div class="px-4 bg-blue-200 col-span-4 shadow-sm sm:rounded-3xl">
                 <video-player :party="{{$p}}" :key="{{$id}}" :user="{{$user}}">  </video-player> 
             </div>
-            <div class="bg-green-200">
+            <div class="bg-violet-200 shadow-sm sm:rounded-3xl">
                 <br>
                 <p class="px-4"> Chat </p>
                 <br>
@@ -22,5 +22,6 @@
         </div>
     </div>
 </body>
+
 
 </x-app-layout>
