@@ -14,19 +14,19 @@ class MoviesTableSeeder extends Seeder
     public function run()
     {
         $a = new Movie;
-        $a->title = "The Shawshank Redemption";
+        $a->title = "Example Movie";
         $a->synopsis = "Andy Dufresne is sentenced to two consecutive life terms in prison for the murders of his wife and her lover and is sentenced to a tough prison.";
         $a->length = 140;
         $a->save();
 
         $a = new Movie;
-        $a->title = "Interstellar";
+        $a->title = "Toy Story";
         $a->synopsis = "In Earth's future, a global crop blight and second Dust Bowl are slowly rendering the planet uninhabitable.";
         $a->length = 134;
         $a->save();
 
         $a = new Movie;
-        $a->title = "The Dark Knight";
+        $a->title = "Avengers: Assemble";
         $a->synopsis = "With the help of allies Lt. Jim Gordon and DA Harvey Dent, Batman has been able to keep a tight lid on crime in Gotham City.";
         $a->length = 155;
         $a->save();

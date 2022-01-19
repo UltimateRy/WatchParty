@@ -24,15 +24,15 @@ class UsersTableSeeder extends Seeder
         $a->save();
 
         $a = new User;
-        $a->username = "abbyt1099";
-        $a->name = "Abby Thomas";
+        $a->username = "jthomas1099";
+        $a->name = "John Thomas";
         $a->email = "a.thomas@gmail.com";
         $a->password = "newpassword";
         $a->role = "Member";
         $a->save();
 
         $a = new User;
-        $a->username = "bread_smith";
+        $a->username = "brad_smith";
         $a->name = "Bradley Smith";
         $a->email = "bradsmith.new@aol.com";
         $a->password = "newpassword";
