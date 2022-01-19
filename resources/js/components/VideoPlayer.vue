@@ -4,7 +4,7 @@
             <input type="file" accept="video/*" id="uploadedFile" />
             <br>
             <br>
-            <button v-on:click="presetVid" class="float-right text-right bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full" >Select File</button>
+            <button v-on:click="presetVid" class="float-right text-right bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full" >Load Preselected File</button>
             <br>
             <br> <ul class="chat">
                 <div v-for="message in messages" :message="message" :key="message.id">
@@ -22,11 +22,6 @@
                     data-setup='{}'>
 
                     <!-- <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"/> -->
-
-
-
-
-
             </video>
         </div>
     </div>
@@ -44,22 +39,15 @@ export default {
             messages: [],
             player: null,
             party_id: this.party.id
-            
         }
     },
-
     mounted() {
-
         const element = this.$refs['video-player']
-
         console.log( {element} );
-
         this.player = videojs(element, {
             fluid: true,
         });
-
         this.player.volume(0.5);
-
 
         (function startVideoPlayer() {
             var URL = window.URL || window.webkitURL;
@@ -86,33 +74,32 @@ export default {
         //COULD BE USED WHEN HOST PRIVILGES IS IMPLEMENTED
         //this.player.controlBar.playToggle.off("click");
 
+        this.player.bigPlayButton.on('click', event => {
+                console.log("Clicked play");
+                this.videoSetTime(this.player.currentTime());
+                this.videoPlayAll();
+        });
+
         this.player.controlBar.playToggle.on("click" , event => {
 
             if (playToggle == 0) {
                 playToggle = 1;
-                console.log("clicked pause lol");
-                this.videoPauseAll();
+                console.log("Clicked pause");
                 this.videoSetTime(this.player.currentTime());
+                this.videoPauseAll();
             } else if (playToggle == 1) {
                 playToggle = 0;
-                console.log("clicked play lol");
-                this.videoPlayAll();
+                console.log("Clicked play");
                 this.videoSetTime(this.player.currentTime());
+                this.videoPlayAll();
             }
             
         });
 
-       // this.player.controlBar.
-
-       // element.addEventListener('play', event=> {
-        //        console.log("Clicked Play");
-        //        this.videoPlayAll();
-        //});
-
-        //element.addEventListener('pause', event => {
-        //        console.log("Clicked Pause");
-        //        this.videoPauseAll();
-        //});
+        this.player.controlBar.progressControl.seekBar.on('mouseup', event => {
+                console.log("Seeking to : " + this.player.currentTime());
+                this.videoSetTime(this.player.currentTime());
+        });
 
         this.listenForControl();
         //this.player.src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
@@ -127,9 +114,7 @@ export default {
 
 
         },
-        listenForControl() {
-            //this.videoSetTime(200);
-            
+        listenForControl() {          
             //Listen for external commands:
 
             Echo.private('parties.' + this.party.id)
@@ -143,8 +128,6 @@ export default {
                 .listen('VideoAction', (e) => {
                     console.log(e);
                     
-                    //NEED TO DISABLE EVENT LISTENERS HERE
-
                     if (e.action == "play") {
                         console.log("Recieved play command");
 
@@ -168,22 +151,8 @@ export default {
                             
                         }
                     }
-
-                    //RE_ENABLE EVENT LISTENERS
-
-                   // element.addEventListener('play', event => {
-                    //    this.videoPlayAll();
-                        //this.videoSetTime(400);
-                    //});
-
-                   // element.addEventListener('pause', event => {
-                   //     this.videoPauseAll();
-                        //this.videoSetTime(400);
-                   // });
-
                 }
             );
-            //console.log(this.party.id);
         },
         videoPauseAll() {
             console.log("Sending pause command");

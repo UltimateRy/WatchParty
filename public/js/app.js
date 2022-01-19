@@ -11296,7 +11296,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 var default_layout = "default";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -11472,11 +11471,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 
 
 var playToggle = 0;
@@ -11524,32 +11518,35 @@ var playToggle = 0;
     //this.player.controlBar.playToggle.off("click");
 
 
+    this.player.bigPlayButton.on('click', function (event) {
+      console.log("Clicked play");
+
+      _this.videoSetTime(_this.player.currentTime());
+
+      _this.videoPlayAll();
+    });
     this.player.controlBar.playToggle.on("click", function (event) {
       if (playToggle == 0) {
         playToggle = 1;
-        console.log("clicked pause lol");
+        console.log("Clicked pause");
+
+        _this.videoSetTime(_this.player.currentTime());
 
         _this.videoPauseAll();
-
-        _this.videoSetTime(_this.player.currentTime());
       } else if (playToggle == 1) {
         playToggle = 0;
-        console.log("clicked play lol");
-
-        _this.videoPlayAll();
+        console.log("Clicked play");
 
         _this.videoSetTime(_this.player.currentTime());
-      }
-    }); // this.player.controlBar.
-    // element.addEventListener('play', event=> {
-    //        console.log("Clicked Play");
-    //        this.videoPlayAll();
-    //});
-    //element.addEventListener('pause', event => {
-    //        console.log("Clicked Pause");
-    //        this.videoPauseAll();
-    //});
 
+        _this.videoPlayAll();
+      }
+    });
+    this.player.controlBar.progressControl.seekBar.on('mouseup', function (event) {
+      console.log("Seeking to : " + _this.player.currentTime());
+
+      _this.videoSetTime(_this.player.currentTime());
+    });
     this.listenForControl(); //this.player.src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
     //this.player = videojs(this.$refs['video-player'], this.options, function onPlayerReady() {
     //    console.log('onPlayerReady', this);
@@ -11563,7 +11560,6 @@ var playToggle = 0;
     listenForControl: function listenForControl() {
       var _this2 = this;
 
-      //this.videoSetTime(200);
       //Listen for external commands:
       Echo["private"]('parties.' + this.party.id).listen('VideoScrub', function (e) {
         console.log(e); //this.messages.push(e);
@@ -11571,7 +11567,7 @@ var playToggle = 0;
         _this2.player.currentTime(e.time);
       });
       Echo["private"]('parties.' + this.party.id).listen('VideoAction', function (e) {
-        console.log(e); //NEED TO DISABLE EVENT LISTENERS HERE
+        console.log(e);
 
         if (e.action == "play") {
           console.log("Recieved play command");
@@ -11597,17 +11593,8 @@ var playToggle = 0;
 
             _this2.player.pause();
           }
-        } //RE_ENABLE EVENT LISTENERS
-        // element.addEventListener('play', event => {
-        //    this.videoPlayAll();
-        //this.videoSetTime(400);
-        //});
-        // element.addEventListener('pause', event => {
-        //     this.videoPauseAll();
-        //this.videoSetTime(400);
-        // });
-
-      }); //console.log(this.party.id);
+        }
+      });
     },
     videoPauseAll: function videoPauseAll() {
       console.log("Sending pause command");
@@ -99120,7 +99107,7 @@ var render = function () {
             "float-right text-right bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full",
           on: { click: _vm.presetVid },
         },
-        [_vm._v("Select File")]
+        [_vm._v("Load Preselected File")]
       ),
       _vm._v(" "),
       _c("br"),

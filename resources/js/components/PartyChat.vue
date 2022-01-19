@@ -1,6 +1,5 @@
 <template>
     <div>
-        
         <div class="panel-footer">
             <div class="input-group">
                 <input id="btn-input" type="text" class="px-10 form-control input-sm bg-blue-100 max-width-32" placeholder="Message..." v-model="newMessage" @keyup.enter="store()" autofocus />
