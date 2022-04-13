@@ -41,15 +41,7 @@
                     </x-nav-link>
                 </div>
 
-                <div class="pl-12 py-8 pt-8 w:full sm:-my-px">  
-                    <a class="text-center bg-indigo-500 
-                        hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full inline-flex items-center" 
-                        href="{{ route('parties.create') }}">
-                        <svg class="mr-2 fill-white fill-current h-6 w-6" xmlns="http://www.w3.org/2000/svg"> <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z"/></svg>
-                        <span class="text-3xl font-bold h-8"> Create Party
-                        </span>
-                    </a>
-                </div>
+                
 
             </div>
 

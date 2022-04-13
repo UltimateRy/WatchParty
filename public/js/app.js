@@ -11339,6 +11339,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 var default_layout = "default";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -11396,7 +11397,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-//
 //
 //
 //
@@ -99651,6 +99651,19 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _c(
+      "ul",
+      { staticClass: "chat h-full overflow-auto" },
+      _vm._l(_vm.messages, function (message) {
+        return _c("div", { key: message.id, attrs: { message: message } }, [
+          _vm._v(
+            "\n            " + _vm._s(message) + "\n            \n        "
+          ),
+        ])
+      }),
+      0
+    ),
+    _vm._v(" "),
     _c("div", { staticClass: "panel-footer" }, [
       _c("div", { staticClass: "input-group" }, [
         _c("input", {
@@ -99662,7 +99675,7 @@ var render = function () {
               expression: "newMessage",
             },
           ],
-          staticClass: "px-10 form-control input-sm bg-blue-100 max-width-32",
+          staticClass: "w-full form-control input-sm bg-blue-100 min-width-32",
           attrs: {
             id: "btn-input",
             type: "text",
@@ -99714,19 +99727,6 @@ var render = function () {
     ]),
     _vm._v(" "),
     _c("br"),
-    _vm._v(" "),
-    _c(
-      "ul",
-      { staticClass: "chat" },
-      _vm._l(_vm.messages, function (message) {
-        return _c("div", { key: message.id, attrs: { message: message } }, [
-          _vm._v(
-            "\n            " + _vm._s(message) + "\n            \n        "
-          ),
-        ])
-      }),
-      0
-    ),
   ])
 }
 var staticRenderFns = []
@@ -99754,97 +99754,91 @@ var render = function () {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    [
-      _vm._l(_vm.parties, function (party) {
-        return _c("div", { key: party.id, attrs: { party: party } }, [
-          _c("br"),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass:
-                "party-object pt-9 max-w-5xl mx-auto sm:px-6 lg:px-8 w:full shadow-2xl bg-white sm:rounded-lg",
-            },
-            [
-              _c("div", { staticClass: "bg-gray overflow-hidden" }, [
-                _c("div", { staticClass: "flex flex-row content-evenly" }, [
-                  _c("div", { staticClass: "w-1/2" }, [
-                    _c("a", { attrs: { href: "/profiles/" + party.host.id } }, [
-                      _vm._v(
-                        "\n                                " +
-                          _vm._s(party.host.username) +
-                          "\n                            "
-                      ),
-                    ]),
+    _vm._l(_vm.parties, function (party) {
+      return _c("div", { key: party.id, attrs: { party: party } }, [
+        _c("br"),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass:
+              "party-object pt-9 max-w-5xl mx-auto sm:px-6 lg:px-8 w:full shadow-2xl bg-white sm:rounded-lg",
+          },
+          [
+            _c("div", { staticClass: "bg-gray overflow-hidden" }, [
+              _c("div", { staticClass: "flex flex-row content-evenly" }, [
+                _c("div", { staticClass: "w-1/2" }, [
+                  _c("a", { attrs: { href: "/profiles/" + party.host.id } }, [
                     _vm._v(
-                      " \n                            invited you to watch\n                            "
+                      "\n                                " +
+                        _vm._s(party.host.username) +
+                        "\n                            "
                     ),
-                    _c("a", { attrs: { href: "/movies/" + party.movie.id } }, [
-                      _vm._v(
-                        "\n                                " +
-                          _vm._s(party.movie.title) +
-                          "  \n                            "
-                      ),
-                    ]),
+                  ]),
+                  _vm._v(
+                    " \n                            invited you to watch\n                            "
+                  ),
+                  _c("a", { attrs: { href: "/movies/" + party.movie.id } }, [
+                    _vm._v(
+                      "\n                                " +
+                        _vm._s(party.movie.title) +
+                        "  \n                            "
+                    ),
                   ]),
                 ]),
-                _vm._v(" "),
-                _c("br"),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "party-list flex flex-row content-evenly" },
-                  [
-                    _c("div", { staticClass: "party-button-parent" }, [
-                      _c(
-                        "div",
-                        { staticClass: "party-button button-first w-1/6 px-4" },
-                        [
-                          _c(
-                            "a",
-                            {
-                              staticClass:
-                                "float-left text-right bg-gradient-to-br from-lime-400 via-green-500 to-emerald-400 hover:bg-green-700 text-white font-bold px-6 rounded-lg",
-                              attrs: { href: "/watchparty/" + party.id },
-                            },
-                            [_vm._v("Accept")]
-                          ),
-                        ]
-                      ),
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "party-button-parent" }, [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "party-button button-second w-1/6 px-4",
-                        },
-                        [
-                          _c(
-                            "a",
-                            {
-                              staticClass:
-                                "px-4 float-left text-right bg-transparent bg-gradient-to-br from-red-500 via-orange-500 to-red-500 text-white font-semibold hover:text-white px-4 hover:border-transparent rounded-lg px-6",
-                              attrs: { href: "/watchparty/" + party.id },
-                            },
-                            [_vm._v("Decline")]
-                          ),
-                        ]
-                      ),
-                    ]),
-                  ]
-                ),
-                _vm._v(" "),
-                _c("br"),
               ]),
-            ]
-          ),
-        ])
-      }),
-      _vm._v(" "),
-      _c("br"),
-    ],
-    2
+              _vm._v(" "),
+              _c("br"),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "party-list flex flex-row content-evenly" },
+                [
+                  _c("div", { staticClass: "party-button-parent" }, [
+                    _c(
+                      "div",
+                      { staticClass: "party-button button-first w-1/6 px-4" },
+                      [
+                        _c(
+                          "a",
+                          {
+                            staticClass:
+                              "float-left text-right bg-gradient-to-br from-lime-400 via-green-500 to-emerald-400 hover:bg-green-700 text-white font-bold px-6 rounded-lg",
+                            attrs: { href: "/watchparty/" + party.id },
+                          },
+                          [_vm._v("Accept")]
+                        ),
+                      ]
+                    ),
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "party-button-parent" }, [
+                    _c(
+                      "div",
+                      { staticClass: "party-button button-second w-1/6 px-4" },
+                      [
+                        _c(
+                          "a",
+                          {
+                            staticClass:
+                              "px-4 float-left text-right bg-transparent bg-gradient-to-br from-red-500 via-orange-500 to-red-500 text-white font-semibold hover:text-white px-4 hover:border-transparent rounded-lg px-6",
+                            attrs: { href: "/watchparty/" + party.id },
+                          },
+                          [_vm._v("Decline")]
+                        ),
+                      ]
+                    ),
+                  ]),
+                ]
+              ),
+              _vm._v(" "),
+              _c("br"),
+            ]),
+          ]
+        ),
+      ])
+    }),
+    0
   )
 }
 var staticRenderFns = []

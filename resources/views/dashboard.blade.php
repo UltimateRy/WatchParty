@@ -5,24 +5,33 @@
         </h2>
     </x-slot>
 
-    <div class="window mx-auto h-screen py-6 bg-[#132152]">
-        <div class=" pb-4 mx-auto sm:px-6 lg:px-8 w:full ">  
-            <a class="float-left text-center bg-green-500 
-            hover:bg-green-700 text-white font-bold py-4 px-8 rounded-full" 
-            href="{{ route('parties.create') }}">
-            <p class="text-3xl font-bold ">Host New Party
-            </p>
-            </a>
-        </div>
-        <div class="w-4/12 mx-auto sm:px-12 float-right">
-            <div class="p-4 bg-white overflow-hidden shadow-sm sm:rounded-lg bg-[#839efd]">
-                <div class="p-6 bg-white border-b border-gray-200 text-blue-600 font-bold text-lg text-center sm:rounded-lg"  >
-                        INVITES                
+    <div class="window mx-auto h-screen py-6 bg-[#9AD4FE]">
+
+        <div class="flex flex-row">
+
+            <div class ="w-8/12 mx-auto sm:px-12">
+                <div class="w-full overflow-hidden shadow-sm sm:rounded-lg bg-white">
+                    <div class="pb-12 pt-8 w:full sm:-my-px">  
+                        <a class="text-center bg-indigo-500 
+                                hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full inline-flex items-center" 
+                                href="{{ route('parties.create') }}">
+                                <svg class="mr-2 fill-white fill-current h-6 w-6" xmlns="http://www.w3.org/2000/svg"> <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z"/></svg>
+                                <span class="text-3xl font-bold h-8"> Create Party
+                                </span>
+                        </a>
+                    </div>
+                    
                 </div>
+            </div>
+            <div class="w-4/12 pr-12 h-0 bg-[#9AD4FE] text-blue-600 font-bold text-lg text-center sm:rounded-lg"  >
+                <div class="bg-white sm:rounded-lg py-6 shadow-lg">
+                    INVITES    
+                </div>            
                 <div id="app">
                     <party-list :initial-parties="{{ $parties }}" :user="{{ $user }}"></party-list>
                 </div>
             </div>
+        </div>
         </div>
     </div> 
 </x-app-layout>
@@ -35,7 +44,7 @@
 }
 .window {
     opacity: 0;
-    animation: revealWindow .5s forwards
+    animation: revealWindow 1.3s forwards
 }
 @keyframes revealInvites {
     0% {
@@ -48,7 +57,7 @@
 }
 @keyframes revealWindow {
     0% {
-        transform: translateY(-300px)
+        transform: translateY(300px)
     }
     100% {
         opacity: 1;

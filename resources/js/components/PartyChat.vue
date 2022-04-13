@@ -1,8 +1,14 @@
 <template>
     <div>
+        <ul class="chat h-full overflow-auto">
+            <div v-for="message in messages" :message="message" :key="message.id">
+                {{message}}
+                
+            </div>
+        </ul>
         <div class="panel-footer">
             <div class="input-group">
-                <input id="btn-input" type="text" class="px-10 form-control input-sm bg-blue-100 max-width-32" placeholder="Message..." v-model="newMessage" @keyup.enter="store()" autofocus />
+                <input id="btn-input" type="text" class="w-full form-control input-sm bg-blue-100 min-width-32" placeholder="Message..." v-model="newMessage" @keyup.enter="store()" autofocus />
                 <br>
                 <br>
                 <span class="input-group-btn">
@@ -11,12 +17,7 @@
             </div>
         </div>
         <br>
-        <ul class="chat">
-            <div v-for="message in messages" :message="message" :key="message.id">
-                {{message}}
-                
-            </div>
-        </ul>
+        
     </div>
 </template>
 
