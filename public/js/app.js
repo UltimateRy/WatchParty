@@ -40,6 +40,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "countBits": () => (/* binding */ countBits),
 /* harmony export */   "countBytes": () => (/* binding */ countBytes),
 /* harmony export */   "padStart": () => (/* binding */ padStart),
+/* harmony export */   "isArrayBufferView": () => (/* binding */ isArrayBufferView),
 /* harmony export */   "isTypedArray": () => (/* binding */ isTypedArray),
 /* harmony export */   "toUint8": () => (/* binding */ toUint8),
 /* harmony export */   "toHexString": () => (/* binding */ toHexString),
@@ -87,8 +88,15 @@ var padStart = function padStart(b, len, str) {
 
   return (repeat(str, len) + b.toString()).slice(-len);
 };
+var isArrayBufferView = function isArrayBufferView(obj) {
+  if (ArrayBuffer.isView === 'function') {
+    return ArrayBuffer.isView(obj);
+  }
+
+  return obj && obj.buffer instanceof ArrayBuffer;
+};
 var isTypedArray = function isTypedArray(obj) {
-  return ArrayBuffer.isView(obj);
+  return isArrayBufferView(obj);
 };
 var toUint8 = function toUint8(bytes) {
   if (bytes instanceof Uint8Array) {
@@ -1522,6 +1530,41 @@ var getId3Offset = function getId3Offset(bytes, offset) {
   // they should not.
 
   return getId3Offset(bytes, offset);
+};
+
+/***/ }),
+
+/***/ "./node_modules/@videojs/vhs-utils/es/media-groups.js":
+/*!************************************************************!*\
+  !*** ./node_modules/@videojs/vhs-utils/es/media-groups.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "forEachMediaGroup": () => (/* binding */ forEachMediaGroup)
+/* harmony export */ });
+/**
+ * Loops through all supported media groups in master and calls the provided
+ * callback for each group
+ *
+ * @param {Object} master
+ *        The parsed master manifest object
+ * @param {string[]} groups
+ *        The media groups to call the callback for
+ * @param {Function} callback
+ *        Callback to call for each media group
+ */
+var forEachMediaGroup = function forEachMediaGroup(master, groups, callback) {
+  groups.forEach(function (mediaType) {
+    for (var groupKey in master.mediaGroups[mediaType]) {
+      for (var labelKey in master.mediaGroups[mediaType][groupKey]) {
+        var mediaProperties = master.mediaGroups[mediaType][groupKey][labelKey];
+        callback(mediaProperties, mediaType, groupKey, labelKey);
+      }
+    }
+  });
 };
 
 /***/ }),
@@ -11394,8 +11437,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 var default_layout = "default";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['initialParties', 'user'],
@@ -11442,6 +11483,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var video_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! video.js */ "./node_modules/video.js/dist/video.es.js");
 /* harmony import */ var video_js_dist_video_js_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! video.js/dist/video-js.css */ "./node_modules/video.js/dist/video-js.css");
+//
 //
 //
 //
@@ -13691,7 +13733,31 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@charset \"UTF-8\";\n.vjs-modal-dialog .vjs-modal-dialog-content, .video-js .vjs-modal-dialog, .vjs-button > .vjs-icon-placeholder:before, .video-js .vjs-big-play-button .vjs-icon-placeholder:before {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n}\n\n.vjs-button > .vjs-icon-placeholder:before, .video-js .vjs-big-play-button .vjs-icon-placeholder:before {\n  text-align: center;\n}\n\n@font-face {\n  font-family: VideoJS;\n  src: url(data:application/font-woff;charset=utf-8;base64,d09GRgABAAAAABDkAAsAAAAAG6gAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADsAAABUIIslek9TLzIAAAFEAAAAPgAAAFZRiV3hY21hcAAAAYQAAADaAAADPv749/pnbHlmAAACYAAAC3AAABHQZg6OcWhlYWQAAA3QAAAAKwAAADYZw251aGhlYQAADfwAAAAdAAAAJA+RCLFobXR4AAAOHAAAABMAAACM744AAGxvY2EAAA4wAAAASAAAAEhF6kqubWF4cAAADngAAAAfAAAAIAE0AIFuYW1lAAAOmAAAASUAAAIK1cf1oHBvc3QAAA/AAAABJAAAAdPExYuNeJxjYGRgYOBiMGCwY2BycfMJYeDLSSzJY5BiYGGAAJA8MpsxJzM9kYEDxgPKsYBpDiBmg4gCACY7BUgAeJxjYGS7wTiBgZWBgaWQ5RkDA8MvCM0cwxDOeI6BgYmBlZkBKwhIc01hcPjI+FGJHcRdyA4RZgQRADK3CxEAAHic7dFZbsMgAEXRS0ycyZnnOeG7y+qC8pU1dHusIOXxuoxaOlwZYWQB0Aea4quIEN4E9LzKbKjzDeM6H/mua6Lmc/p8yhg0lvdYx15ZG8uOLQOGjMp3EzqmzJizYMmKNRu27Nhz4MiJMxeu3Ljz4Ekqm7T8P52G8PP3lnTOVk++Z6iN6QZzNN1F7ptuN7eGOjDUoaGODHVsuvU8MdTO9Hd5aqgzQ50b6sJQl4a6MtS1oW4MdWuoO0PdG+rBUI+GejLUs6FeDPVqqDdDvRvqw1CfhpqM9At0iFLaAAB4nJ1YDXBTVRZ+5/22TUlJ8we0pHlJm7RJf5O8F2j6EymlSPkpxaL8U2xpa3DKj0CBhc2IW4eWKSokIoLsuMqssM64f+jA4HSdWXXXscBq67IOs3FXZ1ZYWVyRFdo899yXtIBQZ90k7717zz3v3HPPOfd854YCCj9cL9dL0RQFOqCbGJnrHb5EayiKIWN8iA/hWBblo6hUWm8TtCDwE80WMJus/irwyxOdxeB0MDb14VNJHnXYoLLSl6FfCUYO9nYPTA8Epg9090LprfbBbZ2hY0UlJUXHQp3/vtWkS6EBv8+rPMq5u9692f/dNxJNiqwC1xPE9TCUgCsSdQWgE3XQD25lkG4CN2xmTcOXWBOyser6RN6KnGbKSbmQ3+d0OI1m2W8QzLLkI2sykrWAgJJEtA8vGGW/2Q+CmT3n8zS9wZwu2DCvtuZKZN3xkrLh36yCZuUomQSqGpY8t/25VfHVhw8z4ebGBtfLb0ya9PCaDc+8dGTvk2dsh6z7WzvowlXKUSWo9MJ15a3KrEP2loOr2Ojhw6iW6hf2BDdEccQvZGpaAy7YovSwq8kr7HGllxpd71rkS6G0Sf11sl9OvMK1+jwPPODxjUwkOim9CU3ix1wNjXDfmJSEn618Bs6lpWwUpU+8PCqLMY650zjq8VhCIP17NEKTx3eaLL+s5Pi6yJWaWjTHLR1jYzPSV9VF/6Ojdb/1kO3Mk3uhHC0x6gc1BjlKQ+nQFxTYdaJkZ7ySVxLBbhR1dsboNXp1tCYKW2LRaEzpYcIx2BKNxaL0ZaUnSqfFoiNhHKR/GkX6PWUSAaJelQaqZL1EpoHNsajSEyPSoJ9IjhIxTdjHLmwZvhRDOiFTY/YeQnvrVZmiTQtGncECXtFTBZLOVwwMRgoXHAkXzMzPn1nAJJ8jYSbMDaqN2waGLzNhih/bZynUBMpIWSg7VYi7DRx2m8ALkIdRCJwI6ArJx2EI8kaDWeTQKeAFk9fjl/1AvwktjQ1P7NjyMGQyfd4vjipX6M/i52D7Cq80kqlcxEcGXRr/FEcgs0u5uGgB4VWuMFfpdn2Re6Hi3PqzmxWKsz6+ae2Pn9hXXw/fqM859UiGC0oKYYILJBqJrsn1Z1E5qOs9rQCiUQRREjm8yJcbHF5cUJufX1vAHlefw0XgUoboS3ETfQlTxBC4SOtuE8VPRJTBSCQSjZCpk7Gqzu+masaZ2y7Zjehho4F3g82BNDkAHpORG4+OCS+f6JTPmtRn/PH1kch6d04sp7AQb25aQ/pqUyXeQ8vrebG8OYQdXOQ+585u0sdW9rqalzRURiJ+9F4MweRFrKUjl1GUYhH1A27WOHw5cTFSFPMo9EeUIGnQTZHIaJ7AHLaOKsOODaNF9jkBjYG2QEsQ2xjMUAx2bBEbeTBWMHwskBjngq56S/yfgkBnWBa4K9sqKtq2t1UI8S9He5XuBRbawAdatrQEAi30Aks2+LM8WeCbalVZkWNylvJ+dqJnzVb+OHlSoKW8nPCP7Rd+CcZ2DdWAGqJ2CBFOphgywFFCFBNtfAbGtNPBCwxvygHeYMZMY9ZboBqwq/pVrsbgN5tkv152ODlbMfiqwGMBgxa4Exz3QhovRIUp6acqZmQzRq0ypDXS2TPLT02YIkQETnOE445oOGxOmXAqUJNNG7XgupMjPq2ua9asrj5yY/yuKteO1Kx0YNJTufrirLe1mZnat7OL6rnUdCWenpW6I8mAnbsY8KWs1PuSovCW9A/Z25PQ24a7cNOqgmTkLmBMgh4THgc4b9k2IVv1/g/F5nGljwPLfOgHAzJzh45V/4+WenTzmMtR5Z7us2Tys909UHqrPY7KbckoxRvRHhmVc3cJGE97uml0R1S0jdULVl7EvZtDFVBF35N9cEdjpgmAiOlFZ+Dtoh93+D3zzHr8RRNZQhnCNMNbcegOvpEwZoL+06cJQ07h+th3fZ/7PVbVC6ngTAV/KoLFuO6+2KFcU651gEb5ugPSIb1D+Xp8V4+k3sEIGnw5mYe4If4k1lFYr6SCzmM2EQ8iWtmwjnBI9kTwe1TlfAmXh7H02by9fW2gsjKwtv0aaURKil4OdV7rDL1MXIFNrhdxohcZXYTnq47WisrKitaObbf5+yvkLi5J6lCNZZ+B6GC38VNBZBDidSS/+mSvh6s+srgC8pyKMvDtt+de3c9fU76ZPfuM8ud4Kv0fyP/LqfepMT/3oZxSqpZaTa1DaQYLY8TFsHYbWYsPoRhRWfL5eSSQbhUGgGC3YLbVMk6PitTFNGpAsNrC6D1VNBKgBHMejaiuRWEWGgsSDBTJjqWIl8kJLlsaLJ2tXDr6xGfT85bM2Q06a46x2HTgvdnV8z5YDy/27J4zt6x2VtkzjoYpkq36kaBr4eQSg7tyiVweWubXZugtadl58ydapfbORfKsDTuZ0OBgx4cfdjCf5tbWNITnL120fdOi1RV1C3uKGzNdwYLcMvZ3BxoPyTOCD1XvXTp7U10gWCVmTV9b3r2z0SkGWovb2hp9I89O8a2smlyaO8muMU+dRmtzp60IzAoFpjLr1n388boLyf0dRvxhsHZ0qbWqDkwqvvpkj4l0fY6EIXRi5sQSrAvsVYwXRy4qJ2EVtD1AN7a0HWth9ymvL1xc3WTUKK/TAHA/bXDVtVWfOMfuGxGZv4Ln/jVr9jc3j1yMv0tndmyt9Vq88Y9gH1wtLX3KWjot5++jWHgAoZZkQ14wGQ20Fli71UmKJAy4xKMSTGbVdybW7FDDAut9XpD5AzWrYO7zQ8qffqF8+Ynd/clrHcdyxGy3a/3+mfNnzC/cBsveTjnTvXf1o6vzOlZw7WtqtdmPK/Errz/6NNtD72zmNOZfbmYdTGHfoofqI79Oc+R2n1lrnL6pOm0Up7kwxhTW12Amm7WYkXR2qYrF2AmgmbAsxZjwy1xpg/m1Je2vrp8v/nz2xpmlBg4E9hrMU341wVpTOh/OfmGvAnra8q6uctr60ZQHV3Q+WMQJykMj8ZsWn2QBOmmHMB+m5pDIpTFonYigiaKAhGEiAHF7EliVnQkjoLVIMPtJpBKHYd3A8GYH9jJzrWwmHx5Qjp7vDAX0suGRym1vtm/9W1/HyR8vczfMs6Sk8DSv855/5dlX9oQq52hT8syyp2rx5Id17IAyAM3wIjQPMOHzytEB64q6D5zT91yNbnx3V/nqnd017S9Y0605k3izoXLpsxde2n38yoOV9s1LcjwzNjbdX6asnBVaBj/6/DwKwPkpcqbDG7BnsXoSqWnUAmottYF6jMSdVyYZh3zVXCjwTiwwHH6sGuRiEHQGzuRX6whZkp123oy1BWE2mEfJ/tvIRtM4ZM5bDXiMsPMaAKOTyc5uL57rqyyc5y5JE5pm1i2S2iUX0CcaQ6lC6Zog7JqSqZmYlosl2K6pwNA84zRnQW6SaALYZQGW5lhCtU/W34N6o+bKfZ8cf3/Cl/+iTX3wBzpOY4mRkeNf3rptycGSshQWgGbYt5jFc2e0+DglIrwl6DVWQ7BuwaJ3Xk1J4VL5urnLl/Wf+gHU/hZoZdKNym6lG+I34FaNeZKcSpJIo2IeCVvpdsDGfKvzJnAwmeD37Ow65ZWwSowpgwX5T69s/rB55dP5BcpgDKFV8p7q2sn/1uc93bVzT/w6UrCqDTWvfCq/oCD/qZXNoUj8BL5Kp6GU017frfNXkAtiiyf/SOCEeLqnd8R/Ql9GlCRfctS6k5chvIBuQ1zCCjoCHL2DHNHIXxMJ3kQeO8lbsUXONeSfA5EjcG6/E+KdhN4bP04vBhdi883+BFBzQbxFbvZzQeY9LNBZc0FNfn5NwfDn6rCTnTw6R8o+gfpf5hCom33cRuiTlss3KHmZjD+BPN+5gXuA2ziS/Q73mLxUkpbKN/eqwz5uK0X9F3h2d1V4nGNgZGBgAOJd776+iue3+crAzc4AAje5Bfcg0xz9YHEOBiYQBQA8FQlFAHicY2BkYGBnAAGOPgaG//85+hkYGVCBMgBGGwNYAAAAeJxjYGBgYB8EmKOPgQEAQ04BfgAAAAAAAA4AaAB+AMwA4AECAUIBbAGYAcICGAJYArQC4AMwA7AD3gQwBJYE3AUkBWYFigYgBmYGtAbqB1gIEghYCG4IhAi2COh4nGNgZGBgUGYoZWBnAAEmIOYCQgaG/2A+AwAYCQG2AHicXZBNaoNAGIZfE5PQCKFQ2lUps2oXBfOzzAESyDKBQJdGR2NQR3QSSE/QE/QEPUUPUHqsvsrXjTMw83zPvPMNCuAWP3DQDAejdm1GjzwS7pMmwi75XngAD4/CQ/oX4TFe4Qt7uMMbOzjuDc0EmXCP/C7cJ38Iu+RP4QEe8CU8pP8WHmOPX2EPz87TPo202ey2OjlnQSXV/6arOjWFmvszMWtd6CqwOlKHq6ovycLaWMWVydXKFFZnmVFlZU46tP7R2nI5ncbi/dDkfDtFBA2DDXbYkhKc+V0Bqs5Zt9JM1HQGBRTm/EezTmZNKtpcAMs9Yu6AK9caF76zoLWIWcfMGOSkVduvSWechqZsz040Ib2PY3urxBJTzriT95lipz+TN1fmAAAAeJxtkMl2wjAMRfOAhABlKm2h80C3+ajgCKKDY6cegP59TYBzukAL+z1Zsq8ctaJTTKPrsUQLbXQQI0EXKXroY4AbDDHCGBNMcYsZ7nCPB8yxwCOe8IwXvOIN7/jAJ76wxHfUqWX+OzgumWAjJMV17i0Ndlr6irLKO+qftdT7i6y4uFSUvCknay+lFYZIZaQcmfH/xIFdYn98bqhra1aKTM/6lWMnyaYirx1rFUQZFBkb2zJUtoXeJCeg0WnLtHeSFc3OtrnozNwqi0TkSpBMDB1nSde5oJXW23hTS2/T0LilglXX7dmFVxLnq5U0vYATHFk3zX3BOisoQHNDFDeZnqKDy9hRNawN7Vh727hFzcJ5c8TILrKZfH7tIPxAFP0BpLeJPA==) format(\"woff\");\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-play, .video-js .vjs-play-control .vjs-icon-placeholder, .video-js .vjs-big-play-button .vjs-icon-placeholder:before {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-play:before, .video-js .vjs-play-control .vjs-icon-placeholder:before, .video-js .vjs-big-play-button .vjs-icon-placeholder:before {\n  content: \"\\f101\";\n}\n\n.vjs-icon-play-circle {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-play-circle:before {\n  content: \"\\f102\";\n}\n\n.vjs-icon-pause, .video-js .vjs-play-control.vjs-playing .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-pause:before, .video-js .vjs-play-control.vjs-playing .vjs-icon-placeholder:before {\n  content: \"\\f103\";\n}\n\n.vjs-icon-volume-mute, .video-js .vjs-mute-control.vjs-vol-0 .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-volume-mute:before, .video-js .vjs-mute-control.vjs-vol-0 .vjs-icon-placeholder:before {\n  content: \"\\f104\";\n}\n\n.vjs-icon-volume-low, .video-js .vjs-mute-control.vjs-vol-1 .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-volume-low:before, .video-js .vjs-mute-control.vjs-vol-1 .vjs-icon-placeholder:before {\n  content: \"\\f105\";\n}\n\n.vjs-icon-volume-mid, .video-js .vjs-mute-control.vjs-vol-2 .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-volume-mid:before, .video-js .vjs-mute-control.vjs-vol-2 .vjs-icon-placeholder:before {\n  content: \"\\f106\";\n}\n\n.vjs-icon-volume-high, .video-js .vjs-mute-control .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-volume-high:before, .video-js .vjs-mute-control .vjs-icon-placeholder:before {\n  content: \"\\f107\";\n}\n\n.vjs-icon-fullscreen-enter, .video-js .vjs-fullscreen-control .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-fullscreen-enter:before, .video-js .vjs-fullscreen-control .vjs-icon-placeholder:before {\n  content: \"\\f108\";\n}\n\n.vjs-icon-fullscreen-exit, .video-js.vjs-fullscreen .vjs-fullscreen-control .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-fullscreen-exit:before, .video-js.vjs-fullscreen .vjs-fullscreen-control .vjs-icon-placeholder:before {\n  content: \"\\f109\";\n}\n\n.vjs-icon-square {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-square:before {\n  content: \"\\f10a\";\n}\n\n.vjs-icon-spinner {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-spinner:before {\n  content: \"\\f10b\";\n}\n\n.vjs-icon-subtitles, .video-js .vjs-subs-caps-button .vjs-icon-placeholder,\n.video-js.video-js:lang(en-GB) .vjs-subs-caps-button .vjs-icon-placeholder,\n.video-js.video-js:lang(en-IE) .vjs-subs-caps-button .vjs-icon-placeholder,\n.video-js.video-js:lang(en-AU) .vjs-subs-caps-button .vjs-icon-placeholder,\n.video-js.video-js:lang(en-NZ) .vjs-subs-caps-button .vjs-icon-placeholder, .video-js .vjs-subtitles-button .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-subtitles:before, .video-js .vjs-subs-caps-button .vjs-icon-placeholder:before,\n.video-js.video-js:lang(en-GB) .vjs-subs-caps-button .vjs-icon-placeholder:before,\n.video-js.video-js:lang(en-IE) .vjs-subs-caps-button .vjs-icon-placeholder:before,\n.video-js.video-js:lang(en-AU) .vjs-subs-caps-button .vjs-icon-placeholder:before,\n.video-js.video-js:lang(en-NZ) .vjs-subs-caps-button .vjs-icon-placeholder:before, .video-js .vjs-subtitles-button .vjs-icon-placeholder:before {\n  content: \"\\f10c\";\n}\n\n.vjs-icon-captions, .video-js:lang(en) .vjs-subs-caps-button .vjs-icon-placeholder,\n.video-js:lang(fr-CA) .vjs-subs-caps-button .vjs-icon-placeholder, .video-js .vjs-captions-button .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-captions:before, .video-js:lang(en) .vjs-subs-caps-button .vjs-icon-placeholder:before,\n.video-js:lang(fr-CA) .vjs-subs-caps-button .vjs-icon-placeholder:before, .video-js .vjs-captions-button .vjs-icon-placeholder:before {\n  content: \"\\f10d\";\n}\n\n.vjs-icon-chapters, .video-js .vjs-chapters-button .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-chapters:before, .video-js .vjs-chapters-button .vjs-icon-placeholder:before {\n  content: \"\\f10e\";\n}\n\n.vjs-icon-share {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-share:before {\n  content: \"\\f10f\";\n}\n\n.vjs-icon-cog {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-cog:before {\n  content: \"\\f110\";\n}\n\n.vjs-icon-circle, .vjs-seek-to-live-control .vjs-icon-placeholder, .video-js .vjs-volume-level, .video-js .vjs-play-progress {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-circle:before, .vjs-seek-to-live-control .vjs-icon-placeholder:before, .video-js .vjs-volume-level:before, .video-js .vjs-play-progress:before {\n  content: \"\\f111\";\n}\n\n.vjs-icon-circle-outline {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-circle-outline:before {\n  content: \"\\f112\";\n}\n\n.vjs-icon-circle-inner-circle {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-circle-inner-circle:before {\n  content: \"\\f113\";\n}\n\n.vjs-icon-hd {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-hd:before {\n  content: \"\\f114\";\n}\n\n.vjs-icon-cancel, .video-js .vjs-control.vjs-close-button .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-cancel:before, .video-js .vjs-control.vjs-close-button .vjs-icon-placeholder:before {\n  content: \"\\f115\";\n}\n\n.vjs-icon-replay, .video-js .vjs-play-control.vjs-ended .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-replay:before, .video-js .vjs-play-control.vjs-ended .vjs-icon-placeholder:before {\n  content: \"\\f116\";\n}\n\n.vjs-icon-facebook {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-facebook:before {\n  content: \"\\f117\";\n}\n\n.vjs-icon-gplus {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-gplus:before {\n  content: \"\\f118\";\n}\n\n.vjs-icon-linkedin {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-linkedin:before {\n  content: \"\\f119\";\n}\n\n.vjs-icon-twitter {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-twitter:before {\n  content: \"\\f11a\";\n}\n\n.vjs-icon-tumblr {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-tumblr:before {\n  content: \"\\f11b\";\n}\n\n.vjs-icon-pinterest {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-pinterest:before {\n  content: \"\\f11c\";\n}\n\n.vjs-icon-audio-description, .video-js .vjs-descriptions-button .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-audio-description:before, .video-js .vjs-descriptions-button .vjs-icon-placeholder:before {\n  content: \"\\f11d\";\n}\n\n.vjs-icon-audio, .video-js .vjs-audio-button .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-audio:before, .video-js .vjs-audio-button .vjs-icon-placeholder:before {\n  content: \"\\f11e\";\n}\n\n.vjs-icon-next-item {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-next-item:before {\n  content: \"\\f11f\";\n}\n\n.vjs-icon-previous-item {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-previous-item:before {\n  content: \"\\f120\";\n}\n\n.vjs-icon-picture-in-picture-enter, .video-js .vjs-picture-in-picture-control .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-picture-in-picture-enter:before, .video-js .vjs-picture-in-picture-control .vjs-icon-placeholder:before {\n  content: \"\\f121\";\n}\n\n.vjs-icon-picture-in-picture-exit, .video-js.vjs-picture-in-picture .vjs-picture-in-picture-control .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-picture-in-picture-exit:before, .video-js.vjs-picture-in-picture .vjs-picture-in-picture-control .vjs-icon-placeholder:before {\n  content: \"\\f122\";\n}\n\n.video-js {\n  display: block;\n  vertical-align: top;\n  box-sizing: border-box;\n  color: #fff;\n  background-color: #000;\n  position: relative;\n  padding: 0;\n  font-size: 10px;\n  line-height: 1;\n  font-weight: normal;\n  font-style: normal;\n  font-family: Arial, Helvetica, sans-serif;\n  word-break: initial;\n}\n.video-js:-moz-full-screen {\n  position: absolute;\n}\n.video-js:-webkit-full-screen {\n  width: 100% !important;\n  height: 100% !important;\n}\n\n.video-js[tabindex=\"-1\"] {\n  outline: none;\n}\n\n.video-js *,\n.video-js *:before,\n.video-js *:after {\n  box-sizing: inherit;\n}\n\n.video-js ul {\n  font-family: inherit;\n  font-size: inherit;\n  line-height: inherit;\n  list-style-position: outside;\n  margin-left: 0;\n  margin-right: 0;\n  margin-top: 0;\n  margin-bottom: 0;\n}\n\n.video-js.vjs-fluid,\n.video-js.vjs-16-9,\n.video-js.vjs-4-3,\n.video-js.vjs-9-16,\n.video-js.vjs-1-1 {\n  width: 100%;\n  max-width: 100%;\n  height: 0;\n}\n\n.video-js.vjs-16-9 {\n  padding-top: 56.25%;\n}\n\n.video-js.vjs-4-3 {\n  padding-top: 75%;\n}\n\n.video-js.vjs-9-16 {\n  padding-top: 177.7777777778%;\n}\n\n.video-js.vjs-1-1 {\n  padding-top: 100%;\n}\n\n.video-js.vjs-fill {\n  width: 100%;\n  height: 100%;\n}\n\n.video-js .vjs-tech {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n}\n\nbody.vjs-full-window {\n  padding: 0;\n  margin: 0;\n  height: 100%;\n}\n\n.vjs-full-window .video-js.vjs-fullscreen {\n  position: fixed;\n  overflow: hidden;\n  z-index: 1000;\n  left: 0;\n  top: 0;\n  bottom: 0;\n  right: 0;\n}\n\n.video-js.vjs-fullscreen:not(.vjs-ios-native-fs) {\n  width: 100% !important;\n  height: 100% !important;\n  padding-top: 0 !important;\n}\n\n.video-js.vjs-fullscreen.vjs-user-inactive {\n  cursor: none;\n}\n\n.vjs-hidden {\n  display: none !important;\n}\n\n.vjs-disabled {\n  opacity: 0.5;\n  cursor: default;\n}\n\n.video-js .vjs-offscreen {\n  height: 1px;\n  left: -9999px;\n  position: absolute;\n  top: 0;\n  width: 1px;\n}\n\n.vjs-lock-showing {\n  display: block !important;\n  opacity: 1 !important;\n  visibility: visible !important;\n}\n\n.vjs-no-js {\n  padding: 20px;\n  color: #fff;\n  background-color: #000;\n  font-size: 18px;\n  font-family: Arial, Helvetica, sans-serif;\n  text-align: center;\n  width: 300px;\n  height: 150px;\n  margin: 0px auto;\n}\n\n.vjs-no-js a,\n.vjs-no-js a:visited {\n  color: #66A8CC;\n}\n\n.video-js .vjs-big-play-button {\n  font-size: 3em;\n  line-height: 1.5em;\n  height: 1.63332em;\n  width: 3em;\n  display: block;\n  position: absolute;\n  top: 10px;\n  left: 10px;\n  padding: 0;\n  cursor: pointer;\n  opacity: 1;\n  border: 0.06666em solid #fff;\n  background-color: #2B333F;\n  background-color: rgba(43, 51, 63, 0.7);\n  border-radius: 0.3em;\n  transition: all 0.4s;\n}\n.vjs-big-play-centered .vjs-big-play-button {\n  top: 50%;\n  left: 50%;\n  margin-top: -0.81666em;\n  margin-left: -1.5em;\n}\n\n.video-js:hover .vjs-big-play-button,\n.video-js .vjs-big-play-button:focus {\n  border-color: #fff;\n  background-color: #73859f;\n  background-color: rgba(115, 133, 159, 0.5);\n  transition: all 0s;\n}\n\n.vjs-controls-disabled .vjs-big-play-button,\n.vjs-has-started .vjs-big-play-button,\n.vjs-using-native-controls .vjs-big-play-button,\n.vjs-error .vjs-big-play-button {\n  display: none;\n}\n\n.vjs-has-started.vjs-paused.vjs-show-big-play-button-on-pause .vjs-big-play-button {\n  display: block;\n}\n\n.video-js button {\n  background: none;\n  border: none;\n  color: inherit;\n  display: inline-block;\n  font-size: inherit;\n  line-height: inherit;\n  text-transform: none;\n  text-decoration: none;\n  transition: none;\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n}\n\n.vjs-control .vjs-button {\n  width: 100%;\n  height: 100%;\n}\n\n.video-js .vjs-control.vjs-close-button {\n  cursor: pointer;\n  height: 3em;\n  position: absolute;\n  right: 0;\n  top: 0.5em;\n  z-index: 2;\n}\n.video-js .vjs-modal-dialog {\n  background: rgba(0, 0, 0, 0.8);\n  background: linear-gradient(180deg, rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0));\n  overflow: auto;\n}\n\n.video-js .vjs-modal-dialog > * {\n  box-sizing: border-box;\n}\n\n.vjs-modal-dialog .vjs-modal-dialog-content {\n  font-size: 1.2em;\n  line-height: 1.5;\n  padding: 20px 24px;\n  z-index: 1;\n}\n\n.vjs-menu-button {\n  cursor: pointer;\n}\n\n.vjs-menu-button.vjs-disabled {\n  cursor: default;\n}\n\n.vjs-workinghover .vjs-menu-button.vjs-disabled:hover .vjs-menu {\n  display: none;\n}\n\n.vjs-menu .vjs-menu-content {\n  display: block;\n  padding: 0;\n  margin: 0;\n  font-family: Arial, Helvetica, sans-serif;\n  overflow: auto;\n}\n\n.vjs-menu .vjs-menu-content > * {\n  box-sizing: border-box;\n}\n\n.vjs-scrubbing .vjs-control.vjs-menu-button:hover .vjs-menu {\n  display: none;\n}\n\n.vjs-menu li {\n  list-style: none;\n  margin: 0;\n  padding: 0.2em 0;\n  line-height: 1.4em;\n  font-size: 1.2em;\n  text-align: center;\n  text-transform: lowercase;\n}\n\n.vjs-menu li.vjs-menu-item:focus,\n.vjs-menu li.vjs-menu-item:hover,\n.js-focus-visible .vjs-menu li.vjs-menu-item:hover {\n  background-color: #73859f;\n  background-color: rgba(115, 133, 159, 0.5);\n}\n\n.vjs-menu li.vjs-selected,\n.vjs-menu li.vjs-selected:focus,\n.vjs-menu li.vjs-selected:hover,\n.js-focus-visible .vjs-menu li.vjs-selected:hover {\n  background-color: #fff;\n  color: #2B333F;\n}\n\n.video-js .vjs-menu *:not(.vjs-selected):focus:not(:focus-visible),\n.js-focus-visible .vjs-menu *:not(.vjs-selected):focus:not(.focus-visible) {\n  background: none;\n}\n\n.vjs-menu li.vjs-menu-title {\n  text-align: center;\n  text-transform: uppercase;\n  font-size: 1em;\n  line-height: 2em;\n  padding: 0;\n  margin: 0 0 0.3em 0;\n  font-weight: bold;\n  cursor: default;\n}\n\n.vjs-menu-button-popup .vjs-menu {\n  display: none;\n  position: absolute;\n  bottom: 0;\n  width: 10em;\n  left: -3em;\n  height: 0em;\n  margin-bottom: 1.5em;\n  border-top-color: rgba(43, 51, 63, 0.7);\n}\n\n.vjs-menu-button-popup .vjs-menu .vjs-menu-content {\n  background-color: #2B333F;\n  background-color: rgba(43, 51, 63, 0.7);\n  position: absolute;\n  width: 100%;\n  bottom: 1.5em;\n  max-height: 15em;\n}\n\n.vjs-layout-tiny .vjs-menu-button-popup .vjs-menu .vjs-menu-content,\n.vjs-layout-x-small .vjs-menu-button-popup .vjs-menu .vjs-menu-content {\n  max-height: 5em;\n}\n\n.vjs-layout-small .vjs-menu-button-popup .vjs-menu .vjs-menu-content {\n  max-height: 10em;\n}\n\n.vjs-layout-medium .vjs-menu-button-popup .vjs-menu .vjs-menu-content {\n  max-height: 14em;\n}\n\n.vjs-layout-large .vjs-menu-button-popup .vjs-menu .vjs-menu-content,\n.vjs-layout-x-large .vjs-menu-button-popup .vjs-menu .vjs-menu-content,\n.vjs-layout-huge .vjs-menu-button-popup .vjs-menu .vjs-menu-content {\n  max-height: 25em;\n}\n\n.vjs-workinghover .vjs-menu-button-popup.vjs-hover .vjs-menu,\n.vjs-menu-button-popup .vjs-menu.vjs-lock-showing {\n  display: block;\n}\n\n.video-js .vjs-menu-button-inline {\n  transition: all 0.4s;\n  overflow: hidden;\n}\n\n.video-js .vjs-menu-button-inline:before {\n  width: 2.222222222em;\n}\n\n.video-js .vjs-menu-button-inline:hover,\n.video-js .vjs-menu-button-inline:focus,\n.video-js .vjs-menu-button-inline.vjs-slider-active,\n.video-js.vjs-no-flex .vjs-menu-button-inline {\n  width: 12em;\n}\n\n.vjs-menu-button-inline .vjs-menu {\n  opacity: 0;\n  height: 100%;\n  width: auto;\n  position: absolute;\n  left: 4em;\n  top: 0;\n  padding: 0;\n  margin: 0;\n  transition: all 0.4s;\n}\n\n.vjs-menu-button-inline:hover .vjs-menu,\n.vjs-menu-button-inline:focus .vjs-menu,\n.vjs-menu-button-inline.vjs-slider-active .vjs-menu {\n  display: block;\n  opacity: 1;\n}\n\n.vjs-no-flex .vjs-menu-button-inline .vjs-menu {\n  display: block;\n  opacity: 1;\n  position: relative;\n  width: auto;\n}\n\n.vjs-no-flex .vjs-menu-button-inline:hover .vjs-menu,\n.vjs-no-flex .vjs-menu-button-inline:focus .vjs-menu,\n.vjs-no-flex .vjs-menu-button-inline.vjs-slider-active .vjs-menu {\n  width: auto;\n}\n\n.vjs-menu-button-inline .vjs-menu-content {\n  width: auto;\n  height: 100%;\n  margin: 0;\n  overflow: hidden;\n}\n\n.video-js .vjs-control-bar {\n  display: none;\n  width: 100%;\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: 3em;\n  background-color: #2B333F;\n  background-color: rgba(43, 51, 63, 0.7);\n}\n\n.vjs-has-started .vjs-control-bar {\n  display: flex;\n  visibility: visible;\n  opacity: 1;\n  transition: visibility 0.1s, opacity 0.1s;\n}\n\n.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar {\n  visibility: visible;\n  opacity: 0;\n  pointer-events: none;\n  transition: visibility 1s, opacity 1s;\n}\n\n.vjs-controls-disabled .vjs-control-bar,\n.vjs-using-native-controls .vjs-control-bar,\n.vjs-error .vjs-control-bar {\n  display: none !important;\n}\n\n.vjs-audio.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar {\n  opacity: 1;\n  visibility: visible;\n}\n\n.vjs-has-started.vjs-no-flex .vjs-control-bar {\n  display: table;\n}\n\n.video-js .vjs-control {\n  position: relative;\n  text-align: center;\n  margin: 0;\n  padding: 0;\n  height: 100%;\n  width: 4em;\n  flex: none;\n}\n\n.vjs-button > .vjs-icon-placeholder:before {\n  font-size: 1.8em;\n  line-height: 1.67;\n}\n\n.vjs-button > .vjs-icon-placeholder {\n  display: block;\n}\n\n.video-js .vjs-control:focus:before,\n.video-js .vjs-control:hover:before,\n.video-js .vjs-control:focus {\n  text-shadow: 0em 0em 1em white;\n}\n\n.video-js .vjs-control-text {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px;\n}\n\n.vjs-no-flex .vjs-control {\n  display: table-cell;\n  vertical-align: middle;\n}\n\n.video-js .vjs-custom-control-spacer {\n  display: none;\n}\n\n.video-js .vjs-progress-control {\n  cursor: pointer;\n  flex: auto;\n  display: flex;\n  align-items: center;\n  min-width: 4em;\n  touch-action: none;\n}\n\n.video-js .vjs-progress-control.disabled {\n  cursor: default;\n}\n\n.vjs-live .vjs-progress-control {\n  display: none;\n}\n\n.vjs-liveui .vjs-progress-control {\n  display: flex;\n  align-items: center;\n}\n\n.vjs-no-flex .vjs-progress-control {\n  width: auto;\n}\n\n.video-js .vjs-progress-holder {\n  flex: auto;\n  transition: all 0.2s;\n  height: 0.3em;\n}\n\n.video-js .vjs-progress-control .vjs-progress-holder {\n  margin: 0 10px;\n}\n\n.video-js .vjs-progress-control:hover .vjs-progress-holder {\n  font-size: 1.6666666667em;\n}\n\n.video-js .vjs-progress-control:hover .vjs-progress-holder.disabled {\n  font-size: 1em;\n}\n\n.video-js .vjs-progress-holder .vjs-play-progress,\n.video-js .vjs-progress-holder .vjs-load-progress,\n.video-js .vjs-progress-holder .vjs-load-progress div {\n  position: absolute;\n  display: block;\n  height: 100%;\n  margin: 0;\n  padding: 0;\n  width: 0;\n}\n\n.video-js .vjs-play-progress {\n  background-color: #fff;\n}\n.video-js .vjs-play-progress:before {\n  font-size: 0.9em;\n  position: absolute;\n  right: -0.5em;\n  top: -0.3333333333em;\n  z-index: 1;\n}\n\n.video-js .vjs-load-progress {\n  background: rgba(115, 133, 159, 0.5);\n}\n\n.video-js .vjs-load-progress div {\n  background: rgba(115, 133, 159, 0.75);\n}\n\n.video-js .vjs-time-tooltip {\n  background-color: #fff;\n  background-color: rgba(255, 255, 255, 0.8);\n  border-radius: 0.3em;\n  color: #000;\n  float: right;\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 1em;\n  padding: 6px 8px 8px 8px;\n  pointer-events: none;\n  position: absolute;\n  top: -3.4em;\n  visibility: hidden;\n  z-index: 1;\n}\n\n.video-js .vjs-progress-holder:focus .vjs-time-tooltip {\n  display: none;\n}\n\n.video-js .vjs-progress-control:hover .vjs-time-tooltip,\n.video-js .vjs-progress-control:hover .vjs-progress-holder:focus .vjs-time-tooltip {\n  display: block;\n  font-size: 0.6em;\n  visibility: visible;\n}\n\n.video-js .vjs-progress-control.disabled:hover .vjs-time-tooltip {\n  font-size: 1em;\n}\n\n.video-js .vjs-progress-control .vjs-mouse-display {\n  display: none;\n  position: absolute;\n  width: 1px;\n  height: 100%;\n  background-color: #000;\n  z-index: 1;\n}\n\n.vjs-no-flex .vjs-progress-control .vjs-mouse-display {\n  z-index: 0;\n}\n\n.video-js .vjs-progress-control:hover .vjs-mouse-display {\n  display: block;\n}\n\n.video-js.vjs-user-inactive .vjs-progress-control .vjs-mouse-display {\n  visibility: hidden;\n  opacity: 0;\n  transition: visibility 1s, opacity 1s;\n}\n\n.video-js.vjs-user-inactive.vjs-no-flex .vjs-progress-control .vjs-mouse-display {\n  display: none;\n}\n\n.vjs-mouse-display .vjs-time-tooltip {\n  color: #fff;\n  background-color: #000;\n  background-color: rgba(0, 0, 0, 0.8);\n}\n\n.video-js .vjs-slider {\n  position: relative;\n  cursor: pointer;\n  padding: 0;\n  margin: 0 0.45em 0 0.45em;\n  /* iOS Safari */\n  -webkit-touch-callout: none;\n  /* Safari */\n  -webkit-user-select: none;\n  /* Konqueror HTML */\n  /* Firefox */\n  -moz-user-select: none;\n  /* Internet Explorer/Edge */\n  -ms-user-select: none;\n  /* Non-prefixed version, currently supported by Chrome and Opera */\n  user-select: none;\n  background-color: #73859f;\n  background-color: rgba(115, 133, 159, 0.5);\n}\n\n.video-js .vjs-slider.disabled {\n  cursor: default;\n}\n\n.video-js .vjs-slider:focus {\n  text-shadow: 0em 0em 1em white;\n  box-shadow: 0 0 1em #fff;\n}\n\n.video-js .vjs-mute-control {\n  cursor: pointer;\n  flex: none;\n}\n.video-js .vjs-volume-control {\n  cursor: pointer;\n  margin-right: 1em;\n  display: flex;\n}\n\n.video-js .vjs-volume-control.vjs-volume-horizontal {\n  width: 5em;\n}\n\n.video-js .vjs-volume-panel .vjs-volume-control {\n  visibility: visible;\n  opacity: 0;\n  width: 1px;\n  height: 1px;\n  margin-left: -1px;\n}\n\n.video-js .vjs-volume-panel {\n  transition: width 1s;\n}\n.video-js .vjs-volume-panel.vjs-hover .vjs-volume-control, .video-js .vjs-volume-panel:active .vjs-volume-control, .video-js .vjs-volume-panel:focus .vjs-volume-control, .video-js .vjs-volume-panel .vjs-volume-control:active, .video-js .vjs-volume-panel.vjs-hover .vjs-mute-control ~ .vjs-volume-control, .video-js .vjs-volume-panel .vjs-volume-control.vjs-slider-active {\n  visibility: visible;\n  opacity: 1;\n  position: relative;\n  transition: visibility 0.1s, opacity 0.1s, height 0.1s, width 0.1s, left 0s, top 0s;\n}\n.video-js .vjs-volume-panel.vjs-hover .vjs-volume-control.vjs-volume-horizontal, .video-js .vjs-volume-panel:active .vjs-volume-control.vjs-volume-horizontal, .video-js .vjs-volume-panel:focus .vjs-volume-control.vjs-volume-horizontal, .video-js .vjs-volume-panel .vjs-volume-control:active.vjs-volume-horizontal, .video-js .vjs-volume-panel.vjs-hover .vjs-mute-control ~ .vjs-volume-control.vjs-volume-horizontal, .video-js .vjs-volume-panel .vjs-volume-control.vjs-slider-active.vjs-volume-horizontal {\n  width: 5em;\n  height: 3em;\n  margin-right: 0;\n}\n.video-js .vjs-volume-panel.vjs-hover .vjs-volume-control.vjs-volume-vertical, .video-js .vjs-volume-panel:active .vjs-volume-control.vjs-volume-vertical, .video-js .vjs-volume-panel:focus .vjs-volume-control.vjs-volume-vertical, .video-js .vjs-volume-panel .vjs-volume-control:active.vjs-volume-vertical, .video-js .vjs-volume-panel.vjs-hover .vjs-mute-control ~ .vjs-volume-control.vjs-volume-vertical, .video-js .vjs-volume-panel .vjs-volume-control.vjs-slider-active.vjs-volume-vertical {\n  left: -3.5em;\n  transition: left 0s;\n}\n.video-js .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-hover, .video-js .vjs-volume-panel.vjs-volume-panel-horizontal:active, .video-js .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-slider-active {\n  width: 10em;\n  transition: width 0.1s;\n}\n.video-js .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-mute-toggle-only {\n  width: 4em;\n}\n\n.video-js .vjs-volume-panel .vjs-volume-control.vjs-volume-vertical {\n  height: 8em;\n  width: 3em;\n  left: -3000em;\n  transition: visibility 1s, opacity 1s, height 1s 1s, width 1s 1s, left 1s 1s, top 1s 1s;\n}\n\n.video-js .vjs-volume-panel .vjs-volume-control.vjs-volume-horizontal {\n  transition: visibility 1s, opacity 1s, height 1s 1s, width 1s, left 1s 1s, top 1s 1s;\n}\n\n.video-js.vjs-no-flex .vjs-volume-panel .vjs-volume-control.vjs-volume-horizontal {\n  width: 5em;\n  height: 3em;\n  visibility: visible;\n  opacity: 1;\n  position: relative;\n  transition: none;\n}\n\n.video-js.vjs-no-flex .vjs-volume-control.vjs-volume-vertical,\n.video-js.vjs-no-flex .vjs-volume-panel .vjs-volume-control.vjs-volume-vertical {\n  position: absolute;\n  bottom: 3em;\n  left: 0.5em;\n}\n\n.video-js .vjs-volume-panel {\n  display: flex;\n}\n\n.video-js .vjs-volume-bar {\n  margin: 1.35em 0.45em;\n}\n\n.vjs-volume-bar.vjs-slider-horizontal {\n  width: 5em;\n  height: 0.3em;\n}\n\n.vjs-volume-bar.vjs-slider-vertical {\n  width: 0.3em;\n  height: 5em;\n  margin: 1.35em auto;\n}\n\n.video-js .vjs-volume-level {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  background-color: #fff;\n}\n.video-js .vjs-volume-level:before {\n  position: absolute;\n  font-size: 0.9em;\n  z-index: 1;\n}\n\n.vjs-slider-vertical .vjs-volume-level {\n  width: 0.3em;\n}\n.vjs-slider-vertical .vjs-volume-level:before {\n  top: -0.5em;\n  left: -0.3em;\n  z-index: 1;\n}\n\n.vjs-slider-horizontal .vjs-volume-level {\n  height: 0.3em;\n}\n.vjs-slider-horizontal .vjs-volume-level:before {\n  top: -0.3em;\n  right: -0.5em;\n}\n\n.video-js .vjs-volume-panel.vjs-volume-panel-vertical {\n  width: 4em;\n}\n\n.vjs-volume-bar.vjs-slider-vertical .vjs-volume-level {\n  height: 100%;\n}\n\n.vjs-volume-bar.vjs-slider-horizontal .vjs-volume-level {\n  width: 100%;\n}\n\n.video-js .vjs-volume-vertical {\n  width: 3em;\n  height: 8em;\n  bottom: 8em;\n  background-color: #2B333F;\n  background-color: rgba(43, 51, 63, 0.7);\n}\n\n.video-js .vjs-volume-horizontal .vjs-menu {\n  left: -2em;\n}\n\n.video-js .vjs-volume-tooltip {\n  background-color: #fff;\n  background-color: rgba(255, 255, 255, 0.8);\n  border-radius: 0.3em;\n  color: #000;\n  float: right;\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 1em;\n  padding: 6px 8px 8px 8px;\n  pointer-events: none;\n  position: absolute;\n  top: -3.4em;\n  visibility: hidden;\n  z-index: 1;\n}\n\n.video-js .vjs-volume-control:hover .vjs-volume-tooltip,\n.video-js .vjs-volume-control:hover .vjs-progress-holder:focus .vjs-volume-tooltip {\n  display: block;\n  font-size: 1em;\n  visibility: visible;\n}\n\n.video-js .vjs-volume-vertical:hover .vjs-volume-tooltip,\n.video-js .vjs-volume-vertical:hover .vjs-progress-holder:focus .vjs-volume-tooltip {\n  left: 1em;\n  top: -12px;\n}\n\n.video-js .vjs-volume-control.disabled:hover .vjs-volume-tooltip {\n  font-size: 1em;\n}\n\n.video-js .vjs-volume-control .vjs-mouse-display {\n  display: none;\n  position: absolute;\n  width: 100%;\n  height: 1px;\n  background-color: #000;\n  z-index: 1;\n}\n\n.video-js .vjs-volume-horizontal .vjs-mouse-display {\n  width: 1px;\n  height: 100%;\n}\n\n.vjs-no-flex .vjs-volume-control .vjs-mouse-display {\n  z-index: 0;\n}\n\n.video-js .vjs-volume-control:hover .vjs-mouse-display {\n  display: block;\n}\n\n.video-js.vjs-user-inactive .vjs-volume-control .vjs-mouse-display {\n  visibility: hidden;\n  opacity: 0;\n  transition: visibility 1s, opacity 1s;\n}\n\n.video-js.vjs-user-inactive.vjs-no-flex .vjs-volume-control .vjs-mouse-display {\n  display: none;\n}\n\n.vjs-mouse-display .vjs-volume-tooltip {\n  color: #fff;\n  background-color: #000;\n  background-color: rgba(0, 0, 0, 0.8);\n}\n\n.vjs-poster {\n  display: inline-block;\n  vertical-align: middle;\n  background-repeat: no-repeat;\n  background-position: 50% 50%;\n  background-size: contain;\n  background-color: #000000;\n  cursor: pointer;\n  margin: 0;\n  padding: 0;\n  position: absolute;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  height: 100%;\n}\n\n.vjs-has-started .vjs-poster {\n  display: none;\n}\n\n.vjs-audio.vjs-has-started .vjs-poster {\n  display: block;\n}\n\n.vjs-using-native-controls .vjs-poster {\n  display: none;\n}\n\n.video-js .vjs-live-control {\n  display: flex;\n  align-items: flex-start;\n  flex: auto;\n  font-size: 1em;\n  line-height: 3em;\n}\n\n.vjs-no-flex .vjs-live-control {\n  display: table-cell;\n  width: auto;\n  text-align: left;\n}\n\n.video-js:not(.vjs-live) .vjs-live-control,\n.video-js.vjs-liveui .vjs-live-control {\n  display: none;\n}\n\n.video-js .vjs-seek-to-live-control {\n  align-items: center;\n  cursor: pointer;\n  flex: none;\n  display: inline-flex;\n  height: 100%;\n  padding-left: 0.5em;\n  padding-right: 0.5em;\n  font-size: 1em;\n  line-height: 3em;\n  width: auto;\n  min-width: 4em;\n}\n\n.vjs-no-flex .vjs-seek-to-live-control {\n  display: table-cell;\n  width: auto;\n  text-align: left;\n}\n\n.video-js.vjs-live:not(.vjs-liveui) .vjs-seek-to-live-control,\n.video-js:not(.vjs-live) .vjs-seek-to-live-control {\n  display: none;\n}\n\n.vjs-seek-to-live-control.vjs-control.vjs-at-live-edge {\n  cursor: auto;\n}\n\n.vjs-seek-to-live-control .vjs-icon-placeholder {\n  margin-right: 0.5em;\n  color: #888;\n}\n\n.vjs-seek-to-live-control.vjs-control.vjs-at-live-edge .vjs-icon-placeholder {\n  color: red;\n}\n\n.video-js .vjs-time-control {\n  flex: none;\n  font-size: 1em;\n  line-height: 3em;\n  min-width: 2em;\n  width: auto;\n  padding-left: 1em;\n  padding-right: 1em;\n}\n\n.vjs-live .vjs-time-control {\n  display: none;\n}\n\n.video-js .vjs-current-time,\n.vjs-no-flex .vjs-current-time {\n  display: none;\n}\n\n.video-js .vjs-duration,\n.vjs-no-flex .vjs-duration {\n  display: none;\n}\n\n.vjs-time-divider {\n  display: none;\n  line-height: 3em;\n}\n\n.vjs-live .vjs-time-divider {\n  display: none;\n}\n\n.video-js .vjs-play-control {\n  cursor: pointer;\n}\n\n.video-js .vjs-play-control .vjs-icon-placeholder {\n  flex: none;\n}\n\n.vjs-text-track-display {\n  position: absolute;\n  bottom: 3em;\n  left: 0;\n  right: 0;\n  top: 0;\n  pointer-events: none;\n}\n\n.video-js.vjs-user-inactive.vjs-playing .vjs-text-track-display {\n  bottom: 1em;\n}\n\n.video-js .vjs-text-track {\n  font-size: 1.4em;\n  text-align: center;\n  margin-bottom: 0.1em;\n}\n\n.vjs-subtitles {\n  color: #fff;\n}\n\n.vjs-captions {\n  color: #fc6;\n}\n\n.vjs-tt-cue {\n  display: block;\n}\n\nvideo::-webkit-media-text-track-display {\n  transform: translateY(-3em);\n}\n\n.video-js.vjs-user-inactive.vjs-playing video::-webkit-media-text-track-display {\n  transform: translateY(-1.5em);\n}\n\n.video-js .vjs-picture-in-picture-control {\n  cursor: pointer;\n  flex: none;\n}\n.video-js .vjs-fullscreen-control {\n  cursor: pointer;\n  flex: none;\n}\n.vjs-playback-rate > .vjs-menu-button,\n.vjs-playback-rate .vjs-playback-rate-value {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n}\n\n.vjs-playback-rate .vjs-playback-rate-value {\n  pointer-events: none;\n  font-size: 1.5em;\n  line-height: 2;\n  text-align: center;\n}\n\n.vjs-playback-rate .vjs-menu {\n  width: 4em;\n  left: 0em;\n}\n\n.vjs-error .vjs-error-display .vjs-modal-dialog-content {\n  font-size: 1.4em;\n  text-align: center;\n}\n\n.vjs-error .vjs-error-display:before {\n  color: #fff;\n  content: \"X\";\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 4em;\n  left: 0;\n  line-height: 1;\n  margin-top: -0.5em;\n  position: absolute;\n  text-shadow: 0.05em 0.05em 0.1em #000;\n  text-align: center;\n  top: 50%;\n  vertical-align: middle;\n  width: 100%;\n}\n\n.vjs-loading-spinner {\n  display: none;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  margin: -25px 0 0 -25px;\n  opacity: 0.85;\n  text-align: left;\n  border: 6px solid rgba(43, 51, 63, 0.7);\n  box-sizing: border-box;\n  background-clip: padding-box;\n  width: 50px;\n  height: 50px;\n  border-radius: 25px;\n  visibility: hidden;\n}\n\n.vjs-seeking .vjs-loading-spinner,\n.vjs-waiting .vjs-loading-spinner {\n  display: block;\n  -webkit-animation: vjs-spinner-show 0s linear 0.3s forwards;\n          animation: vjs-spinner-show 0s linear 0.3s forwards;\n}\n\n.vjs-loading-spinner:before,\n.vjs-loading-spinner:after {\n  content: \"\";\n  position: absolute;\n  margin: -6px;\n  box-sizing: inherit;\n  width: inherit;\n  height: inherit;\n  border-radius: inherit;\n  opacity: 1;\n  border: inherit;\n  border-color: transparent;\n  border-top-color: white;\n}\n\n.vjs-seeking .vjs-loading-spinner:before,\n.vjs-seeking .vjs-loading-spinner:after,\n.vjs-waiting .vjs-loading-spinner:before,\n.vjs-waiting .vjs-loading-spinner:after {\n  -webkit-animation: vjs-spinner-spin 1.1s cubic-bezier(0.6, 0.2, 0, 0.8) infinite, vjs-spinner-fade 1.1s linear infinite;\n  animation: vjs-spinner-spin 1.1s cubic-bezier(0.6, 0.2, 0, 0.8) infinite, vjs-spinner-fade 1.1s linear infinite;\n}\n\n.vjs-seeking .vjs-loading-spinner:before,\n.vjs-waiting .vjs-loading-spinner:before {\n  border-top-color: white;\n}\n\n.vjs-seeking .vjs-loading-spinner:after,\n.vjs-waiting .vjs-loading-spinner:after {\n  border-top-color: white;\n  -webkit-animation-delay: 0.44s;\n  animation-delay: 0.44s;\n}\n\n@keyframes vjs-spinner-show {\n  to {\n    visibility: visible;\n  }\n}\n@-webkit-keyframes vjs-spinner-show {\n  to {\n    visibility: visible;\n  }\n}\n@keyframes vjs-spinner-spin {\n  100% {\n    transform: rotate(360deg);\n  }\n}\n@-webkit-keyframes vjs-spinner-spin {\n  100% {\n    -webkit-transform: rotate(360deg);\n  }\n}\n@keyframes vjs-spinner-fade {\n  0% {\n    border-top-color: #73859f;\n  }\n  20% {\n    border-top-color: #73859f;\n  }\n  35% {\n    border-top-color: white;\n  }\n  60% {\n    border-top-color: #73859f;\n  }\n  100% {\n    border-top-color: #73859f;\n  }\n}\n@-webkit-keyframes vjs-spinner-fade {\n  0% {\n    border-top-color: #73859f;\n  }\n  20% {\n    border-top-color: #73859f;\n  }\n  35% {\n    border-top-color: white;\n  }\n  60% {\n    border-top-color: #73859f;\n  }\n  100% {\n    border-top-color: #73859f;\n  }\n}\n.vjs-chapters-button .vjs-menu ul {\n  width: 24em;\n}\n\n.video-js .vjs-subs-caps-button + .vjs-menu .vjs-captions-menu-item .vjs-menu-item-text .vjs-icon-placeholder {\n  vertical-align: middle;\n  display: inline-block;\n  margin-bottom: -0.1em;\n}\n\n.video-js .vjs-subs-caps-button + .vjs-menu .vjs-captions-menu-item .vjs-menu-item-text .vjs-icon-placeholder:before {\n  font-family: VideoJS;\n  content: \"\";\n  font-size: 1.5em;\n  line-height: inherit;\n}\n\n.video-js .vjs-audio-button + .vjs-menu .vjs-main-desc-menu-item .vjs-menu-item-text .vjs-icon-placeholder {\n  vertical-align: middle;\n  display: inline-block;\n  margin-bottom: -0.1em;\n}\n\n.video-js .vjs-audio-button + .vjs-menu .vjs-main-desc-menu-item .vjs-menu-item-text .vjs-icon-placeholder:before {\n  font-family: VideoJS;\n  content: \" \";\n  font-size: 1.5em;\n  line-height: inherit;\n}\n\n.video-js.vjs-layout-small .vjs-current-time,\n.video-js.vjs-layout-small .vjs-time-divider,\n.video-js.vjs-layout-small .vjs-duration,\n.video-js.vjs-layout-small .vjs-remaining-time,\n.video-js.vjs-layout-small .vjs-playback-rate,\n.video-js.vjs-layout-small .vjs-chapters-button,\n.video-js.vjs-layout-small .vjs-descriptions-button,\n.video-js.vjs-layout-small .vjs-captions-button,\n.video-js.vjs-layout-small .vjs-subtitles-button,\n.video-js.vjs-layout-small .vjs-audio-button,\n.video-js.vjs-layout-small .vjs-volume-control, .video-js.vjs-layout-x-small .vjs-current-time,\n.video-js.vjs-layout-x-small .vjs-time-divider,\n.video-js.vjs-layout-x-small .vjs-duration,\n.video-js.vjs-layout-x-small .vjs-remaining-time,\n.video-js.vjs-layout-x-small .vjs-playback-rate,\n.video-js.vjs-layout-x-small .vjs-chapters-button,\n.video-js.vjs-layout-x-small .vjs-descriptions-button,\n.video-js.vjs-layout-x-small .vjs-captions-button,\n.video-js.vjs-layout-x-small .vjs-subtitles-button,\n.video-js.vjs-layout-x-small .vjs-audio-button,\n.video-js.vjs-layout-x-small .vjs-volume-control, .video-js.vjs-layout-tiny .vjs-current-time,\n.video-js.vjs-layout-tiny .vjs-time-divider,\n.video-js.vjs-layout-tiny .vjs-duration,\n.video-js.vjs-layout-tiny .vjs-remaining-time,\n.video-js.vjs-layout-tiny .vjs-playback-rate,\n.video-js.vjs-layout-tiny .vjs-chapters-button,\n.video-js.vjs-layout-tiny .vjs-descriptions-button,\n.video-js.vjs-layout-tiny .vjs-captions-button,\n.video-js.vjs-layout-tiny .vjs-subtitles-button,\n.video-js.vjs-layout-tiny .vjs-audio-button,\n.video-js.vjs-layout-tiny .vjs-volume-control {\n  display: none;\n}\n.video-js.vjs-layout-small .vjs-volume-panel.vjs-volume-panel-horizontal:hover, .video-js.vjs-layout-small .vjs-volume-panel.vjs-volume-panel-horizontal:active, .video-js.vjs-layout-small .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-slider-active, .video-js.vjs-layout-small .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-hover, .video-js.vjs-layout-x-small .vjs-volume-panel.vjs-volume-panel-horizontal:hover, .video-js.vjs-layout-x-small .vjs-volume-panel.vjs-volume-panel-horizontal:active, .video-js.vjs-layout-x-small .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-slider-active, .video-js.vjs-layout-x-small .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-hover, .video-js.vjs-layout-tiny .vjs-volume-panel.vjs-volume-panel-horizontal:hover, .video-js.vjs-layout-tiny .vjs-volume-panel.vjs-volume-panel-horizontal:active, .video-js.vjs-layout-tiny .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-slider-active, .video-js.vjs-layout-tiny .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-hover {\n  width: auto;\n  width: initial;\n}\n.video-js.vjs-layout-x-small:not(.vjs-liveui) .vjs-subs-caps-button, .video-js.vjs-layout-x-small:not(.vjs-live) .vjs-subs-caps-button, .video-js.vjs-layout-tiny .vjs-subs-caps-button {\n  display: none;\n}\n.video-js.vjs-layout-x-small.vjs-liveui .vjs-custom-control-spacer, .video-js.vjs-layout-tiny .vjs-custom-control-spacer {\n  flex: auto;\n  display: block;\n}\n.video-js.vjs-layout-x-small.vjs-liveui.vjs-no-flex .vjs-custom-control-spacer, .video-js.vjs-layout-tiny.vjs-no-flex .vjs-custom-control-spacer {\n  width: auto;\n}\n.video-js.vjs-layout-x-small.vjs-liveui .vjs-progress-control, .video-js.vjs-layout-tiny .vjs-progress-control {\n  display: none;\n}\n\n.vjs-modal-dialog.vjs-text-track-settings {\n  background-color: #2B333F;\n  background-color: rgba(43, 51, 63, 0.75);\n  color: #fff;\n  height: 70%;\n}\n\n.vjs-text-track-settings .vjs-modal-dialog-content {\n  display: table;\n}\n\n.vjs-text-track-settings .vjs-track-settings-colors,\n.vjs-text-track-settings .vjs-track-settings-font,\n.vjs-text-track-settings .vjs-track-settings-controls {\n  display: table-cell;\n}\n\n.vjs-text-track-settings .vjs-track-settings-controls {\n  text-align: right;\n  vertical-align: bottom;\n}\n\n@supports (display: grid) {\n  .vjs-text-track-settings .vjs-modal-dialog-content {\n    display: grid;\n    grid-template-columns: 1fr 1fr;\n    grid-template-rows: 1fr;\n    padding: 20px 24px 0px 24px;\n  }\n\n  .vjs-track-settings-controls .vjs-default-button {\n    margin-bottom: 20px;\n  }\n\n  .vjs-text-track-settings .vjs-track-settings-controls {\n    grid-column: 1/-1;\n  }\n\n  .vjs-layout-small .vjs-text-track-settings .vjs-modal-dialog-content,\n.vjs-layout-x-small .vjs-text-track-settings .vjs-modal-dialog-content,\n.vjs-layout-tiny .vjs-text-track-settings .vjs-modal-dialog-content {\n    grid-template-columns: 1fr;\n  }\n}\n.vjs-track-setting > select {\n  margin-right: 1em;\n  margin-bottom: 0.5em;\n}\n\n.vjs-text-track-settings fieldset {\n  margin: 5px;\n  padding: 3px;\n  border: none;\n}\n\n.vjs-text-track-settings fieldset span {\n  display: inline-block;\n}\n\n.vjs-text-track-settings fieldset span > select {\n  max-width: 7.3em;\n}\n\n.vjs-text-track-settings legend {\n  color: #fff;\n  margin: 0 0 5px 0;\n}\n\n.vjs-text-track-settings .vjs-label {\n  position: absolute;\n  clip: rect(1px 1px 1px 1px);\n  clip: rect(1px, 1px, 1px, 1px);\n  display: block;\n  margin: 0 0 5px 0;\n  padding: 0;\n  border: 0;\n  height: 1px;\n  width: 1px;\n  overflow: hidden;\n}\n\n.vjs-track-settings-controls button:focus,\n.vjs-track-settings-controls button:active {\n  outline-style: solid;\n  outline-width: medium;\n  background-image: linear-gradient(0deg, #fff 88%, #73859f 100%);\n}\n\n.vjs-track-settings-controls button:hover {\n  color: rgba(43, 51, 63, 0.75);\n}\n\n.vjs-track-settings-controls button {\n  background-color: #fff;\n  background-image: linear-gradient(-180deg, #fff 88%, #73859f 100%);\n  color: #2B333F;\n  cursor: pointer;\n  border-radius: 2px;\n}\n\n.vjs-track-settings-controls .vjs-default-button {\n  margin-right: 1em;\n}\n\n@media print {\n  .video-js > *:not(.vjs-tech):not(.vjs-poster) {\n    visibility: hidden;\n  }\n}\n.vjs-resize-manager {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  border: none;\n  z-index: -1000;\n}\n\n.js-focus-visible .video-js *:focus:not(.focus-visible) {\n  outline: none;\n}\n\n.video-js *:focus:not(:focus-visible) {\n  outline: none;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@charset \"UTF-8\";\n.vjs-modal-dialog .vjs-modal-dialog-content, .video-js .vjs-modal-dialog, .vjs-button > .vjs-icon-placeholder:before, .video-js .vjs-big-play-button .vjs-icon-placeholder:before {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n}\n\n.vjs-button > .vjs-icon-placeholder:before, .video-js .vjs-big-play-button .vjs-icon-placeholder:before {\n  text-align: center;\n}\n\n@font-face {\n  font-family: VideoJS;\n  src: url(data:application/font-woff;charset=utf-8;base64,d09GRgABAAAAABDkAAsAAAAAG6gAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADsAAABUIIslek9TLzIAAAFEAAAAPgAAAFZRiV3hY21hcAAAAYQAAADaAAADPv749/pnbHlmAAACYAAAC3AAABHQZg6OcWhlYWQAAA3QAAAAKwAAADYZw251aGhlYQAADfwAAAAdAAAAJA+RCLFobXR4AAAOHAAAABMAAACM744AAGxvY2EAAA4wAAAASAAAAEhF6kqubWF4cAAADngAAAAfAAAAIAE0AIFuYW1lAAAOmAAAASUAAAIK1cf1oHBvc3QAAA/AAAABJAAAAdPExYuNeJxjYGRgYOBiMGCwY2BycfMJYeDLSSzJY5BiYGGAAJA8MpsxJzM9kYEDxgPKsYBpDiBmg4gCACY7BUgAeJxjYGS7wTiBgZWBgaWQ5RkDA8MvCM0cwxDOeI6BgYmBlZkBKwhIc01hcPjI+FGJHcRdyA4RZgQRADK3CxEAAHic7dFZbsMgAEXRS0ycyZnnOeG7y+qC8pU1dHusIOXxuoxaOlwZYWQB0Aea4quIEN4E9LzKbKjzDeM6H/mua6Lmc/p8yhg0lvdYx15ZG8uOLQOGjMp3EzqmzJizYMmKNRu27Nhz4MiJMxeu3Ljz4Ekqm7T8P52G8PP3lnTOVk++Z6iN6QZzNN1F7ptuN7eGOjDUoaGODHVsuvU8MdTO9Hd5aqgzQ50b6sJQl4a6MtS1oW4MdWuoO0PdG+rBUI+GejLUs6FeDPVqqDdDvRvqw1CfhpqM9At0iFLaAAB4nJ1YDXBTVRZ+5/22TUlJ8we0pHlJm7RJf5O8F2j6EymlSPkpxaL8U2xpa3DKj0CBhc2IW4eWKSokIoLsuMqssM64f+jA4HSdWXXXscBq67IOs3FXZ1ZYWVyRFdo899yXtIBQZ90k7717zz3v3HPPOfd854YCCj9cL9dL0RQFOqCbGJnrHb5EayiKIWN8iA/hWBblo6hUWm8TtCDwE80WMJus/irwyxOdxeB0MDb14VNJHnXYoLLSl6FfCUYO9nYPTA8Epg9090LprfbBbZ2hY0UlJUXHQp3/vtWkS6EBv8+rPMq5u9692f/dNxJNiqwC1xPE9TCUgCsSdQWgE3XQD25lkG4CN2xmTcOXWBOyser6RN6KnGbKSbmQ3+d0OI1m2W8QzLLkI2sykrWAgJJEtA8vGGW/2Q+CmT3n8zS9wZwu2DCvtuZKZN3xkrLh36yCZuUomQSqGpY8t/25VfHVhw8z4ebGBtfLb0ya9PCaDc+8dGTvk2dsh6z7WzvowlXKUSWo9MJ15a3KrEP2loOr2Ojhw6iW6hf2BDdEccQvZGpaAy7YovSwq8kr7HGllxpd71rkS6G0Sf11sl9OvMK1+jwPPODxjUwkOim9CU3ix1wNjXDfmJSEn618Bs6lpWwUpU+8PCqLMY650zjq8VhCIP17NEKTx3eaLL+s5Pi6yJWaWjTHLR1jYzPSV9VF/6Ojdb/1kO3Mk3uhHC0x6gc1BjlKQ+nQFxTYdaJkZ7ySVxLBbhR1dsboNXp1tCYKW2LRaEzpYcIx2BKNxaL0ZaUnSqfFoiNhHKR/GkX6PWUSAaJelQaqZL1EpoHNsajSEyPSoJ9IjhIxTdjHLmwZvhRDOiFTY/YeQnvrVZmiTQtGncECXtFTBZLOVwwMRgoXHAkXzMzPn1nAJJ8jYSbMDaqN2waGLzNhih/bZynUBMpIWSg7VYi7DRx2m8ALkIdRCJwI6ArJx2EI8kaDWeTQKeAFk9fjl/1AvwktjQ1P7NjyMGQyfd4vjipX6M/i52D7Cq80kqlcxEcGXRr/FEcgs0u5uGgB4VWuMFfpdn2Re6Hi3PqzmxWKsz6+ae2Pn9hXXw/fqM859UiGC0oKYYILJBqJrsn1Z1E5qOs9rQCiUQRREjm8yJcbHF5cUJufX1vAHlefw0XgUoboS3ETfQlTxBC4SOtuE8VPRJTBSCQSjZCpk7Gqzu+masaZ2y7Zjehho4F3g82BNDkAHpORG4+OCS+f6JTPmtRn/PH1kch6d04sp7AQb25aQ/pqUyXeQ8vrebG8OYQdXOQ+585u0sdW9rqalzRURiJ+9F4MweRFrKUjl1GUYhH1A27WOHw5cTFSFPMo9EeUIGnQTZHIaJ7AHLaOKsOODaNF9jkBjYG2QEsQ2xjMUAx2bBEbeTBWMHwskBjngq56S/yfgkBnWBa4K9sqKtq2t1UI8S9He5XuBRbawAdatrQEAi30Aks2+LM8WeCbalVZkWNylvJ+dqJnzVb+OHlSoKW8nPCP7Rd+CcZ2DdWAGqJ2CBFOphgywFFCFBNtfAbGtNPBCwxvygHeYMZMY9ZboBqwq/pVrsbgN5tkv152ODlbMfiqwGMBgxa4Exz3QhovRIUp6acqZmQzRq0ypDXS2TPLT02YIkQETnOE445oOGxOmXAqUJNNG7XgupMjPq2ua9asrj5yY/yuKteO1Kx0YNJTufrirLe1mZnat7OL6rnUdCWenpW6I8mAnbsY8KWs1PuSovCW9A/Z25PQ24a7cNOqgmTkLmBMgh4THgc4b9k2IVv1/g/F5nGljwPLfOgHAzJzh45V/4+WenTzmMtR5Z7us2Tys909UHqrPY7KbckoxRvRHhmVc3cJGE97uml0R1S0jdULVl7EvZtDFVBF35N9cEdjpgmAiOlFZ+Dtoh93+D3zzHr8RRNZQhnCNMNbcegOvpEwZoL+06cJQ07h+th3fZ/7PVbVC6ngTAV/KoLFuO6+2KFcU651gEb5ugPSIb1D+Xp8V4+k3sEIGnw5mYe4If4k1lFYr6SCzmM2EQ8iWtmwjnBI9kTwe1TlfAmXh7H02by9fW2gsjKwtv0aaURKil4OdV7rDL1MXIFNrhdxohcZXYTnq47WisrKitaObbf5+yvkLi5J6lCNZZ+B6GC38VNBZBDidSS/+mSvh6s+srgC8pyKMvDtt+de3c9fU76ZPfuM8ud4Kv0fyP/LqfepMT/3oZxSqpZaTa1DaQYLY8TFsHYbWYsPoRhRWfL5eSSQbhUGgGC3YLbVMk6PitTFNGpAsNrC6D1VNBKgBHMejaiuRWEWGgsSDBTJjqWIl8kJLlsaLJ2tXDr6xGfT85bM2Q06a46x2HTgvdnV8z5YDy/27J4zt6x2VtkzjoYpkq36kaBr4eQSg7tyiVweWubXZugtadl58ydapfbORfKsDTuZ0OBgx4cfdjCf5tbWNITnL120fdOi1RV1C3uKGzNdwYLcMvZ3BxoPyTOCD1XvXTp7U10gWCVmTV9b3r2z0SkGWovb2hp9I89O8a2smlyaO8muMU+dRmtzp60IzAoFpjLr1n388boLyf0dRvxhsHZ0qbWqDkwqvvpkj4l0fY6EIXRi5sQSrAvsVYwXRy4qJ2EVtD1AN7a0HWth9ymvL1xc3WTUKK/TAHA/bXDVtVWfOMfuGxGZv4Ln/jVr9jc3j1yMv0tndmyt9Vq88Y9gH1wtLX3KWjot5++jWHgAoZZkQ14wGQ20Fli71UmKJAy4xKMSTGbVdybW7FDDAut9XpD5AzWrYO7zQ8qffqF8+Ynd/clrHcdyxGy3a/3+mfNnzC/cBsveTjnTvXf1o6vzOlZw7WtqtdmPK/Errz/6NNtD72zmNOZfbmYdTGHfoofqI79Oc+R2n1lrnL6pOm0Up7kwxhTW12Amm7WYkXR2qYrF2AmgmbAsxZjwy1xpg/m1Je2vrp8v/nz2xpmlBg4E9hrMU341wVpTOh/OfmGvAnra8q6uctr60ZQHV3Q+WMQJykMj8ZsWn2QBOmmHMB+m5pDIpTFonYigiaKAhGEiAHF7EliVnQkjoLVIMPtJpBKHYd3A8GYH9jJzrWwmHx5Qjp7vDAX0suGRym1vtm/9W1/HyR8vczfMs6Sk8DSv855/5dlX9oQq52hT8syyp2rx5Id17IAyAM3wIjQPMOHzytEB64q6D5zT91yNbnx3V/nqnd017S9Y0605k3izoXLpsxde2n38yoOV9s1LcjwzNjbdX6asnBVaBj/6/DwKwPkpcqbDG7BnsXoSqWnUAmottYF6jMSdVyYZh3zVXCjwTiwwHH6sGuRiEHQGzuRX6whZkp123oy1BWE2mEfJ/tvIRtM4ZM5bDXiMsPMaAKOTyc5uL57rqyyc5y5JE5pm1i2S2iUX0CcaQ6lC6Zog7JqSqZmYlosl2K6pwNA84zRnQW6SaALYZQGW5lhCtU/W34N6o+bKfZ8cf3/Cl/+iTX3wBzpOY4mRkeNf3rptycGSshQWgGbYt5jFc2e0+DglIrwl6DVWQ7BuwaJ3Xk1J4VL5urnLl/Wf+gHU/hZoZdKNym6lG+I34FaNeZKcSpJIo2IeCVvpdsDGfKvzJnAwmeD37Ow65ZWwSowpgwX5T69s/rB55dP5BcpgDKFV8p7q2sn/1uc93bVzT/w6UrCqDTWvfCq/oCD/qZXNoUj8BL5Kp6GU017frfNXkAtiiyf/SOCEeLqnd8R/Ql9GlCRfctS6k5chvIBuQ1zCCjoCHL2DHNHIXxMJ3kQeO8lbsUXONeSfA5EjcG6/E+KdhN4bP04vBhdi883+BFBzQbxFbvZzQeY9LNBZc0FNfn5NwfDn6rCTnTw6R8o+gfpf5hCom33cRuiTlss3KHmZjD+BPN+5gXuA2ziS/Q73mLxUkpbKN/eqwz5uK0X9F3h2d1V4nGNgZGBgAOJd776+iue3+crAzc4AAje5Bfcg0xz9YHEOBiYQBQA8FQlFAHicY2BkYGBnAAGOPgaG//85+hkYGVCBMgBGGwNYAAAAeJxjYGBgYB8EmKOPgQEAQ04BfgAAAAAAAA4AaAB+AMwA4AECAUIBbAGYAcICGAJYArQC4AMwA7AD3gQwBJYE3AUkBWYFigYgBmYGtAbqB1gIEghYCG4IhAi2COh4nGNgZGBgUGYoZWBnAAEmIOYCQgaG/2A+AwAYCQG2AHicXZBNaoNAGIZfE5PQCKFQ2lUps2oXBfOzzAESyDKBQJdGR2NQR3QSSE/QE/QEPUUPUHqsvsrXjTMw83zPvPMNCuAWP3DQDAejdm1GjzwS7pMmwi75XngAD4/CQ/oX4TFe4Qt7uMMbOzjuDc0EmXCP/C7cJ38Iu+RP4QEe8CU8pP8WHmOPX2EPz87TPo202ey2OjlnQSXV/6arOjWFmvszMWtd6CqwOlKHq6ovycLaWMWVydXKFFZnmVFlZU46tP7R2nI5ncbi/dDkfDtFBA2DDXbYkhKc+V0Bqs5Zt9JM1HQGBRTm/EezTmZNKtpcAMs9Yu6AK9caF76zoLWIWcfMGOSkVduvSWechqZsz040Ib2PY3urxBJTzriT95lipz+TN1fmAAAAeJxtkMl2wjAMRfOAhABlKm2h80C3+ajgCKKDY6cegP59TYBzukAL+z1Zsq8ctaJTTKPrsUQLbXQQI0EXKXroY4AbDDHCGBNMcYsZ7nCPB8yxwCOe8IwXvOIN7/jAJ76wxHfUqWX+OzgumWAjJMV17i0Ndlr6irLKO+qftdT7i6y4uFSUvCknay+lFYZIZaQcmfH/xIFdYn98bqhra1aKTM/6lWMnyaYirx1rFUQZFBkb2zJUtoXeJCeg0WnLtHeSFc3OtrnozNwqi0TkSpBMDB1nSde5oJXW23hTS2/T0LilglXX7dmFVxLnq5U0vYATHFk3zX3BOisoQHNDFDeZnqKDy9hRNawN7Vh727hFzcJ5c8TILrKZfH7tIPxAFP0BpLeJPA==) format(\"woff\");\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-play, .video-js .vjs-play-control .vjs-icon-placeholder, .video-js .vjs-big-play-button .vjs-icon-placeholder:before {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-play:before, .video-js .vjs-play-control .vjs-icon-placeholder:before, .video-js .vjs-big-play-button .vjs-icon-placeholder:before {\n  content: \"\\f101\";\n}\n\n.vjs-icon-play-circle {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-play-circle:before {\n  content: \"\\f102\";\n}\n\n.vjs-icon-pause, .video-js .vjs-play-control.vjs-playing .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-pause:before, .video-js .vjs-play-control.vjs-playing .vjs-icon-placeholder:before {\n  content: \"\\f103\";\n}\n\n.vjs-icon-volume-mute, .video-js .vjs-mute-control.vjs-vol-0 .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-volume-mute:before, .video-js .vjs-mute-control.vjs-vol-0 .vjs-icon-placeholder:before {\n  content: \"\\f104\";\n}\n\n.vjs-icon-volume-low, .video-js .vjs-mute-control.vjs-vol-1 .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-volume-low:before, .video-js .vjs-mute-control.vjs-vol-1 .vjs-icon-placeholder:before {\n  content: \"\\f105\";\n}\n\n.vjs-icon-volume-mid, .video-js .vjs-mute-control.vjs-vol-2 .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-volume-mid:before, .video-js .vjs-mute-control.vjs-vol-2 .vjs-icon-placeholder:before {\n  content: \"\\f106\";\n}\n\n.vjs-icon-volume-high, .video-js .vjs-mute-control .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-volume-high:before, .video-js .vjs-mute-control .vjs-icon-placeholder:before {\n  content: \"\\f107\";\n}\n\n.vjs-icon-fullscreen-enter, .video-js .vjs-fullscreen-control .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-fullscreen-enter:before, .video-js .vjs-fullscreen-control .vjs-icon-placeholder:before {\n  content: \"\\f108\";\n}\n\n.vjs-icon-fullscreen-exit, .video-js.vjs-fullscreen .vjs-fullscreen-control .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-fullscreen-exit:before, .video-js.vjs-fullscreen .vjs-fullscreen-control .vjs-icon-placeholder:before {\n  content: \"\\f109\";\n}\n\n.vjs-icon-square {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-square:before {\n  content: \"\\f10a\";\n}\n\n.vjs-icon-spinner {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-spinner:before {\n  content: \"\\f10b\";\n}\n\n.vjs-icon-subtitles, .video-js .vjs-subs-caps-button .vjs-icon-placeholder,\n.video-js.video-js:lang(en-GB) .vjs-subs-caps-button .vjs-icon-placeholder,\n.video-js.video-js:lang(en-IE) .vjs-subs-caps-button .vjs-icon-placeholder,\n.video-js.video-js:lang(en-AU) .vjs-subs-caps-button .vjs-icon-placeholder,\n.video-js.video-js:lang(en-NZ) .vjs-subs-caps-button .vjs-icon-placeholder, .video-js .vjs-subtitles-button .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-subtitles:before, .video-js .vjs-subs-caps-button .vjs-icon-placeholder:before,\n.video-js.video-js:lang(en-GB) .vjs-subs-caps-button .vjs-icon-placeholder:before,\n.video-js.video-js:lang(en-IE) .vjs-subs-caps-button .vjs-icon-placeholder:before,\n.video-js.video-js:lang(en-AU) .vjs-subs-caps-button .vjs-icon-placeholder:before,\n.video-js.video-js:lang(en-NZ) .vjs-subs-caps-button .vjs-icon-placeholder:before, .video-js .vjs-subtitles-button .vjs-icon-placeholder:before {\n  content: \"\\f10c\";\n}\n\n.vjs-icon-captions, .video-js:lang(en) .vjs-subs-caps-button .vjs-icon-placeholder,\n.video-js:lang(fr-CA) .vjs-subs-caps-button .vjs-icon-placeholder, .video-js .vjs-captions-button .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-captions:before, .video-js:lang(en) .vjs-subs-caps-button .vjs-icon-placeholder:before,\n.video-js:lang(fr-CA) .vjs-subs-caps-button .vjs-icon-placeholder:before, .video-js .vjs-captions-button .vjs-icon-placeholder:before {\n  content: \"\\f10d\";\n}\n\n.vjs-icon-chapters, .video-js .vjs-chapters-button .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-chapters:before, .video-js .vjs-chapters-button .vjs-icon-placeholder:before {\n  content: \"\\f10e\";\n}\n\n.vjs-icon-share {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-share:before {\n  content: \"\\f10f\";\n}\n\n.vjs-icon-cog {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-cog:before {\n  content: \"\\f110\";\n}\n\n.vjs-icon-circle, .vjs-seek-to-live-control .vjs-icon-placeholder, .video-js .vjs-volume-level, .video-js .vjs-play-progress {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-circle:before, .vjs-seek-to-live-control .vjs-icon-placeholder:before, .video-js .vjs-volume-level:before, .video-js .vjs-play-progress:before {\n  content: \"\\f111\";\n}\n\n.vjs-icon-circle-outline {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-circle-outline:before {\n  content: \"\\f112\";\n}\n\n.vjs-icon-circle-inner-circle {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-circle-inner-circle:before {\n  content: \"\\f113\";\n}\n\n.vjs-icon-hd {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-hd:before {\n  content: \"\\f114\";\n}\n\n.vjs-icon-cancel, .video-js .vjs-control.vjs-close-button .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-cancel:before, .video-js .vjs-control.vjs-close-button .vjs-icon-placeholder:before {\n  content: \"\\f115\";\n}\n\n.vjs-icon-replay, .video-js .vjs-play-control.vjs-ended .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-replay:before, .video-js .vjs-play-control.vjs-ended .vjs-icon-placeholder:before {\n  content: \"\\f116\";\n}\n\n.vjs-icon-facebook {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-facebook:before {\n  content: \"\\f117\";\n}\n\n.vjs-icon-gplus {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-gplus:before {\n  content: \"\\f118\";\n}\n\n.vjs-icon-linkedin {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-linkedin:before {\n  content: \"\\f119\";\n}\n\n.vjs-icon-twitter {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-twitter:before {\n  content: \"\\f11a\";\n}\n\n.vjs-icon-tumblr {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-tumblr:before {\n  content: \"\\f11b\";\n}\n\n.vjs-icon-pinterest {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-pinterest:before {\n  content: \"\\f11c\";\n}\n\n.vjs-icon-audio-description, .video-js .vjs-descriptions-button .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-audio-description:before, .video-js .vjs-descriptions-button .vjs-icon-placeholder:before {\n  content: \"\\f11d\";\n}\n\n.vjs-icon-audio, .video-js .vjs-audio-button .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-audio:before, .video-js .vjs-audio-button .vjs-icon-placeholder:before {\n  content: \"\\f11e\";\n}\n\n.vjs-icon-next-item {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-next-item:before {\n  content: \"\\f11f\";\n}\n\n.vjs-icon-previous-item {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-previous-item:before {\n  content: \"\\f120\";\n}\n\n.vjs-icon-picture-in-picture-enter, .video-js .vjs-picture-in-picture-control .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-picture-in-picture-enter:before, .video-js .vjs-picture-in-picture-control .vjs-icon-placeholder:before {\n  content: \"\\f121\";\n}\n\n.vjs-icon-picture-in-picture-exit, .video-js.vjs-picture-in-picture .vjs-picture-in-picture-control .vjs-icon-placeholder {\n  font-family: VideoJS;\n  font-weight: normal;\n  font-style: normal;\n}\n.vjs-icon-picture-in-picture-exit:before, .video-js.vjs-picture-in-picture .vjs-picture-in-picture-control .vjs-icon-placeholder:before {\n  content: \"\\f122\";\n}\n\n.video-js {\n  display: block;\n  vertical-align: top;\n  box-sizing: border-box;\n  color: #fff;\n  background-color: #000;\n  position: relative;\n  padding: 0;\n  font-size: 10px;\n  line-height: 1;\n  font-weight: normal;\n  font-style: normal;\n  font-family: Arial, Helvetica, sans-serif;\n  word-break: initial;\n}\n.video-js:-moz-full-screen {\n  position: absolute;\n}\n.video-js:-webkit-full-screen {\n  width: 100% !important;\n  height: 100% !important;\n}\n\n.video-js[tabindex=\"-1\"] {\n  outline: none;\n}\n\n.video-js *,\n.video-js *:before,\n.video-js *:after {\n  box-sizing: inherit;\n}\n\n.video-js ul {\n  font-family: inherit;\n  font-size: inherit;\n  line-height: inherit;\n  list-style-position: outside;\n  margin-left: 0;\n  margin-right: 0;\n  margin-top: 0;\n  margin-bottom: 0;\n}\n\n.video-js.vjs-fluid,\n.video-js.vjs-16-9,\n.video-js.vjs-4-3,\n.video-js.vjs-9-16,\n.video-js.vjs-1-1 {\n  width: 100%;\n  max-width: 100%;\n  height: 0;\n}\n\n.video-js.vjs-16-9 {\n  padding-top: 56.25%;\n}\n\n.video-js.vjs-4-3 {\n  padding-top: 75%;\n}\n\n.video-js.vjs-9-16 {\n  padding-top: 177.7777777778%;\n}\n\n.video-js.vjs-1-1 {\n  padding-top: 100%;\n}\n\n.video-js.vjs-fill {\n  width: 100%;\n  height: 100%;\n}\n\n.video-js .vjs-tech {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n}\n\nbody.vjs-full-window {\n  padding: 0;\n  margin: 0;\n  height: 100%;\n}\n\n.vjs-full-window .video-js.vjs-fullscreen {\n  position: fixed;\n  overflow: hidden;\n  z-index: 1000;\n  left: 0;\n  top: 0;\n  bottom: 0;\n  right: 0;\n}\n\n.video-js.vjs-fullscreen:not(.vjs-ios-native-fs) {\n  width: 100% !important;\n  height: 100% !important;\n  padding-top: 0 !important;\n}\n\n.video-js.vjs-fullscreen.vjs-user-inactive {\n  cursor: none;\n}\n\n.vjs-hidden {\n  display: none !important;\n}\n\n.vjs-disabled {\n  opacity: 0.5;\n  cursor: default;\n}\n\n.video-js .vjs-offscreen {\n  height: 1px;\n  left: -9999px;\n  position: absolute;\n  top: 0;\n  width: 1px;\n}\n\n.vjs-lock-showing {\n  display: block !important;\n  opacity: 1 !important;\n  visibility: visible !important;\n}\n\n.vjs-no-js {\n  padding: 20px;\n  color: #fff;\n  background-color: #000;\n  font-size: 18px;\n  font-family: Arial, Helvetica, sans-serif;\n  text-align: center;\n  width: 300px;\n  height: 150px;\n  margin: 0px auto;\n}\n\n.vjs-no-js a,\n.vjs-no-js a:visited {\n  color: #66A8CC;\n}\n\n.video-js .vjs-big-play-button {\n  font-size: 3em;\n  line-height: 1.5em;\n  height: 1.63332em;\n  width: 3em;\n  display: block;\n  position: absolute;\n  top: 10px;\n  left: 10px;\n  padding: 0;\n  cursor: pointer;\n  opacity: 1;\n  border: 0.06666em solid #fff;\n  background-color: #2B333F;\n  background-color: rgba(43, 51, 63, 0.7);\n  border-radius: 0.3em;\n  transition: all 0.4s;\n}\n.vjs-big-play-centered .vjs-big-play-button {\n  top: 50%;\n  left: 50%;\n  margin-top: -0.81666em;\n  margin-left: -1.5em;\n}\n\n.video-js:hover .vjs-big-play-button,\n.video-js .vjs-big-play-button:focus {\n  border-color: #fff;\n  background-color: #73859f;\n  background-color: rgba(115, 133, 159, 0.5);\n  transition: all 0s;\n}\n\n.vjs-controls-disabled .vjs-big-play-button,\n.vjs-has-started .vjs-big-play-button,\n.vjs-using-native-controls .vjs-big-play-button,\n.vjs-error .vjs-big-play-button {\n  display: none;\n}\n\n.vjs-has-started.vjs-paused.vjs-show-big-play-button-on-pause .vjs-big-play-button {\n  display: block;\n}\n\n.video-js button {\n  background: none;\n  border: none;\n  color: inherit;\n  display: inline-block;\n  font-size: inherit;\n  line-height: inherit;\n  text-transform: none;\n  text-decoration: none;\n  transition: none;\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n}\n\n.vjs-control .vjs-button {\n  width: 100%;\n  height: 100%;\n}\n\n.video-js .vjs-control.vjs-close-button {\n  cursor: pointer;\n  height: 3em;\n  position: absolute;\n  right: 0;\n  top: 0.5em;\n  z-index: 2;\n}\n.video-js .vjs-modal-dialog {\n  background: rgba(0, 0, 0, 0.8);\n  background: linear-gradient(180deg, rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0));\n  overflow: auto;\n}\n\n.video-js .vjs-modal-dialog > * {\n  box-sizing: border-box;\n}\n\n.vjs-modal-dialog .vjs-modal-dialog-content {\n  font-size: 1.2em;\n  line-height: 1.5;\n  padding: 20px 24px;\n  z-index: 1;\n}\n\n.vjs-menu-button {\n  cursor: pointer;\n}\n\n.vjs-menu-button.vjs-disabled {\n  cursor: default;\n}\n\n.vjs-workinghover .vjs-menu-button.vjs-disabled:hover .vjs-menu {\n  display: none;\n}\n\n.vjs-menu .vjs-menu-content {\n  display: block;\n  padding: 0;\n  margin: 0;\n  font-family: Arial, Helvetica, sans-serif;\n  overflow: auto;\n}\n\n.vjs-menu .vjs-menu-content > * {\n  box-sizing: border-box;\n}\n\n.vjs-scrubbing .vjs-control.vjs-menu-button:hover .vjs-menu {\n  display: none;\n}\n\n.vjs-menu li {\n  list-style: none;\n  margin: 0;\n  padding: 0.2em 0;\n  line-height: 1.4em;\n  font-size: 1.2em;\n  text-align: center;\n  text-transform: lowercase;\n}\n\n.vjs-menu li.vjs-menu-item:focus,\n.vjs-menu li.vjs-menu-item:hover,\n.js-focus-visible .vjs-menu li.vjs-menu-item:hover {\n  background-color: #73859f;\n  background-color: rgba(115, 133, 159, 0.5);\n}\n\n.vjs-menu li.vjs-selected,\n.vjs-menu li.vjs-selected:focus,\n.vjs-menu li.vjs-selected:hover,\n.js-focus-visible .vjs-menu li.vjs-selected:hover {\n  background-color: #fff;\n  color: #2B333F;\n}\n\n.video-js .vjs-menu *:not(.vjs-selected):focus:not(:focus-visible),\n.js-focus-visible .vjs-menu *:not(.vjs-selected):focus:not(.focus-visible) {\n  background: none;\n}\n\n.vjs-menu li.vjs-menu-title {\n  text-align: center;\n  text-transform: uppercase;\n  font-size: 1em;\n  line-height: 2em;\n  padding: 0;\n  margin: 0 0 0.3em 0;\n  font-weight: bold;\n  cursor: default;\n}\n\n.vjs-menu-button-popup .vjs-menu {\n  display: none;\n  position: absolute;\n  bottom: 0;\n  width: 10em;\n  left: -3em;\n  height: 0em;\n  margin-bottom: 1.5em;\n  border-top-color: rgba(43, 51, 63, 0.7);\n}\n\n.vjs-menu-button-popup .vjs-menu .vjs-menu-content {\n  background-color: #2B333F;\n  background-color: rgba(43, 51, 63, 0.7);\n  position: absolute;\n  width: 100%;\n  bottom: 1.5em;\n  max-height: 15em;\n}\n\n.vjs-layout-tiny .vjs-menu-button-popup .vjs-menu .vjs-menu-content,\n.vjs-layout-x-small .vjs-menu-button-popup .vjs-menu .vjs-menu-content {\n  max-height: 5em;\n}\n\n.vjs-layout-small .vjs-menu-button-popup .vjs-menu .vjs-menu-content {\n  max-height: 10em;\n}\n\n.vjs-layout-medium .vjs-menu-button-popup .vjs-menu .vjs-menu-content {\n  max-height: 14em;\n}\n\n.vjs-layout-large .vjs-menu-button-popup .vjs-menu .vjs-menu-content,\n.vjs-layout-x-large .vjs-menu-button-popup .vjs-menu .vjs-menu-content,\n.vjs-layout-huge .vjs-menu-button-popup .vjs-menu .vjs-menu-content {\n  max-height: 25em;\n}\n\n.vjs-workinghover .vjs-menu-button-popup.vjs-hover .vjs-menu,\n.vjs-menu-button-popup .vjs-menu.vjs-lock-showing {\n  display: block;\n}\n\n.video-js .vjs-menu-button-inline {\n  transition: all 0.4s;\n  overflow: hidden;\n}\n\n.video-js .vjs-menu-button-inline:before {\n  width: 2.222222222em;\n}\n\n.video-js .vjs-menu-button-inline:hover,\n.video-js .vjs-menu-button-inline:focus,\n.video-js .vjs-menu-button-inline.vjs-slider-active,\n.video-js.vjs-no-flex .vjs-menu-button-inline {\n  width: 12em;\n}\n\n.vjs-menu-button-inline .vjs-menu {\n  opacity: 0;\n  height: 100%;\n  width: auto;\n  position: absolute;\n  left: 4em;\n  top: 0;\n  padding: 0;\n  margin: 0;\n  transition: all 0.4s;\n}\n\n.vjs-menu-button-inline:hover .vjs-menu,\n.vjs-menu-button-inline:focus .vjs-menu,\n.vjs-menu-button-inline.vjs-slider-active .vjs-menu {\n  display: block;\n  opacity: 1;\n}\n\n.vjs-no-flex .vjs-menu-button-inline .vjs-menu {\n  display: block;\n  opacity: 1;\n  position: relative;\n  width: auto;\n}\n\n.vjs-no-flex .vjs-menu-button-inline:hover .vjs-menu,\n.vjs-no-flex .vjs-menu-button-inline:focus .vjs-menu,\n.vjs-no-flex .vjs-menu-button-inline.vjs-slider-active .vjs-menu {\n  width: auto;\n}\n\n.vjs-menu-button-inline .vjs-menu-content {\n  width: auto;\n  height: 100%;\n  margin: 0;\n  overflow: hidden;\n}\n\n.video-js .vjs-control-bar {\n  display: none;\n  width: 100%;\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: 3em;\n  background-color: #2B333F;\n  background-color: rgba(43, 51, 63, 0.7);\n}\n\n.vjs-has-started .vjs-control-bar {\n  display: flex;\n  visibility: visible;\n  opacity: 1;\n  transition: visibility 0.1s, opacity 0.1s;\n}\n\n.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar {\n  visibility: visible;\n  opacity: 0;\n  pointer-events: none;\n  transition: visibility 1s, opacity 1s;\n}\n\n.vjs-controls-disabled .vjs-control-bar,\n.vjs-using-native-controls .vjs-control-bar,\n.vjs-error .vjs-control-bar {\n  display: none !important;\n}\n\n.vjs-audio.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar {\n  opacity: 1;\n  visibility: visible;\n}\n\n.vjs-has-started.vjs-no-flex .vjs-control-bar {\n  display: table;\n}\n\n.video-js .vjs-control {\n  position: relative;\n  text-align: center;\n  margin: 0;\n  padding: 0;\n  height: 100%;\n  width: 4em;\n  flex: none;\n}\n\n.vjs-button > .vjs-icon-placeholder:before {\n  font-size: 1.8em;\n  line-height: 1.67;\n}\n\n.vjs-button > .vjs-icon-placeholder {\n  display: block;\n}\n\n.video-js .vjs-control:focus:before,\n.video-js .vjs-control:hover:before,\n.video-js .vjs-control:focus {\n  text-shadow: 0em 0em 1em white;\n}\n\n.video-js .vjs-control-text {\n  border: 0;\n  clip: rect(0 0 0 0);\n  height: 1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  width: 1px;\n}\n\n.vjs-no-flex .vjs-control {\n  display: table-cell;\n  vertical-align: middle;\n}\n\n.video-js .vjs-custom-control-spacer {\n  display: none;\n}\n\n.video-js .vjs-progress-control {\n  cursor: pointer;\n  flex: auto;\n  display: flex;\n  align-items: center;\n  min-width: 4em;\n  touch-action: none;\n}\n\n.video-js .vjs-progress-control.disabled {\n  cursor: default;\n}\n\n.vjs-live .vjs-progress-control {\n  display: none;\n}\n\n.vjs-liveui .vjs-progress-control {\n  display: flex;\n  align-items: center;\n}\n\n.vjs-no-flex .vjs-progress-control {\n  width: auto;\n}\n\n.video-js .vjs-progress-holder {\n  flex: auto;\n  transition: all 0.2s;\n  height: 0.3em;\n}\n\n.video-js .vjs-progress-control .vjs-progress-holder {\n  margin: 0 10px;\n}\n\n.video-js .vjs-progress-control:hover .vjs-progress-holder {\n  font-size: 1.6666666667em;\n}\n\n.video-js .vjs-progress-control:hover .vjs-progress-holder.disabled {\n  font-size: 1em;\n}\n\n.video-js .vjs-progress-holder .vjs-play-progress,\n.video-js .vjs-progress-holder .vjs-load-progress,\n.video-js .vjs-progress-holder .vjs-load-progress div {\n  position: absolute;\n  display: block;\n  height: 100%;\n  margin: 0;\n  padding: 0;\n  width: 0;\n}\n\n.video-js .vjs-play-progress {\n  background-color: #fff;\n}\n.video-js .vjs-play-progress:before {\n  font-size: 0.9em;\n  position: absolute;\n  right: -0.5em;\n  top: -0.3333333333em;\n  z-index: 1;\n}\n\n.video-js .vjs-load-progress {\n  background: rgba(115, 133, 159, 0.5);\n}\n\n.video-js .vjs-load-progress div {\n  background: rgba(115, 133, 159, 0.75);\n}\n\n.video-js .vjs-time-tooltip {\n  background-color: #fff;\n  background-color: rgba(255, 255, 255, 0.8);\n  border-radius: 0.3em;\n  color: #000;\n  float: right;\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 1em;\n  padding: 6px 8px 8px 8px;\n  pointer-events: none;\n  position: absolute;\n  top: -3.4em;\n  visibility: hidden;\n  z-index: 1;\n}\n\n.video-js .vjs-progress-holder:focus .vjs-time-tooltip {\n  display: none;\n}\n\n.video-js .vjs-progress-control:hover .vjs-time-tooltip,\n.video-js .vjs-progress-control:hover .vjs-progress-holder:focus .vjs-time-tooltip {\n  display: block;\n  font-size: 0.6em;\n  visibility: visible;\n}\n\n.video-js .vjs-progress-control.disabled:hover .vjs-time-tooltip {\n  font-size: 1em;\n}\n\n.video-js .vjs-progress-control .vjs-mouse-display {\n  display: none;\n  position: absolute;\n  width: 1px;\n  height: 100%;\n  background-color: #000;\n  z-index: 1;\n}\n\n.vjs-no-flex .vjs-progress-control .vjs-mouse-display {\n  z-index: 0;\n}\n\n.video-js .vjs-progress-control:hover .vjs-mouse-display {\n  display: block;\n}\n\n.video-js.vjs-user-inactive .vjs-progress-control .vjs-mouse-display {\n  visibility: hidden;\n  opacity: 0;\n  transition: visibility 1s, opacity 1s;\n}\n\n.video-js.vjs-user-inactive.vjs-no-flex .vjs-progress-control .vjs-mouse-display {\n  display: none;\n}\n\n.vjs-mouse-display .vjs-time-tooltip {\n  color: #fff;\n  background-color: #000;\n  background-color: rgba(0, 0, 0, 0.8);\n}\n\n.video-js .vjs-slider {\n  position: relative;\n  cursor: pointer;\n  padding: 0;\n  margin: 0 0.45em 0 0.45em;\n  /* iOS Safari */\n  -webkit-touch-callout: none;\n  /* Safari */\n  -webkit-user-select: none;\n  /* Konqueror HTML */\n  /* Firefox */\n  -moz-user-select: none;\n  /* Internet Explorer/Edge */\n  -ms-user-select: none;\n  /* Non-prefixed version, currently supported by Chrome and Opera */\n  user-select: none;\n  background-color: #73859f;\n  background-color: rgba(115, 133, 159, 0.5);\n}\n\n.video-js .vjs-slider.disabled {\n  cursor: default;\n}\n\n.video-js .vjs-slider:focus {\n  text-shadow: 0em 0em 1em white;\n  box-shadow: 0 0 1em #fff;\n}\n\n.video-js .vjs-mute-control {\n  cursor: pointer;\n  flex: none;\n}\n.video-js .vjs-volume-control {\n  cursor: pointer;\n  margin-right: 1em;\n  display: flex;\n}\n\n.video-js .vjs-volume-control.vjs-volume-horizontal {\n  width: 5em;\n}\n\n.video-js .vjs-volume-panel .vjs-volume-control {\n  visibility: visible;\n  opacity: 0;\n  width: 1px;\n  height: 1px;\n  margin-left: -1px;\n}\n\n.video-js .vjs-volume-panel {\n  transition: width 1s;\n}\n.video-js .vjs-volume-panel.vjs-hover .vjs-volume-control, .video-js .vjs-volume-panel:active .vjs-volume-control, .video-js .vjs-volume-panel:focus .vjs-volume-control, .video-js .vjs-volume-panel .vjs-volume-control:active, .video-js .vjs-volume-panel.vjs-hover .vjs-mute-control ~ .vjs-volume-control, .video-js .vjs-volume-panel .vjs-volume-control.vjs-slider-active {\n  visibility: visible;\n  opacity: 1;\n  position: relative;\n  transition: visibility 0.1s, opacity 0.1s, height 0.1s, width 0.1s, left 0s, top 0s;\n}\n.video-js .vjs-volume-panel.vjs-hover .vjs-volume-control.vjs-volume-horizontal, .video-js .vjs-volume-panel:active .vjs-volume-control.vjs-volume-horizontal, .video-js .vjs-volume-panel:focus .vjs-volume-control.vjs-volume-horizontal, .video-js .vjs-volume-panel .vjs-volume-control:active.vjs-volume-horizontal, .video-js .vjs-volume-panel.vjs-hover .vjs-mute-control ~ .vjs-volume-control.vjs-volume-horizontal, .video-js .vjs-volume-panel .vjs-volume-control.vjs-slider-active.vjs-volume-horizontal {\n  width: 5em;\n  height: 3em;\n  margin-right: 0;\n}\n.video-js .vjs-volume-panel.vjs-hover .vjs-volume-control.vjs-volume-vertical, .video-js .vjs-volume-panel:active .vjs-volume-control.vjs-volume-vertical, .video-js .vjs-volume-panel:focus .vjs-volume-control.vjs-volume-vertical, .video-js .vjs-volume-panel .vjs-volume-control:active.vjs-volume-vertical, .video-js .vjs-volume-panel.vjs-hover .vjs-mute-control ~ .vjs-volume-control.vjs-volume-vertical, .video-js .vjs-volume-panel .vjs-volume-control.vjs-slider-active.vjs-volume-vertical {\n  left: -3.5em;\n  transition: left 0s;\n}\n.video-js .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-hover, .video-js .vjs-volume-panel.vjs-volume-panel-horizontal:active, .video-js .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-slider-active {\n  width: 10em;\n  transition: width 0.1s;\n}\n.video-js .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-mute-toggle-only {\n  width: 4em;\n}\n\n.video-js .vjs-volume-panel .vjs-volume-control.vjs-volume-vertical {\n  height: 8em;\n  width: 3em;\n  left: -3000em;\n  transition: visibility 1s, opacity 1s, height 1s 1s, width 1s 1s, left 1s 1s, top 1s 1s;\n}\n\n.video-js .vjs-volume-panel .vjs-volume-control.vjs-volume-horizontal {\n  transition: visibility 1s, opacity 1s, height 1s 1s, width 1s, left 1s 1s, top 1s 1s;\n}\n\n.video-js.vjs-no-flex .vjs-volume-panel .vjs-volume-control.vjs-volume-horizontal {\n  width: 5em;\n  height: 3em;\n  visibility: visible;\n  opacity: 1;\n  position: relative;\n  transition: none;\n}\n\n.video-js.vjs-no-flex .vjs-volume-control.vjs-volume-vertical,\n.video-js.vjs-no-flex .vjs-volume-panel .vjs-volume-control.vjs-volume-vertical {\n  position: absolute;\n  bottom: 3em;\n  left: 0.5em;\n}\n\n.video-js .vjs-volume-panel {\n  display: flex;\n}\n\n.video-js .vjs-volume-bar {\n  margin: 1.35em 0.45em;\n}\n\n.vjs-volume-bar.vjs-slider-horizontal {\n  width: 5em;\n  height: 0.3em;\n}\n\n.vjs-volume-bar.vjs-slider-vertical {\n  width: 0.3em;\n  height: 5em;\n  margin: 1.35em auto;\n}\n\n.video-js .vjs-volume-level {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  background-color: #fff;\n}\n.video-js .vjs-volume-level:before {\n  position: absolute;\n  font-size: 0.9em;\n  z-index: 1;\n}\n\n.vjs-slider-vertical .vjs-volume-level {\n  width: 0.3em;\n}\n.vjs-slider-vertical .vjs-volume-level:before {\n  top: -0.5em;\n  left: -0.3em;\n  z-index: 1;\n}\n\n.vjs-slider-horizontal .vjs-volume-level {\n  height: 0.3em;\n}\n.vjs-slider-horizontal .vjs-volume-level:before {\n  top: -0.3em;\n  right: -0.5em;\n}\n\n.video-js .vjs-volume-panel.vjs-volume-panel-vertical {\n  width: 4em;\n}\n\n.vjs-volume-bar.vjs-slider-vertical .vjs-volume-level {\n  height: 100%;\n}\n\n.vjs-volume-bar.vjs-slider-horizontal .vjs-volume-level {\n  width: 100%;\n}\n\n.video-js .vjs-volume-vertical {\n  width: 3em;\n  height: 8em;\n  bottom: 8em;\n  background-color: #2B333F;\n  background-color: rgba(43, 51, 63, 0.7);\n}\n\n.video-js .vjs-volume-horizontal .vjs-menu {\n  left: -2em;\n}\n\n.video-js .vjs-volume-tooltip {\n  background-color: #fff;\n  background-color: rgba(255, 255, 255, 0.8);\n  border-radius: 0.3em;\n  color: #000;\n  float: right;\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 1em;\n  padding: 6px 8px 8px 8px;\n  pointer-events: none;\n  position: absolute;\n  top: -3.4em;\n  visibility: hidden;\n  z-index: 1;\n}\n\n.video-js .vjs-volume-control:hover .vjs-volume-tooltip,\n.video-js .vjs-volume-control:hover .vjs-progress-holder:focus .vjs-volume-tooltip {\n  display: block;\n  font-size: 1em;\n  visibility: visible;\n}\n\n.video-js .vjs-volume-vertical:hover .vjs-volume-tooltip,\n.video-js .vjs-volume-vertical:hover .vjs-progress-holder:focus .vjs-volume-tooltip {\n  left: 1em;\n  top: -12px;\n}\n\n.video-js .vjs-volume-control.disabled:hover .vjs-volume-tooltip {\n  font-size: 1em;\n}\n\n.video-js .vjs-volume-control .vjs-mouse-display {\n  display: none;\n  position: absolute;\n  width: 100%;\n  height: 1px;\n  background-color: #000;\n  z-index: 1;\n}\n\n.video-js .vjs-volume-horizontal .vjs-mouse-display {\n  width: 1px;\n  height: 100%;\n}\n\n.vjs-no-flex .vjs-volume-control .vjs-mouse-display {\n  z-index: 0;\n}\n\n.video-js .vjs-volume-control:hover .vjs-mouse-display {\n  display: block;\n}\n\n.video-js.vjs-user-inactive .vjs-volume-control .vjs-mouse-display {\n  visibility: hidden;\n  opacity: 0;\n  transition: visibility 1s, opacity 1s;\n}\n\n.video-js.vjs-user-inactive.vjs-no-flex .vjs-volume-control .vjs-mouse-display {\n  display: none;\n}\n\n.vjs-mouse-display .vjs-volume-tooltip {\n  color: #fff;\n  background-color: #000;\n  background-color: rgba(0, 0, 0, 0.8);\n}\n\n.vjs-poster {\n  display: inline-block;\n  vertical-align: middle;\n  background-repeat: no-repeat;\n  background-position: 50% 50%;\n  background-size: contain;\n  background-color: #000000;\n  cursor: pointer;\n  margin: 0;\n  padding: 0;\n  position: absolute;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  height: 100%;\n}\n\n.vjs-has-started .vjs-poster {\n  display: none;\n}\n\n.vjs-audio.vjs-has-started .vjs-poster {\n  display: block;\n}\n\n.vjs-using-native-controls .vjs-poster {\n  display: none;\n}\n\n.video-js .vjs-live-control {\n  display: flex;\n  align-items: flex-start;\n  flex: auto;\n  font-size: 1em;\n  line-height: 3em;\n}\n\n.vjs-no-flex .vjs-live-control {\n  display: table-cell;\n  width: auto;\n  text-align: left;\n}\n\n.video-js:not(.vjs-live) .vjs-live-control,\n.video-js.vjs-liveui .vjs-live-control {\n  display: none;\n}\n\n.video-js .vjs-seek-to-live-control {\n  align-items: center;\n  cursor: pointer;\n  flex: none;\n  display: inline-flex;\n  height: 100%;\n  padding-left: 0.5em;\n  padding-right: 0.5em;\n  font-size: 1em;\n  line-height: 3em;\n  width: auto;\n  min-width: 4em;\n}\n\n.vjs-no-flex .vjs-seek-to-live-control {\n  display: table-cell;\n  width: auto;\n  text-align: left;\n}\n\n.video-js.vjs-live:not(.vjs-liveui) .vjs-seek-to-live-control,\n.video-js:not(.vjs-live) .vjs-seek-to-live-control {\n  display: none;\n}\n\n.vjs-seek-to-live-control.vjs-control.vjs-at-live-edge {\n  cursor: auto;\n}\n\n.vjs-seek-to-live-control .vjs-icon-placeholder {\n  margin-right: 0.5em;\n  color: #888;\n}\n\n.vjs-seek-to-live-control.vjs-control.vjs-at-live-edge .vjs-icon-placeholder {\n  color: red;\n}\n\n.video-js .vjs-time-control {\n  flex: none;\n  font-size: 1em;\n  line-height: 3em;\n  min-width: 2em;\n  width: auto;\n  padding-left: 1em;\n  padding-right: 1em;\n}\n\n.vjs-live .vjs-time-control {\n  display: none;\n}\n\n.video-js .vjs-current-time,\n.vjs-no-flex .vjs-current-time {\n  display: none;\n}\n\n.video-js .vjs-duration,\n.vjs-no-flex .vjs-duration {\n  display: none;\n}\n\n.vjs-time-divider {\n  display: none;\n  line-height: 3em;\n}\n\n.vjs-live .vjs-time-divider {\n  display: none;\n}\n\n.video-js .vjs-play-control {\n  cursor: pointer;\n}\n\n.video-js .vjs-play-control .vjs-icon-placeholder {\n  flex: none;\n}\n\n.vjs-text-track-display {\n  position: absolute;\n  bottom: 3em;\n  left: 0;\n  right: 0;\n  top: 0;\n  pointer-events: none;\n}\n\n.video-js.vjs-user-inactive.vjs-playing .vjs-text-track-display {\n  bottom: 1em;\n}\n\n.video-js .vjs-text-track {\n  font-size: 1.4em;\n  text-align: center;\n  margin-bottom: 0.1em;\n}\n\n.vjs-subtitles {\n  color: #fff;\n}\n\n.vjs-captions {\n  color: #fc6;\n}\n\n.vjs-tt-cue {\n  display: block;\n}\n\nvideo::-webkit-media-text-track-display {\n  transform: translateY(-3em);\n}\n\n.video-js.vjs-user-inactive.vjs-playing video::-webkit-media-text-track-display {\n  transform: translateY(-1.5em);\n}\n\n.video-js .vjs-picture-in-picture-control {\n  cursor: pointer;\n  flex: none;\n}\n.video-js .vjs-fullscreen-control {\n  cursor: pointer;\n  flex: none;\n}\n.vjs-playback-rate > .vjs-menu-button,\n.vjs-playback-rate .vjs-playback-rate-value {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n}\n\n.vjs-playback-rate .vjs-playback-rate-value {\n  pointer-events: none;\n  font-size: 1.5em;\n  line-height: 2;\n  text-align: center;\n}\n\n.vjs-playback-rate .vjs-menu {\n  width: 4em;\n  left: 0em;\n}\n\n.vjs-error .vjs-error-display .vjs-modal-dialog-content {\n  font-size: 1.4em;\n  text-align: center;\n}\n\n.vjs-error .vjs-error-display:before {\n  color: #fff;\n  content: \"X\";\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 4em;\n  left: 0;\n  line-height: 1;\n  margin-top: -0.5em;\n  position: absolute;\n  text-shadow: 0.05em 0.05em 0.1em #000;\n  text-align: center;\n  top: 50%;\n  vertical-align: middle;\n  width: 100%;\n}\n\n.vjs-loading-spinner {\n  display: none;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  margin: -25px 0 0 -25px;\n  opacity: 0.85;\n  text-align: left;\n  border: 6px solid rgba(43, 51, 63, 0.7);\n  box-sizing: border-box;\n  background-clip: padding-box;\n  width: 50px;\n  height: 50px;\n  border-radius: 25px;\n  visibility: hidden;\n}\n\n.vjs-seeking .vjs-loading-spinner,\n.vjs-waiting .vjs-loading-spinner {\n  display: block;\n  -webkit-animation: vjs-spinner-show 0s linear 0.3s forwards;\n          animation: vjs-spinner-show 0s linear 0.3s forwards;\n}\n\n.vjs-loading-spinner:before,\n.vjs-loading-spinner:after {\n  content: \"\";\n  position: absolute;\n  margin: -6px;\n  box-sizing: inherit;\n  width: inherit;\n  height: inherit;\n  border-radius: inherit;\n  opacity: 1;\n  border: inherit;\n  border-color: transparent;\n  border-top-color: white;\n}\n\n.vjs-seeking .vjs-loading-spinner:before,\n.vjs-seeking .vjs-loading-spinner:after,\n.vjs-waiting .vjs-loading-spinner:before,\n.vjs-waiting .vjs-loading-spinner:after {\n  -webkit-animation: vjs-spinner-spin 1.1s cubic-bezier(0.6, 0.2, 0, 0.8) infinite, vjs-spinner-fade 1.1s linear infinite;\n  animation: vjs-spinner-spin 1.1s cubic-bezier(0.6, 0.2, 0, 0.8) infinite, vjs-spinner-fade 1.1s linear infinite;\n}\n\n.vjs-seeking .vjs-loading-spinner:before,\n.vjs-waiting .vjs-loading-spinner:before {\n  border-top-color: white;\n}\n\n.vjs-seeking .vjs-loading-spinner:after,\n.vjs-waiting .vjs-loading-spinner:after {\n  border-top-color: white;\n  -webkit-animation-delay: 0.44s;\n  animation-delay: 0.44s;\n}\n\n@keyframes vjs-spinner-show {\n  to {\n    visibility: visible;\n  }\n}\n@-webkit-keyframes vjs-spinner-show {\n  to {\n    visibility: visible;\n  }\n}\n@keyframes vjs-spinner-spin {\n  100% {\n    transform: rotate(360deg);\n  }\n}\n@-webkit-keyframes vjs-spinner-spin {\n  100% {\n    -webkit-transform: rotate(360deg);\n  }\n}\n@keyframes vjs-spinner-fade {\n  0% {\n    border-top-color: #73859f;\n  }\n  20% {\n    border-top-color: #73859f;\n  }\n  35% {\n    border-top-color: white;\n  }\n  60% {\n    border-top-color: #73859f;\n  }\n  100% {\n    border-top-color: #73859f;\n  }\n}\n@-webkit-keyframes vjs-spinner-fade {\n  0% {\n    border-top-color: #73859f;\n  }\n  20% {\n    border-top-color: #73859f;\n  }\n  35% {\n    border-top-color: white;\n  }\n  60% {\n    border-top-color: #73859f;\n  }\n  100% {\n    border-top-color: #73859f;\n  }\n}\n.vjs-chapters-button .vjs-menu ul {\n  width: 24em;\n}\n\n.video-js .vjs-subs-caps-button + .vjs-menu .vjs-captions-menu-item .vjs-menu-item-text .vjs-icon-placeholder {\n  vertical-align: middle;\n  display: inline-block;\n  margin-bottom: -0.1em;\n}\n\n.video-js .vjs-subs-caps-button + .vjs-menu .vjs-captions-menu-item .vjs-menu-item-text .vjs-icon-placeholder:before {\n  font-family: VideoJS;\n  content: \"\";\n  font-size: 1.5em;\n  line-height: inherit;\n}\n\n.video-js .vjs-audio-button + .vjs-menu .vjs-main-desc-menu-item .vjs-menu-item-text .vjs-icon-placeholder {\n  vertical-align: middle;\n  display: inline-block;\n  margin-bottom: -0.1em;\n}\n\n.video-js .vjs-audio-button + .vjs-menu .vjs-main-desc-menu-item .vjs-menu-item-text .vjs-icon-placeholder:before {\n  font-family: VideoJS;\n  content: \" \";\n  font-size: 1.5em;\n  line-height: inherit;\n}\n\n.video-js.vjs-layout-small .vjs-current-time,\n.video-js.vjs-layout-small .vjs-time-divider,\n.video-js.vjs-layout-small .vjs-duration,\n.video-js.vjs-layout-small .vjs-remaining-time,\n.video-js.vjs-layout-small .vjs-playback-rate,\n.video-js.vjs-layout-small .vjs-volume-control, .video-js.vjs-layout-x-small .vjs-current-time,\n.video-js.vjs-layout-x-small .vjs-time-divider,\n.video-js.vjs-layout-x-small .vjs-duration,\n.video-js.vjs-layout-x-small .vjs-remaining-time,\n.video-js.vjs-layout-x-small .vjs-playback-rate,\n.video-js.vjs-layout-x-small .vjs-volume-control, .video-js.vjs-layout-tiny .vjs-current-time,\n.video-js.vjs-layout-tiny .vjs-time-divider,\n.video-js.vjs-layout-tiny .vjs-duration,\n.video-js.vjs-layout-tiny .vjs-remaining-time,\n.video-js.vjs-layout-tiny .vjs-playback-rate,\n.video-js.vjs-layout-tiny .vjs-volume-control {\n  display: none;\n}\n.video-js.vjs-layout-small .vjs-volume-panel.vjs-volume-panel-horizontal:hover, .video-js.vjs-layout-small .vjs-volume-panel.vjs-volume-panel-horizontal:active, .video-js.vjs-layout-small .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-slider-active, .video-js.vjs-layout-small .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-hover, .video-js.vjs-layout-x-small .vjs-volume-panel.vjs-volume-panel-horizontal:hover, .video-js.vjs-layout-x-small .vjs-volume-panel.vjs-volume-panel-horizontal:active, .video-js.vjs-layout-x-small .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-slider-active, .video-js.vjs-layout-x-small .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-hover, .video-js.vjs-layout-tiny .vjs-volume-panel.vjs-volume-panel-horizontal:hover, .video-js.vjs-layout-tiny .vjs-volume-panel.vjs-volume-panel-horizontal:active, .video-js.vjs-layout-tiny .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-slider-active, .video-js.vjs-layout-tiny .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-hover {\n  width: auto;\n  width: initial;\n}\n.video-js.vjs-layout-x-small .vjs-progress-control, .video-js.vjs-layout-tiny .vjs-progress-control {\n  display: none;\n}\n.video-js.vjs-layout-x-small .vjs-custom-control-spacer {\n  flex: auto;\n  display: block;\n}\n.video-js.vjs-layout-x-small.vjs-no-flex .vjs-custom-control-spacer {\n  width: auto;\n}\n\n.vjs-modal-dialog.vjs-text-track-settings {\n  background-color: #2B333F;\n  background-color: rgba(43, 51, 63, 0.75);\n  color: #fff;\n  height: 70%;\n}\n\n.vjs-text-track-settings .vjs-modal-dialog-content {\n  display: table;\n}\n\n.vjs-text-track-settings .vjs-track-settings-colors,\n.vjs-text-track-settings .vjs-track-settings-font,\n.vjs-text-track-settings .vjs-track-settings-controls {\n  display: table-cell;\n}\n\n.vjs-text-track-settings .vjs-track-settings-controls {\n  text-align: right;\n  vertical-align: bottom;\n}\n\n@supports (display: grid) {\n  .vjs-text-track-settings .vjs-modal-dialog-content {\n    display: grid;\n    grid-template-columns: 1fr 1fr;\n    grid-template-rows: 1fr;\n    padding: 20px 24px 0px 24px;\n  }\n\n  .vjs-track-settings-controls .vjs-default-button {\n    margin-bottom: 20px;\n  }\n\n  .vjs-text-track-settings .vjs-track-settings-controls {\n    grid-column: 1/-1;\n  }\n\n  .vjs-layout-small .vjs-text-track-settings .vjs-modal-dialog-content,\n.vjs-layout-x-small .vjs-text-track-settings .vjs-modal-dialog-content,\n.vjs-layout-tiny .vjs-text-track-settings .vjs-modal-dialog-content {\n    grid-template-columns: 1fr;\n  }\n}\n.vjs-track-setting > select {\n  margin-right: 1em;\n  margin-bottom: 0.5em;\n}\n\n.vjs-text-track-settings fieldset {\n  margin: 5px;\n  padding: 3px;\n  border: none;\n}\n\n.vjs-text-track-settings fieldset span {\n  display: inline-block;\n}\n\n.vjs-text-track-settings fieldset span > select {\n  max-width: 7.3em;\n}\n\n.vjs-text-track-settings legend {\n  color: #fff;\n  margin: 0 0 5px 0;\n}\n\n.vjs-text-track-settings .vjs-label {\n  position: absolute;\n  clip: rect(1px 1px 1px 1px);\n  clip: rect(1px, 1px, 1px, 1px);\n  display: block;\n  margin: 0 0 5px 0;\n  padding: 0;\n  border: 0;\n  height: 1px;\n  width: 1px;\n  overflow: hidden;\n}\n\n.vjs-track-settings-controls button:focus,\n.vjs-track-settings-controls button:active {\n  outline-style: solid;\n  outline-width: medium;\n  background-image: linear-gradient(0deg, #fff 88%, #73859f 100%);\n}\n\n.vjs-track-settings-controls button:hover {\n  color: rgba(43, 51, 63, 0.75);\n}\n\n.vjs-track-settings-controls button {\n  background-color: #fff;\n  background-image: linear-gradient(-180deg, #fff 88%, #73859f 100%);\n  color: #2B333F;\n  cursor: pointer;\n  border-radius: 2px;\n}\n\n.vjs-track-settings-controls .vjs-default-button {\n  margin-right: 1em;\n}\n\n@media print {\n  .video-js > *:not(.vjs-tech):not(.vjs-poster) {\n    visibility: hidden;\n  }\n}\n.vjs-resize-manager {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  border: none;\n  z-index: -1000;\n}\n\n.js-focus-visible .video-js *:focus:not(.focus-visible) {\n  outline: none;\n}\n\n.video-js *:focus:not(:focus-visible) {\n  outline: none;\n}\n", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PartyList.vue?vue&type=style&index=0&id=4e37d66e&scoped=true&lang=css&":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PartyList.vue?vue&type=style&index=0&id=4e37d66e&scoped=true&lang=css& ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "\n.party-list[data-v-4e37d66e] {\n    text-transform: uppercase;\n    line-height: 40px;\n}\n.party-object[data-v-4e37d66e] {\n    opacity: 0;\n    -webkit-animation: revealParty-data-v-4e37d66e .7s forwards;\n            animation: revealParty-data-v-4e37d66e .7s forwards\n}\n.party-button[data-v-4e37d66e] {\n    display: block;\n    opacity: 0;\n    -webkit-animation-delay: .5s;\n            animation-delay: .5s;\n    -webkit-animation: revealText-data-v-4e37d66e 1s forwards;\n            animation: revealText-data-v-4e37d66e 1s forwards;\n}\n.party-button-parent[data-v-4e37d66e]:hover {\n    cursor: pointer;\n    -webkit-animation: bounce-data-v-4e37d66e 1s forwards;\n            animation: bounce-data-v-4e37d66e 1s forwards;\n}\n.button-first[data-v-4e37d66e]{\n    -webkit-animation-delay: .175s;\n            animation-delay: .175s;\n}\n.button-second[data-v-4e37d66e]{\n    -webkit-animation-delay: .25s;\n            animation-delay: .25s;\n}\n@-webkit-keyframes revealText-data-v-4e37d66e {\nfrom {\n        transform: translateY(30px)\n}\nto {\n        opacity: 1;\n        transform: none;\n}\n}\n@keyframes revealText-data-v-4e37d66e {\nfrom {\n        transform: translateY(30px)\n}\nto {\n        opacity: 1;\n        transform: none;\n}\n}\n@-webkit-keyframes revealParty-data-v-4e37d66e {\n0% {\n        transform: translateY(-300px)\n}\n100% {\n        opacity: 1;\n        transform: none;\n}\n}\n@keyframes revealParty-data-v-4e37d66e {\n0% {\n        transform: translateY(-300px)\n}\n100% {\n        opacity: 1;\n        transform: none;\n}\n}\n@-webkit-keyframes bounce-data-v-4e37d66e {\n0%{\n\t\ttransform:         translateY(0)\n}\n100% {\n\t\ttransform:         translateY(-10px)\n}\n}\n@keyframes bounce-data-v-4e37d66e {\n0%{\n\t\ttransform:         translateY(0)\n}\n100% {\n\t\ttransform:         translateY(-10px)\n}\n}\n\n\n\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -34517,7 +34583,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "VERSION": () => (/* binding */ VERSION),
-/* harmony export */   "addSidxSegmentsToPlaylist": () => (/* binding */ addSidxSegmentsToPlaylist),
+/* harmony export */   "addSidxSegmentsToPlaylist": () => (/* binding */ addSidxSegmentsToPlaylist$1),
 /* harmony export */   "generateSidxKey": () => (/* binding */ generateSidxKey),
 /* harmony export */   "inheritAttributes": () => (/* binding */ inheritAttributes),
 /* harmony export */   "parse": () => (/* binding */ parse),
@@ -34529,15 +34595,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _videojs_vhs_utils_es_resolve_url__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @videojs/vhs-utils/es/resolve-url */ "./node_modules/@videojs/vhs-utils/es/resolve-url.js");
 /* harmony import */ var global_window__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! global/window */ "./node_modules/global/window.js");
 /* harmony import */ var global_window__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(global_window__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _videojs_vhs_utils_es_decode_b64_to_uint8_array__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @videojs/vhs-utils/es/decode-b64-to-uint8-array */ "./node_modules/@videojs/vhs-utils/es/decode-b64-to-uint8-array.js");
-/* harmony import */ var _xmldom_xmldom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @xmldom/xmldom */ "./node_modules/@xmldom/xmldom/lib/index.js");
-/*! @name mpd-parser @version 0.19.2 @license Apache-2.0 */
+/* harmony import */ var _videojs_vhs_utils_es_media_groups__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @videojs/vhs-utils/es/media-groups */ "./node_modules/@videojs/vhs-utils/es/media-groups.js");
+/* harmony import */ var _videojs_vhs_utils_es_decode_b64_to_uint8_array__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @videojs/vhs-utils/es/decode-b64-to-uint8-array */ "./node_modules/@videojs/vhs-utils/es/decode-b64-to-uint8-array.js");
+/* harmony import */ var _xmldom_xmldom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @xmldom/xmldom */ "./node_modules/@xmldom/xmldom/lib/index.js");
+/*! @name mpd-parser @version 0.21.0 @license Apache-2.0 */
 
 
 
 
 
-var version = "0.19.2";
+
+var version = "0.21.0";
 
 var isObject = function isObject(obj) {
   return !!obj && typeof obj === 'object';
@@ -34607,6 +34675,43 @@ var findIndexes = function findIndexes(l, key) {
     return a;
   }, []);
 };
+/**
+ * Returns the first index that satisfies the matching function, or -1 if not found.
+ *
+ * Only necessary because of IE11 support.
+ *
+ * @param {Array} list - the list to search through
+ * @param {Function} matchingFunction - the matching function
+ *
+ * @return {number} the matching index or -1 if not found
+ */
+
+var findIndex = function findIndex(list, matchingFunction) {
+  for (var i = 0; i < list.length; i++) {
+    if (matchingFunction(list[i])) {
+      return i;
+    }
+  }
+
+  return -1;
+};
+/**
+ * Returns a union of the included lists provided each element can be identified by a key.
+ *
+ * @param {Array} list - list of lists to get the union of
+ * @param {Function} keyFunction - the function to use as a key for each element
+ *
+ * @return {Array} the union of the arrays
+ */
+
+var union = function union(lists, keyFunction) {
+  return values(lists.reduce(function (acc, list) {
+    list.forEach(function (el) {
+      acc[keyFunction(el)] = el;
+    });
+    return acc;
+  }, {}));
+};
 
 var errors = {
   INVALID_NUMBER_OF_PERIOD: 'INVALID_NUMBER_OF_PERIOD',
@@ -34660,13 +34765,35 @@ var urlTypeToSegment = function urlTypeToSegment(_ref) {
 
   if (range || indexRange) {
     var rangeStr = range ? range : indexRange;
-    var ranges = rangeStr.split('-');
-    var startRange = parseInt(ranges[0], 10);
-    var endRange = parseInt(ranges[1], 10); // byterange should be inclusive according to
+    var ranges = rangeStr.split('-'); // default to parsing this as a BigInt if possible
+
+    var startRange = (global_window__WEBPACK_IMPORTED_MODULE_1___default().BigInt) ? global_window__WEBPACK_IMPORTED_MODULE_1___default().BigInt(ranges[0]) : parseInt(ranges[0], 10);
+    var endRange = (global_window__WEBPACK_IMPORTED_MODULE_1___default().BigInt) ? global_window__WEBPACK_IMPORTED_MODULE_1___default().BigInt(ranges[1]) : parseInt(ranges[1], 10); // convert back to a number if less than MAX_SAFE_INTEGER
+
+    if (startRange < Number.MAX_SAFE_INTEGER && typeof startRange === 'bigint') {
+      startRange = Number(startRange);
+    }
+
+    if (endRange < Number.MAX_SAFE_INTEGER && typeof endRange === 'bigint') {
+      endRange = Number(endRange);
+    }
+
+    var length;
+
+    if (typeof endRange === 'bigint' || typeof startRange === 'bigint') {
+      length = global_window__WEBPACK_IMPORTED_MODULE_1___default().BigInt(endRange) - global_window__WEBPACK_IMPORTED_MODULE_1___default().BigInt(startRange) + global_window__WEBPACK_IMPORTED_MODULE_1___default().BigInt(1);
+    } else {
+      length = endRange - startRange + 1;
+    }
+
+    if (typeof length === 'bigint' && length < Number.MAX_SAFE_INTEGER) {
+      length = Number(length);
+    } // byterange should be inclusive according to
     // RFC 2616, Clause 14.35.1
 
+
     segment.byterange = {
-      length: endRange - startRange + 1,
+      length: length,
       offset: startRange
     };
   }
@@ -34676,7 +34803,14 @@ var urlTypeToSegment = function urlTypeToSegment(_ref) {
 var byteRangeToString = function byteRangeToString(byterange) {
   // `endRange` is one less than `offset + length` because the HTTP range
   // header uses inclusive ranges
-  var endRange = byterange.offset + byterange.length - 1;
+  var endRange;
+
+  if (typeof byterange.offset === 'bigint' || typeof byterange.length === 'bigint') {
+    endRange = global_window__WEBPACK_IMPORTED_MODULE_1___default().BigInt(byterange.offset) + global_window__WEBPACK_IMPORTED_MODULE_1___default().BigInt(byterange.length) - global_window__WEBPACK_IMPORTED_MODULE_1___default().BigInt(1);
+  } else {
+    endRange = byterange.offset + byterange.length - 1;
+  }
+
   return byterange.offset + "-" + endRange;
 };
 
@@ -34761,15 +34895,20 @@ var segmentRange = {
         _attributes$timescale2 = attributes.timescale,
         timescale = _attributes$timescale2 === void 0 ? 1 : _attributes$timescale2,
         duration = attributes.duration,
-        _attributes$start = attributes.start,
-        start = _attributes$start === void 0 ? 0 : _attributes$start,
+        _attributes$periodSta = attributes.periodStart,
+        periodStart = _attributes$periodSta === void 0 ? 0 : _attributes$periodSta,
         _attributes$minimumUp = attributes.minimumUpdatePeriod,
         minimumUpdatePeriod = _attributes$minimumUp === void 0 ? 0 : _attributes$minimumUp,
         _attributes$timeShift = attributes.timeShiftBufferDepth,
         timeShiftBufferDepth = _attributes$timeShift === void 0 ? Infinity : _attributes$timeShift;
-    var endNumber = parseEndNumber(attributes.endNumber);
-    var now = (NOW + clientOffset) / 1000;
-    var periodStartWC = availabilityStartTime + start;
+    var endNumber = parseEndNumber(attributes.endNumber); // clientOffset is passed in at the top level of mpd-parser and is an offset calculated
+    // after retrieving UTC server time.
+
+    var now = (NOW + clientOffset) / 1000; // WC stands for Wall Clock.
+    // Convert the period start time to EPOCH.
+
+    var periodStartWC = availabilityStartTime + periodStart; // Period end in EPOCH is manifest's retrieval time + time until next update.
+
     var periodEndWC = now + minimumUpdatePeriod;
     var periodDuration = periodEndWC - periodStartWC;
     var segmentCount = Math.ceil(periodDuration * timescale / duration);
@@ -34806,18 +34945,18 @@ var segmentRange = {
  */
 
 var toSegments = function toSegments(attributes) {
-  return function (number, index) {
+  return function (number) {
     var duration = attributes.duration,
         _attributes$timescale3 = attributes.timescale,
         timescale = _attributes$timescale3 === void 0 ? 1 : _attributes$timescale3,
-        periodIndex = attributes.periodIndex,
+        periodStart = attributes.periodStart,
         _attributes$startNumb = attributes.startNumber,
         startNumber = _attributes$startNumb === void 0 ? 1 : _attributes$startNumb;
     return {
       number: startNumber + number,
       duration: duration / timescale,
-      timeline: periodIndex,
-      time: index * duration
+      timeline: periodStart,
+      time: number * duration
     };
   };
 };
@@ -34875,6 +35014,10 @@ var segmentsFromBase = function segmentsFromBase(attributes) {
       sourceDuration = attributes.sourceDuration,
       _attributes$indexRang = attributes.indexRange,
       indexRange = _attributes$indexRang === void 0 ? '' : _attributes$indexRang,
+      periodStart = attributes.periodStart,
+      presentationTime = attributes.presentationTime,
+      _attributes$number = attributes.number,
+      number = _attributes$number === void 0 ? 0 : _attributes$number,
       duration = attributes.duration; // base url is required for SegmentBase to work, per spec (Section 5.3.9.2.1)
 
   if (!baseUrl) {
@@ -34903,11 +35046,15 @@ var segmentsFromBase = function segmentsFromBase(attributes) {
     }
   } else if (sourceDuration) {
     segment.duration = sourceDuration;
-    segment.timeline = 0;
-  } // This is used for mediaSequence
+    segment.timeline = periodStart;
+  } // If presentation time is provided, these segments are being generated by SIDX
+  // references, and should use the time provided. For the general case of SegmentBase,
+  // there should only be one segment in the period, so its presentation time is the same
+  // as its period start.
 
 
-  segment.number = 0;
+  segment.presentationTime = presentationTime || periodStart;
+  segment.number = number;
   return [segment];
 };
 /**
@@ -34922,7 +35069,7 @@ var segmentsFromBase = function segmentsFromBase(attributes) {
  * @return {Object} the playlist object with the updated sidx information
  */
 
-var addSidxSegmentsToPlaylist = function addSidxSegmentsToPlaylist(playlist, sidx, baseUrl) {
+var addSidxSegmentsToPlaylist$1 = function addSidxSegmentsToPlaylist(playlist, sidx, baseUrl) {
   // Retain init segment information
   var initSegment = playlist.sidx.map ? playlist.sidx.map : null; // Retain source duration from initial main manifest parsing
 
@@ -34938,9 +35085,18 @@ var addSidxSegmentsToPlaylist = function addSidxSegmentsToPlaylist(playlist, sid
     return r.referenceType !== 1;
   });
   var segments = [];
-  var type = playlist.endList ? 'static' : 'dynamic'; // firstOffset is the offset from the end of the sidx box
+  var type = playlist.endList ? 'static' : 'dynamic';
+  var periodStart = playlist.sidx.timeline;
+  var presentationTime = periodStart;
+  var number = playlist.mediaSequence || 0; // firstOffset is the offset from the end of the sidx box
 
-  var startIndex = sidxEnd + sidx.firstOffset;
+  var startIndex; // eslint-disable-next-line
+
+  if (typeof sidx.firstOffset === 'bigint') {
+    startIndex = global_window__WEBPACK_IMPORTED_MODULE_1___default().BigInt(sidxEnd) + sidx.firstOffset;
+  } else {
+    startIndex = sidxEnd + sidx.firstOffset;
+  }
 
   for (var i = 0; i < mediaReferences.length; i++) {
     var reference = sidx.references[i]; // size of the referenced (sub)segment
@@ -34950,14 +35106,22 @@ var addSidxSegmentsToPlaylist = function addSidxSegmentsToPlaylist(playlist, sid
 
     var duration = reference.subsegmentDuration; // should be an inclusive range
 
-    var endIndex = startIndex + size - 1;
+    var endIndex = void 0; // eslint-disable-next-line
+
+    if (typeof startIndex === 'bigint') {
+      endIndex = startIndex + global_window__WEBPACK_IMPORTED_MODULE_1___default().BigInt(size) - global_window__WEBPACK_IMPORTED_MODULE_1___default().BigInt(1);
+    } else {
+      endIndex = startIndex + size - 1;
+    }
+
     var indexRange = startIndex + "-" + endIndex;
     var attributes = {
       baseUrl: baseUrl,
       timescale: timescale,
       timeline: timeline,
-      // this is used in parseByDuration
-      periodIndex: timeline,
+      periodStart: periodStart,
+      presentationTime: presentationTime,
+      number: number,
       duration: duration,
       sourceDuration: sourceDuration,
       indexRange: indexRange,
@@ -34970,11 +35134,255 @@ var addSidxSegmentsToPlaylist = function addSidxSegmentsToPlaylist(playlist, sid
     }
 
     segments.push(segment);
-    startIndex += size;
+
+    if (typeof startIndex === 'bigint') {
+      startIndex += global_window__WEBPACK_IMPORTED_MODULE_1___default().BigInt(size);
+    } else {
+      startIndex += size;
+    }
+
+    presentationTime += duration / timescale;
+    number++;
   }
 
   playlist.segments = segments;
   return playlist;
+};
+
+var SUPPORTED_MEDIA_TYPES = ['AUDIO', 'SUBTITLES']; // allow one 60fps frame as leniency (arbitrarily chosen)
+
+var TIME_FUDGE = 1 / 60;
+/**
+ * Given a list of timelineStarts, combines, dedupes, and sorts them.
+ *
+ * @param {TimelineStart[]} timelineStarts - list of timeline starts
+ *
+ * @return {TimelineStart[]} the combined and deduped timeline starts
+ */
+
+var getUniqueTimelineStarts = function getUniqueTimelineStarts(timelineStarts) {
+  return union(timelineStarts, function (_ref) {
+    var timeline = _ref.timeline;
+    return timeline;
+  }).sort(function (a, b) {
+    return a.timeline > b.timeline ? 1 : -1;
+  });
+};
+/**
+ * Finds the playlist with the matching NAME attribute.
+ *
+ * @param {Array} playlists - playlists to search through
+ * @param {string} name - the NAME attribute to search for
+ *
+ * @return {Object|null} the matching playlist object, or null
+ */
+
+var findPlaylistWithName = function findPlaylistWithName(playlists, name) {
+  for (var i = 0; i < playlists.length; i++) {
+    if (playlists[i].attributes.NAME === name) {
+      return playlists[i];
+    }
+  }
+
+  return null;
+};
+/**
+ * Gets a flattened array of media group playlists.
+ *
+ * @param {Object} manifest - the main manifest object
+ *
+ * @return {Array} the media group playlists
+ */
+
+var getMediaGroupPlaylists = function getMediaGroupPlaylists(manifest) {
+  var mediaGroupPlaylists = [];
+  (0,_videojs_vhs_utils_es_media_groups__WEBPACK_IMPORTED_MODULE_2__.forEachMediaGroup)(manifest, SUPPORTED_MEDIA_TYPES, function (properties, type, group, label) {
+    mediaGroupPlaylists = mediaGroupPlaylists.concat(properties.playlists || []);
+  });
+  return mediaGroupPlaylists;
+};
+/**
+ * Updates the playlist's media sequence numbers.
+ *
+ * @param {Object} config - options object
+ * @param {Object} config.playlist - the playlist to update
+ * @param {number} config.mediaSequence - the mediaSequence number to start with
+ */
+
+var updateMediaSequenceForPlaylist = function updateMediaSequenceForPlaylist(_ref2) {
+  var playlist = _ref2.playlist,
+      mediaSequence = _ref2.mediaSequence;
+  playlist.mediaSequence = mediaSequence;
+  playlist.segments.forEach(function (segment, index) {
+    segment.number = playlist.mediaSequence + index;
+  });
+};
+/**
+ * Updates the media and discontinuity sequence numbers of newPlaylists given oldPlaylists
+ * and a complete list of timeline starts.
+ *
+ * If no matching playlist is found, only the discontinuity sequence number of the playlist
+ * will be updated.
+ *
+ * Since early available timelines are not supported, at least one segment must be present.
+ *
+ * @param {Object} config - options object
+ * @param {Object[]} oldPlaylists - the old playlists to use as a reference
+ * @param {Object[]} newPlaylists - the new playlists to update
+ * @param {Object} timelineStarts - all timelineStarts seen in the stream to this point
+ */
+
+var updateSequenceNumbers = function updateSequenceNumbers(_ref3) {
+  var oldPlaylists = _ref3.oldPlaylists,
+      newPlaylists = _ref3.newPlaylists,
+      timelineStarts = _ref3.timelineStarts;
+  newPlaylists.forEach(function (playlist) {
+    playlist.discontinuitySequence = findIndex(timelineStarts, function (_ref4) {
+      var timeline = _ref4.timeline;
+      return timeline === playlist.timeline;
+    }); // Playlists NAMEs come from DASH Representation IDs, which are mandatory
+    // (see ISO_23009-1-2012 5.3.5.2).
+    //
+    // If the same Representation existed in a prior Period, it will retain the same NAME.
+
+    var oldPlaylist = findPlaylistWithName(oldPlaylists, playlist.attributes.NAME);
+
+    if (!oldPlaylist) {
+      // Since this is a new playlist, the media sequence values can start from 0 without
+      // consequence.
+      return;
+    } // TODO better support for live SIDX
+    //
+    // As of this writing, mpd-parser does not support multiperiod SIDX (in live or VOD).
+    // This is evident by a playlist only having a single SIDX reference. In a multiperiod
+    // playlist there would need to be multiple SIDX references. In addition, live SIDX is
+    // not supported when the SIDX properties change on refreshes.
+    //
+    // In the future, if support needs to be added, the merging logic here can be called
+    // after SIDX references are resolved. For now, exit early to prevent exceptions being
+    // thrown due to undefined references.
+
+
+    if (playlist.sidx) {
+      return;
+    } // Since we don't yet support early available timelines, we don't need to support
+    // playlists with no segments.
+
+
+    var firstNewSegment = playlist.segments[0];
+    var oldMatchingSegmentIndex = findIndex(oldPlaylist.segments, function (oldSegment) {
+      return Math.abs(oldSegment.presentationTime - firstNewSegment.presentationTime) < TIME_FUDGE;
+    }); // No matching segment from the old playlist means the entire playlist was refreshed.
+    // In this case the media sequence should account for this update, and the new segments
+    // should be marked as discontinuous from the prior content, since the last prior
+    // timeline was removed.
+
+    if (oldMatchingSegmentIndex === -1) {
+      updateMediaSequenceForPlaylist({
+        playlist: playlist,
+        mediaSequence: oldPlaylist.mediaSequence + oldPlaylist.segments.length
+      });
+      playlist.segments[0].discontinuity = true;
+      playlist.discontinuityStarts.unshift(0); // No matching segment does not necessarily mean there's missing content.
+      //
+      // If the new playlist's timeline is the same as the last seen segment's timeline,
+      // then a discontinuity can be added to identify that there's potentially missing
+      // content. If there's no missing content, the discontinuity should still be rather
+      // harmless. It's possible that if segment durations are accurate enough, that the
+      // existence of a gap can be determined using the presentation times and durations,
+      // but if the segment timing info is off, it may introduce more problems than simply
+      // adding the discontinuity.
+      //
+      // If the new playlist's timeline is different from the last seen segment's timeline,
+      // then a discontinuity can be added to identify that this is the first seen segment
+      // of a new timeline. However, the logic at the start of this function that
+      // determined the disconinuity sequence by timeline index is now off by one (the
+      // discontinuity of the newest timeline hasn't yet fallen off the manifest...since
+      // we added it), so the disconinuity sequence must be decremented.
+      //
+      // A period may also have a duration of zero, so the case of no segments is handled
+      // here even though we don't yet support early available periods.
+
+      if (!oldPlaylist.segments.length && playlist.timeline > oldPlaylist.timeline || oldPlaylist.segments.length && playlist.timeline > oldPlaylist.segments[oldPlaylist.segments.length - 1].timeline) {
+        playlist.discontinuitySequence--;
+      }
+
+      return;
+    } // If the first segment matched with a prior segment on a discontinuity (it's matching
+    // on the first segment of a period), then the discontinuitySequence shouldn't be the
+    // timeline's matching one, but instead should be the one prior, and the first segment
+    // of the new manifest should be marked with a discontinuity.
+    //
+    // The reason for this special case is that discontinuity sequence shows how many
+    // discontinuities have fallen off of the playlist, and discontinuities are marked on
+    // the first segment of a new "timeline." Because of this, while DASH will retain that
+    // Period while the "timeline" exists, HLS keeps track of it via the discontinuity
+    // sequence, and that first segment is an indicator, but can be removed before that
+    // timeline is gone.
+
+
+    var oldMatchingSegment = oldPlaylist.segments[oldMatchingSegmentIndex];
+
+    if (oldMatchingSegment.discontinuity && !firstNewSegment.discontinuity) {
+      firstNewSegment.discontinuity = true;
+      playlist.discontinuityStarts.unshift(0);
+      playlist.discontinuitySequence--;
+    }
+
+    updateMediaSequenceForPlaylist({
+      playlist: playlist,
+      mediaSequence: oldPlaylist.segments[oldMatchingSegmentIndex].number
+    });
+  });
+};
+/**
+ * Given an old parsed manifest object and a new parsed manifest object, updates the
+ * sequence and timing values within the new manifest to ensure that it lines up with the
+ * old.
+ *
+ * @param {Array} oldManifest - the old main manifest object
+ * @param {Array} newManifest - the new main manifest object
+ *
+ * @return {Object} the updated new manifest object
+ */
+
+var positionManifestOnTimeline = function positionManifestOnTimeline(_ref5) {
+  var oldManifest = _ref5.oldManifest,
+      newManifest = _ref5.newManifest;
+  // Starting from v4.1.2 of the IOP, section 4.4.3.3 states:
+  //
+  // "MPD@availabilityStartTime and Period@start shall not be changed over MPD updates."
+  //
+  // This was added from https://github.com/Dash-Industry-Forum/DASH-IF-IOP/issues/160
+  //
+  // Because of this change, and the difficulty of supporting periods with changing start
+  // times, periods with changing start times are not supported. This makes the logic much
+  // simpler, since periods with the same start time can be considerred the same period
+  // across refreshes.
+  //
+  // To give an example as to the difficulty of handling periods where the start time may
+  // change, if a single period manifest is refreshed with another manifest with a single
+  // period, and both the start and end times are increased, then the only way to determine
+  // if it's a new period or an old one that has changed is to look through the segments of
+  // each playlist and determine the presentation time bounds to find a match. In addition,
+  // if the period start changed to exceed the old period end, then there would be no
+  // match, and it would not be possible to determine whether the refreshed period is a new
+  // one or the old one.
+  var oldPlaylists = oldManifest.playlists.concat(getMediaGroupPlaylists(oldManifest));
+  var newPlaylists = newManifest.playlists.concat(getMediaGroupPlaylists(newManifest)); // Save all seen timelineStarts to the new manifest. Although this potentially means that
+  // there's a "memory leak" in that it will never stop growing, in reality, only a couple
+  // of properties are saved for each seen Period. Even long running live streams won't
+  // generate too many Periods, unless the stream is watched for decades. In the future,
+  // this can be optimized by mapping to discontinuity sequence numbers for each timeline,
+  // but it may not become an issue, and the additional info can be useful for debugging.
+
+  newManifest.timelineStarts = getUniqueTimelineStarts([oldManifest.timelineStarts, newManifest.timelineStarts]);
+  updateSequenceNumbers({
+    oldPlaylists: oldPlaylists,
+    newPlaylists: newPlaylists,
+    timelineStarts: newManifest.timelineStarts
+  });
+  return newManifest;
 };
 
 var generateSidxKey = function generateSidxKey(sidx) {
@@ -34986,42 +35394,52 @@ var mergeDiscontiguousPlaylists = function mergeDiscontiguousPlaylists(playlists
     // assuming playlist IDs are the same across periods
     // TODO: handle multiperiod where representation sets are not the same
     // across periods
-    var name = playlist.attributes.id + (playlist.attributes.lang || ''); // Periods after first
+    var name = playlist.attributes.id + (playlist.attributes.lang || '');
 
-    if (acc[name]) {
-      var _acc$name$segments;
+    if (!acc[name]) {
+      // First Period
+      acc[name] = playlist;
+      acc[name].attributes.timelineStarts = [];
+    } else {
+      // Subsequent Periods
+      if (playlist.segments) {
+        var _acc$name$segments;
 
-      // first segment of subsequent periods signal a discontinuity
-      if (playlist.segments[0]) {
-        playlist.segments[0].discontinuity = true;
-      }
+        // first segment of subsequent periods signal a discontinuity
+        if (playlist.segments[0]) {
+          playlist.segments[0].discontinuity = true;
+        }
 
-      (_acc$name$segments = acc[name].segments).push.apply(_acc$name$segments, playlist.segments); // bubble up contentProtection, this assumes all DRM content
+        (_acc$name$segments = acc[name].segments).push.apply(_acc$name$segments, playlist.segments);
+      } // bubble up contentProtection, this assumes all DRM content
       // has the same contentProtection
 
 
       if (playlist.attributes.contentProtection) {
         acc[name].attributes.contentProtection = playlist.attributes.contentProtection;
       }
-    } else {
-      // first Period
-      acc[name] = playlist;
     }
 
+    acc[name].attributes.timelineStarts.push({
+      // Although they represent the same number, it's important to have both to make it
+      // compatible with HLS potentially having a similar attribute.
+      start: playlist.attributes.periodStart,
+      timeline: playlist.attributes.periodStart
+    });
     return acc;
   }, {}));
   return mergedPlaylists.map(function (playlist) {
-    playlist.discontinuityStarts = findIndexes(playlist.segments, 'discontinuity');
+    playlist.discontinuityStarts = findIndexes(playlist.segments || [], 'discontinuity');
     return playlist;
   });
 };
 
-var addSidxSegmentsToPlaylist$1 = function addSidxSegmentsToPlaylist$1(playlist, sidxMapping) {
+var addSidxSegmentsToPlaylist = function addSidxSegmentsToPlaylist(playlist, sidxMapping) {
   var sidxKey = generateSidxKey(playlist.sidx);
   var sidxMatch = sidxKey && sidxMapping[sidxKey] && sidxMapping[sidxKey].sidx;
 
   if (sidxMatch) {
-    addSidxSegmentsToPlaylist(playlist, sidxMatch, playlist.sidx.resolvedUri);
+    addSidxSegmentsToPlaylist$1(playlist, sidxMatch, playlist.sidx.resolvedUri);
   }
 
   return playlist;
@@ -35036,7 +35454,7 @@ var addSidxSegmentsToPlaylists = function addSidxSegmentsToPlaylists(playlists, 
   }
 
   for (var i in playlists) {
-    playlists[i] = addSidxSegmentsToPlaylist$1(playlists[i], sidxMapping);
+    playlists[i] = addSidxSegmentsToPlaylist(playlists[i], sidxMapping);
   }
 
   return playlists;
@@ -35046,7 +35464,10 @@ var formatAudioPlaylist = function formatAudioPlaylist(_ref, isAudioOnly) {
 
   var attributes = _ref.attributes,
       segments = _ref.segments,
-      sidx = _ref.sidx;
+      sidx = _ref.sidx,
+      mediaSequence = _ref.mediaSequence,
+      discontinuitySequence = _ref.discontinuitySequence,
+      discontinuityStarts = _ref.discontinuityStarts;
   var playlist = {
     attributes: (_attributes = {
       NAME: attributes.id,
@@ -35055,11 +35476,14 @@ var formatAudioPlaylist = function formatAudioPlaylist(_ref, isAudioOnly) {
     }, _attributes['PROGRAM-ID'] = 1, _attributes),
     uri: '',
     endList: attributes.type === 'static',
-    timeline: attributes.periodIndex,
+    timeline: attributes.periodStart,
     resolvedUri: '',
     targetDuration: attributes.duration,
-    segments: segments,
-    mediaSequence: segments.length ? segments[0].number : 1
+    discontinuitySequence: discontinuitySequence,
+    discontinuityStarts: discontinuityStarts,
+    timelineStarts: attributes.timelineStarts,
+    mediaSequence: mediaSequence,
+    segments: segments
   };
 
   if (attributes.contentProtection) {
@@ -35081,13 +35505,16 @@ var formatVttPlaylist = function formatVttPlaylist(_ref2) {
   var _m3u8Attributes;
 
   var attributes = _ref2.attributes,
-      segments = _ref2.segments;
+      segments = _ref2.segments,
+      mediaSequence = _ref2.mediaSequence,
+      discontinuityStarts = _ref2.discontinuityStarts,
+      discontinuitySequence = _ref2.discontinuitySequence;
 
   if (typeof segments === 'undefined') {
     // vtt tracks may use single file in BaseURL
     segments = [{
       uri: attributes.baseUrl,
-      timeline: attributes.periodIndex,
+      timeline: attributes.periodStart,
       resolvedUri: attributes.baseUrl || '',
       duration: attributes.sourceDuration,
       number: 0
@@ -35109,11 +35536,14 @@ var formatVttPlaylist = function formatVttPlaylist(_ref2) {
     attributes: m3u8Attributes,
     uri: '',
     endList: attributes.type === 'static',
-    timeline: attributes.periodIndex,
+    timeline: attributes.periodStart,
     resolvedUri: attributes.baseUrl || '',
     targetDuration: attributes.duration,
-    segments: segments,
-    mediaSequence: segments.length ? segments[0].number : 1
+    timelineStarts: attributes.timelineStarts,
+    discontinuityStarts: discontinuityStarts,
+    discontinuitySequence: discontinuitySequence,
+    mediaSequence: mediaSequence,
+    segments: segments
   };
 };
 var organizeAudioPlaylists = function organizeAudioPlaylists(playlists, sidxMapping, isAudioOnly) {
@@ -35146,7 +35576,7 @@ var organizeAudioPlaylists = function organizeAudioPlaylists(playlists, sidxMapp
       };
     }
 
-    var formatted = addSidxSegmentsToPlaylist$1(formatAudioPlaylist(playlist, isAudioOnly), sidxMapping);
+    var formatted = addSidxSegmentsToPlaylist(formatAudioPlaylist(playlist, isAudioOnly), sidxMapping);
     a[label].playlists.push(formatted);
 
     if (typeof mainPlaylist === 'undefined' && role === 'main') {
@@ -35182,7 +35612,7 @@ var organizeVttPlaylists = function organizeVttPlaylists(playlists, sidxMapping)
       };
     }
 
-    a[label].playlists.push(addSidxSegmentsToPlaylist$1(formatVttPlaylist(playlist), sidxMapping));
+    a[label].playlists.push(addSidxSegmentsToPlaylist(formatVttPlaylist(playlist), sidxMapping));
     return a;
   }, {});
 };
@@ -35224,7 +35654,8 @@ var formatVideoPlaylist = function formatVideoPlaylist(_ref3) {
 
   var attributes = _ref3.attributes,
       segments = _ref3.segments,
-      sidx = _ref3.sidx;
+      sidx = _ref3.sidx,
+      discontinuityStarts = _ref3.discontinuityStarts;
   var playlist = {
     attributes: (_attributes2 = {
       NAME: attributes.id,
@@ -35239,11 +35670,12 @@ var formatVideoPlaylist = function formatVideoPlaylist(_ref3) {
     }, _attributes2['PROGRAM-ID'] = 1, _attributes2),
     uri: '',
     endList: attributes.type === 'static',
-    timeline: attributes.periodIndex,
+    timeline: attributes.periodStart,
     resolvedUri: '',
     targetDuration: attributes.duration,
-    segments: segments,
-    mediaSequence: segments.length ? segments[0].number : 1
+    discontinuityStarts: discontinuityStarts,
+    timelineStarts: attributes.timelineStarts,
+    segments: segments
   };
 
   if (attributes.contentProtection) {
@@ -35271,13 +35703,84 @@ var vttOnly = function vttOnly(_ref6) {
   var attributes = _ref6.attributes;
   return attributes.mimeType === 'text/vtt' || attributes.contentType === 'text';
 };
+/**
+ * Contains start and timeline properties denoting a timeline start. For DASH, these will
+ * be the same number.
+ *
+ * @typedef {Object} TimelineStart
+ * @property {number} start - the start time of the timeline
+ * @property {number} timeline - the timeline number
+ */
 
-var toM3u8 = function toM3u8(dashPlaylists, locations, sidxMapping) {
+/**
+ * Adds appropriate media and discontinuity sequence values to the segments and playlists.
+ *
+ * Throughout mpd-parser, the `number` attribute is used in relation to `startNumber`, a
+ * DASH specific attribute used in constructing segment URI's from templates. However, from
+ * an HLS perspective, the `number` attribute on a segment would be its `mediaSequence`
+ * value, which should start at the original media sequence value (or 0) and increment by 1
+ * for each segment thereafter. Since DASH's `startNumber` values are independent per
+ * period, it doesn't make sense to use it for `number`. Instead, assume everything starts
+ * from a 0 mediaSequence value and increment from there.
+ *
+ * Note that VHS currently doesn't use the `number` property, but it can be helpful for
+ * debugging and making sense of the manifest.
+ *
+ * For live playlists, to account for values increasing in manifests when periods are
+ * removed on refreshes, merging logic should be used to update the numbers to their
+ * appropriate values (to ensure they're sequential and increasing).
+ *
+ * @param {Object[]} playlists - the playlists to update
+ * @param {TimelineStart[]} timelineStarts - the timeline starts for the manifest
+ */
+
+
+var addMediaSequenceValues = function addMediaSequenceValues(playlists, timelineStarts) {
+  // increment all segments sequentially
+  playlists.forEach(function (playlist) {
+    playlist.mediaSequence = 0;
+    playlist.discontinuitySequence = findIndex(timelineStarts, function (_ref7) {
+      var timeline = _ref7.timeline;
+      return timeline === playlist.timeline;
+    });
+
+    if (!playlist.segments) {
+      return;
+    }
+
+    playlist.segments.forEach(function (segment, index) {
+      segment.number = index;
+    });
+  });
+};
+/**
+ * Given a media group object, flattens all playlists within the media group into a single
+ * array.
+ *
+ * @param {Object} mediaGroupObject - the media group object
+ *
+ * @return {Object[]}
+ *         The media group playlists
+ */
+
+var flattenMediaGroupPlaylists = function flattenMediaGroupPlaylists(mediaGroupObject) {
+  if (!mediaGroupObject) {
+    return [];
+  }
+
+  return Object.keys(mediaGroupObject).reduce(function (acc, label) {
+    var labelContents = mediaGroupObject[label];
+    return acc.concat(labelContents.playlists);
+  }, []);
+};
+var toM3u8 = function toM3u8(_ref8) {
   var _mediaGroups;
 
-  if (sidxMapping === void 0) {
-    sidxMapping = {};
-  }
+  var dashPlaylists = _ref8.dashPlaylists,
+      locations = _ref8.locations,
+      _ref8$sidxMapping = _ref8.sidxMapping,
+      sidxMapping = _ref8$sidxMapping === void 0 ? {} : _ref8$sidxMapping,
+      previousManifest = _ref8.previousManifest;
 
   if (!dashPlaylists.length) {
     return {};
@@ -35291,7 +35794,7 @@ var toM3u8 = function toM3u8(dashPlaylists, locations, sidxMapping) {
       minimumUpdatePeriod = _dashPlaylists$0$attr.minimumUpdatePeriod;
   var videoPlaylists = mergeDiscontiguousPlaylists(dashPlaylists.filter(videoOnly)).map(formatVideoPlaylist);
   var audioPlaylists = mergeDiscontiguousPlaylists(dashPlaylists.filter(audioOnly));
-  var vttPlaylists = dashPlaylists.filter(vttOnly);
+  var vttPlaylists = mergeDiscontiguousPlaylists(dashPlaylists.filter(vttOnly));
   var captions = dashPlaylists.map(function (playlist) {
     return playlist.attributes.captionServices;
   }).filter(Boolean);
@@ -35322,17 +35825,33 @@ var toM3u8 = function toM3u8(dashPlaylists, locations, sidxMapping) {
   }
 
   var isAudioOnly = manifest.playlists.length === 0;
+  var organizedAudioGroup = audioPlaylists.length ? organizeAudioPlaylists(audioPlaylists, sidxMapping, isAudioOnly) : null;
+  var organizedVttGroup = vttPlaylists.length ? organizeVttPlaylists(vttPlaylists, sidxMapping) : null;
+  var formattedPlaylists = videoPlaylists.concat(flattenMediaGroupPlaylists(organizedAudioGroup), flattenMediaGroupPlaylists(organizedVttGroup));
+  var playlistTimelineStarts = formattedPlaylists.map(function (_ref9) {
+    var timelineStarts = _ref9.timelineStarts;
+    return timelineStarts;
+  });
+  manifest.timelineStarts = getUniqueTimelineStarts(playlistTimelineStarts);
+  addMediaSequenceValues(formattedPlaylists, manifest.timelineStarts);
 
-  if (audioPlaylists.length) {
-    manifest.mediaGroups.AUDIO.audio = organizeAudioPlaylists(audioPlaylists, sidxMapping, isAudioOnly);
+  if (organizedAudioGroup) {
+    manifest.mediaGroups.AUDIO.audio = organizedAudioGroup;
   }
 
-  if (vttPlaylists.length) {
-    manifest.mediaGroups.SUBTITLES.subs = organizeVttPlaylists(vttPlaylists, sidxMapping);
+  if (organizedVttGroup) {
+    manifest.mediaGroups.SUBTITLES.subs = organizedVttGroup;
   }
 
   if (captions.length) {
     manifest.mediaGroups['CLOSED-CAPTIONS'].cc = organizeCaptionServices(captions);
+  }
+
+  if (previousManifest) {
+    return positionManifestOnTimeline({
+      oldManifest: previousManifest,
+      newManifest: manifest
+    });
   }
 
   return manifest;
@@ -35359,12 +35878,12 @@ var getLiveRValue = function getLiveRValue(attributes, time, duration) {
       availabilityStartTime = attributes.availabilityStartTime,
       _attributes$timescale = attributes.timescale,
       timescale = _attributes$timescale === void 0 ? 1 : _attributes$timescale,
-      _attributes$start = attributes.start,
-      start = _attributes$start === void 0 ? 0 : _attributes$start,
+      _attributes$periodSta = attributes.periodStart,
+      periodStart = _attributes$periodSta === void 0 ? 0 : _attributes$periodSta,
       _attributes$minimumUp = attributes.minimumUpdatePeriod,
       minimumUpdatePeriod = _attributes$minimumUp === void 0 ? 0 : _attributes$minimumUp;
   var now = (NOW + clientOffset) / 1000;
-  var periodStartWC = availabilityStartTime + start;
+  var periodStartWC = availabilityStartTime + periodStart;
   var periodEndWC = now + minimumUpdatePeriod;
   var periodDuration = periodEndWC - periodStartWC;
   return Math.ceil((periodDuration * timescale - time) / duration);
@@ -35395,7 +35914,7 @@ var parseByTimeline = function parseByTimeline(attributes, segmentTimeline) {
       timescale = _attributes$timescale2 === void 0 ? 1 : _attributes$timescale2,
       _attributes$startNumb = attributes.startNumber,
       startNumber = _attributes$startNumb === void 0 ? 1 : _attributes$startNumb,
-      timeline = attributes.periodIndex;
+      timeline = attributes.periodStart;
   var segments = [];
   var time = -1;
 
@@ -35585,7 +36104,7 @@ var parseTemplateInfo = function parseTemplateInfo(attributes, segmentTimeline) 
       number: attributes.startNumber || 1,
       duration: attributes.sourceDuration,
       time: 0,
-      timeline: attributes.periodIndex
+      timeline: attributes.periodStart
     }];
   }
 
@@ -36284,7 +36803,7 @@ var generateKeySystemInformation = function generateKeySystemInformation(content
 
       if (psshNode) {
         var pssh = getContent(psshNode);
-        var psshBuffer = pssh && (0,_videojs_vhs_utils_es_decode_b64_to_uint8_array__WEBPACK_IMPORTED_MODULE_2__["default"])(pssh);
+        var psshBuffer = pssh && (0,_videojs_vhs_utils_es_decode_b64_to_uint8_array__WEBPACK_IMPORTED_MODULE_3__["default"])(pssh);
         acc[keySystem].pssh = psshBuffer;
       }
     }
@@ -36460,8 +36979,8 @@ var toRepresentations = function toRepresentations(periodAttributes, periodBaseU
  * @function
  * @param {PeriodInformation} period
  *        Period object containing necessary period information
- * @param {number} periodIndex
- *        Index of the Period within the mpd
+ * @param {number} periodStart
+ *        Start time of the Period within the mpd
  * @return {RepresentationInformation[]}
  *         List of objects containing Representaion information
  */
@@ -36481,11 +37000,7 @@ var toRepresentations = function toRepresentations(periodAttributes, periodBaseU
 var toAdaptationSets = function toAdaptationSets(mpdAttributes, mpdBaseUrls) {
   return function (period, index) {
     var periodBaseUrls = buildBaseUrls(mpdBaseUrls, findChildren(period.node, 'BaseURL'));
-    var parsedPeriodId = parseInt(period.attributes.id, 10); // fallback to mapping index if Period@id is not a number
-
-    var periodIndex = global_window__WEBPACK_IMPORTED_MODULE_1___default().isNaN(parsedPeriodId) ? index : parsedPeriodId;
     var periodAttributes = merge(mpdAttributes, {
-      periodIndex: periodIndex,
       periodStart: period.attributes.start
     });
 
@@ -36635,7 +37150,7 @@ var stringToMpdXml = function stringToMpdXml(manifestString) {
     throw new Error(errors.DASH_EMPTY_MANIFEST);
   }
 
-  var parser = new _xmldom_xmldom__WEBPACK_IMPORTED_MODULE_3__.DOMParser();
+  var parser = new _xmldom_xmldom__WEBPACK_IMPORTED_MODULE_4__.DOMParser();
   var xml;
   var mpd;
 
@@ -36700,6 +37215,19 @@ var parseUTCTimingScheme = function parseUTCTimingScheme(mpd) {
 };
 
 var VERSION = version;
+/*
+ * Given a DASH manifest string and options, parses the DASH manifest into an object in the
+ * form outputed by m3u8-parser and accepted by videojs/http-streaming.
+ *
+ * For live DASH manifests, if `previousManifest` is provided in options, then the newly
+ * parsed DASH manifest will have its media sequence and discontinuity sequence values
+ * updated to reflect its position relative to the prior manifest.
+ *
+ * @param {string} manifestString - the DASH manifest as a string
+ * @param {options} [options] - any options
+ *
+ * @return {Object} the manifest object
+ */
 
 var parse = function parse(manifestString, options) {
   if (options === void 0) {
@@ -36708,7 +37236,12 @@ var parse = function parse(manifestString, options) {
 
   var parsedManifestInfo = inheritAttributes(stringToMpdXml(manifestString), options);
   var playlists = toPlaylists(parsedManifestInfo.representationInfo);
-  return toM3u8(playlists, parsedManifestInfo.locations, options.sidxMapping);
+  return toM3u8({
+    dashPlaylists: playlists,
+    locations: parsedManifestInfo.locations,
+    sidxMapping: options.sidxMapping,
+    previousManifest: options.previousManifest
+  });
 };
 /**
  * Parses the manifest for a UTCTiming node, returning the nodes attributes if found
@@ -36733,9 +37266,9 @@ var parseUTCTiming = function parseUTCTiming(manifestString) {
 /*!*****************************************************!*\
   !*** ./node_modules/mux.js/lib/tools/parse-sidx.js ***!
   \*****************************************************/
-/***/ ((module) => {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var MAX_UINT32 = Math.pow(2, 32);
+var getUint64 = (__webpack_require__(/*! ../utils/numbers.js */ "./node_modules/mux.js/lib/utils/numbers.js").getUint64);
 
 var parseSidx = function(data) {
   var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
@@ -36754,8 +37287,8 @@ var parseSidx = function(data) {
     i += 8;
   } else {
     // read 64 bits
-    result.earliestPresentationTime = (view.getUint32(i) * MAX_UINT32) + view.getUint32(i + 4);
-    result.firstOffset = (view.getUint32(i + 8) * MAX_UINT32) + view.getUint32(i + 12);
+    result.earliestPresentationTime = getUint64(data.subarray(i));
+    result.firstOffset = getUint64(data.subarray(i + 8));
     i += 16;
   }
 
@@ -36848,6 +37381,39 @@ module.exports = {
   audioTsToVideoTs: audioTsToVideoTs,
   videoTsToAudioTs: videoTsToAudioTs,
   metadataTsToSeconds: metadataTsToSeconds
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/mux.js/lib/utils/numbers.js":
+/*!**************************************************!*\
+  !*** ./node_modules/mux.js/lib/utils/numbers.js ***!
+  \**************************************************/
+/***/ ((module) => {
+
+var MAX_UINT32 = Math.pow(2, 32);
+
+var getUint64 = function(uint8) {
+  var dv = new DataView(uint8.buffer, uint8.byteOffset, uint8.byteLength);
+  var value;
+
+  if (dv.getBigUint64) {
+    value = dv.getBigUint64(0);
+
+    if (value < Number.MAX_SAFE_INTEGER) {
+      return Number(value);
+    }
+
+    return value;
+  }
+
+  return (dv.getUint32(0) * MAX_UINT32) + dv.getUint32(4);
+};
+
+module.exports = {
+  getUint64: getUint64,
+  MAX_UINT32: MAX_UINT32
 };
 
 
@@ -41671,6 +42237,36 @@ var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMP
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PartyList.vue?vue&type=style&index=0&id=4e37d66e&scoped=true&lang=css&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PartyList.vue?vue&type=style&index=0&id=4e37d66e&scoped=true&lang=css& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PartyList_vue_vue_type_style_index_0_id_4e37d66e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./PartyList.vue?vue&type=style&index=0&id=4e37d66e&scoped=true&lang=css& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PartyList.vue?vue&type=style&index=0&id=4e37d66e&scoped=true&lang=css&");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PartyList_vue_vue_type_style_index_0_id_4e37d66e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PartyList_vue_vue_type_style_index_0_id_4e37d66e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js":
 /*!****************************************************************************!*\
   !*** ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js ***!
@@ -41960,8 +42556,8 @@ module.exports = function (list, options) {
 
 (function (root) {
   var URL_REGEX =
-    /^((?:[a-zA-Z0-9+\-.]+:)?)(\/\/[^\/?#]*)?((?:[^\/?#]*\/)*[^;?#]*)?(;[^?#]*)?(\?[^#]*)?(#[^]*)?$/;
-  var FIRST_SEGMENT_REGEX = /^([^\/?#]*)([^]*)$/;
+    /^(?=((?:[a-zA-Z0-9+\-.]+:)?))\1(?=((?:\/\/[^\/?#]*)?))\2(?=((?:(?:[^?#\/]*\/)*[^;?#\/]*)?))\3((?:;[^?#]*)?)(\?[^#]*)?(#[^]*)?$/;
+  var FIRST_SEGMENT_REGEX = /^(?=([^\/?#]*))\1([^]*)$/;
   var SLASH_DOT_REGEX = /(?:\/|^)\.(?=\/)/g;
   var SLASH_DOT_DOT_REGEX = /(?:\/|^)\.\.\/(?!\.\.\/)[^\/]*(?=\/)/g;
 
@@ -42145,12 +42741,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var global_document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! global/document */ "./node_modules/global/document.js");
 /* harmony import */ var global_document__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(global_document__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
-/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
-/* harmony import */ var _babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inheritsLoose */ "./node_modules/@babel/runtime/helpers/esm/inheritsLoose.js");
-/* harmony import */ var safe_json_parse_tuple__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! safe-json-parse/tuple */ "./node_modules/safe-json-parse/tuple.js");
-/* harmony import */ var safe_json_parse_tuple__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(safe_json_parse_tuple__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var keycode__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! keycode */ "./node_modules/keycode/index.js");
-/* harmony import */ var keycode__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(keycode__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var keycode__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! keycode */ "./node_modules/keycode/index.js");
+/* harmony import */ var keycode__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(keycode__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
+/* harmony import */ var _babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/inheritsLoose */ "./node_modules/@babel/runtime/helpers/esm/inheritsLoose.js");
+/* harmony import */ var safe_json_parse_tuple__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! safe-json-parse/tuple */ "./node_modules/safe-json-parse/tuple.js");
+/* harmony import */ var safe_json_parse_tuple__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(safe_json_parse_tuple__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _videojs_xhr__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @videojs/xhr */ "./node_modules/@videojs/xhr/lib/index.js");
 /* harmony import */ var _videojs_xhr__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_videojs_xhr__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var videojs_vtt_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! videojs-vtt.js */ "./node_modules/videojs-vtt.js/lib/browser-index.js");
@@ -42171,7 +42767,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var mux_js_lib_utils_clock__WEBPACK_IMPORTED_MODULE_20___default = /*#__PURE__*/__webpack_require__.n(mux_js_lib_utils_clock__WEBPACK_IMPORTED_MODULE_20__);
 /**
  * @license
- * Video.js 7.17.0 <http://videojs.com/>
+ * Video.js 7.18.1 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/main/LICENSE>
@@ -42203,7 +42799,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var version$5 = "7.17.0";
+var version$5 = "7.18.1";
 
 /**
  * An Object that contains lifecycle hooks as keys which point to an array
@@ -47097,8 +47693,11 @@ var Component$1 = /*#__PURE__*/function () {
   _proto.handleKeyDown = function handleKeyDown(event) {
     if (this.player_) {
       // We only stop propagation here because we want unhandled events to fall
-      // back to the browser.
-      event.stopPropagation();
+      // back to the browser. Exclude Tab for focus trapping.
+      if (!keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Tab')) {
+        event.stopPropagation();
+      }
+
       this.player_.handleKeyDown(event);
     }
   }
@@ -48106,7 +48705,7 @@ var MODAL_CLASS_NAME = 'vjs-modal-dialog';
  */
 
 var ModalDialog = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(ModalDialog, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(ModalDialog, _Component);
 
   /**
    * Create an instance of this class.
@@ -48563,14 +49162,14 @@ var ModalDialog = /*#__PURE__*/function (_Component) {
     // Do not allow keydowns to reach out of the modal dialog.
     event.stopPropagation();
 
-    if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Escape') && this.closeable()) {
+    if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Escape') && this.closeable()) {
       event.preventDefault();
       this.close();
       return;
     } // exit early if it isn't a tab key
 
 
-    if (!keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Tab')) {
+    if (!keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Tab')) {
       return;
     }
 
@@ -48635,7 +49234,7 @@ Component$1.registerComponent('ModalDialog', ModalDialog);
  */
 
 var TrackList = /*#__PURE__*/function (_EventTarget) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(TrackList, _EventTarget);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(TrackList, _EventTarget);
 
   /**
    * Create an instance of this class
@@ -48661,7 +49260,7 @@ var TrackList = /*#__PURE__*/function (_EventTarget) {
      * @instance
      */
 
-    Object.defineProperty((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), 'length', {
+    Object.defineProperty((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), 'length', {
       get: function get() {
         return this.tracks_.length;
       }
@@ -48868,7 +49467,7 @@ var disableOthers$1 = function disableOthers(list, track) {
 
 
 var AudioTrackList = /*#__PURE__*/function (_TrackList) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(AudioTrackList, _TrackList);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(AudioTrackList, _TrackList);
 
   /**
    * Create an instance of this class.
@@ -48988,7 +49587,7 @@ var disableOthers = function disableOthers(list, track) {
 
 
 var VideoTrackList = /*#__PURE__*/function (_TrackList) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(VideoTrackList, _TrackList);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(VideoTrackList, _TrackList);
 
   /**
    * Create an instance of this class.
@@ -49019,7 +49618,7 @@ var VideoTrackList = /*#__PURE__*/function (_TrackList) {
      *         The current index of the selected {@link VideoTrack`}.
      */
 
-    Object.defineProperty((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), 'selectedIndex', {
+    Object.defineProperty((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), 'selectedIndex', {
       get: function get() {
         for (var _i = 0; _i < this.length; _i++) {
           if (this[_i].selected) {
@@ -49099,7 +49698,7 @@ var VideoTrackList = /*#__PURE__*/function (_TrackList) {
  */
 
 var TextTrackList = /*#__PURE__*/function (_TrackList) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(TextTrackList, _TrackList);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(TextTrackList, _TrackList);
 
   function TextTrackList() {
     return _TrackList.apply(this, arguments) || this;
@@ -49476,7 +50075,7 @@ var TextTrackMode = {
  */
 
 var Track = /*#__PURE__*/function (_EventTarget) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(Track, _EventTarget);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(Track, _EventTarget);
 
   /**
    * Create an instance of this class.
@@ -49541,7 +50140,7 @@ var Track = /*#__PURE__*/function (_EventTarget) {
      */
 
     var _loop = function _loop(key) {
-      Object.defineProperty((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), key, {
+      Object.defineProperty((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), key, {
         get: function get() {
           return trackProps[key];
         },
@@ -49562,7 +50161,7 @@ var Track = /*#__PURE__*/function (_EventTarget) {
      */
 
 
-    Object.defineProperty((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), 'label', {
+    Object.defineProperty((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), 'label', {
       get: function get() {
         return label;
       },
@@ -49870,7 +50469,7 @@ var loadTrack = function loadTrack(src, track) {
 
 
 var TextTrack = /*#__PURE__*/function (_Track) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(TextTrack, _Track);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(TextTrack, _Track);
 
   /**
    * Create an instance of this class.
@@ -49936,7 +50535,7 @@ var TextTrack = /*#__PURE__*/function (_Track) {
     var cues = new TextTrackCueList(_this.cues_);
     var activeCues = new TextTrackCueList(_this.activeCues_);
     var changed = false;
-    var timeupdateHandler = bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), function () {
+    var timeupdateHandler = bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), function () {
       if (!this.tech_.isReady_ || this.tech_.isDisposed()) {
         return;
       } // Accessing this.activeCues for the side-effects of updating itself
@@ -49963,7 +50562,7 @@ var TextTrack = /*#__PURE__*/function (_Track) {
       _this.tech_.on('timeupdate', timeupdateHandler);
     }
 
-    Object.defineProperties((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), {
+    Object.defineProperties((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), {
       /**
        * @memberof TextTrack
        * @member {boolean} default
@@ -50107,7 +50706,7 @@ var TextTrack = /*#__PURE__*/function (_Track) {
       }
 
       if (_this.preload_ || settings.kind !== 'subtitles' && settings.kind !== 'captions') {
-        loadTrack(_this.src, (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
+        loadTrack(_this.src, (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this));
       }
     } else {
       _this.loaded_ = true;
@@ -50195,7 +50794,7 @@ TextTrack.prototype.allowedEvents_ = {
  */
 
 var AudioTrack = /*#__PURE__*/function (_Track) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(AudioTrack, _Track);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(AudioTrack, _Track);
 
   /**
    * Create an instance of this class.
@@ -50241,7 +50840,7 @@ var AudioTrack = /*#__PURE__*/function (_Track) {
      * @fires VideoTrack#selectedchange
      */
 
-    Object.defineProperty((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), 'enabled', {
+    Object.defineProperty((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), 'enabled', {
       get: function get() {
         return enabled;
       },
@@ -50288,7 +50887,7 @@ var AudioTrack = /*#__PURE__*/function (_Track) {
  */
 
 var VideoTrack = /*#__PURE__*/function (_Track) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(VideoTrack, _Track);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(VideoTrack, _Track);
 
   /**
    * Create an instance of this class.
@@ -50333,7 +50932,7 @@ var VideoTrack = /*#__PURE__*/function (_Track) {
      * @fires VideoTrack#selectedchange
      */
 
-    Object.defineProperty((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), 'selected', {
+    Object.defineProperty((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), 'selected', {
       get: function get() {
         return selected;
       },
@@ -50389,7 +50988,7 @@ var ERROR = 3;
  */
 
 var HTMLTrackElement = /*#__PURE__*/function (_EventTarget) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(HTMLTrackElement, _EventTarget);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(HTMLTrackElement, _EventTarget);
 
   /**
    * Create an instance of this class.
@@ -50440,7 +51039,7 @@ var HTMLTrackElement = /*#__PURE__*/function (_EventTarget) {
     _this.srclang = track.language;
     _this.label = track.label;
     _this["default"] = track["default"];
-    Object.defineProperties((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), {
+    Object.defineProperties((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), {
       /**
        * @memberof HTMLTrackElement
        * @member {HTMLTrackElement~ReadyState} readyState
@@ -50477,7 +51076,7 @@ var HTMLTrackElement = /*#__PURE__*/function (_EventTarget) {
 
       _this.trigger({
         type: 'load',
-        target: (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this)
+        target: (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this)
       });
     });
     return _this;
@@ -50612,7 +51211,7 @@ function createTrackHelper(self, kind, label, language, options) {
 
 
 var Tech = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(Tech, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(Tech, _Component);
 
   /**
   * Create an instance of this Tech.
@@ -52538,7 +53137,7 @@ function fixSource(src) {
  */
 
 var MediaLoader = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(MediaLoader, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(MediaLoader, _Component);
 
   /**
    * Create an instance of this class.
@@ -52602,7 +53201,7 @@ Component$1.registerComponent('MediaLoader', MediaLoader);
  */
 
 var ClickableComponent = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(ClickableComponent, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(ClickableComponent, _Component);
 
   /**
    * Creates an instance of this class.
@@ -52857,7 +53456,7 @@ var ClickableComponent = /*#__PURE__*/function (_Component) {
     // Support Space or Enter key operation to fire a click event. Also,
     // prevent the event from propagating through the DOM and triggering
     // Player hotkeys.
-    if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Space') || keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Enter')) {
+    if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Space') || keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Enter')) {
       event.preventDefault();
       event.stopPropagation();
       this.trigger('click');
@@ -52879,7 +53478,7 @@ Component$1.registerComponent('ClickableComponent', ClickableComponent);
  */
 
 var PosterImage = /*#__PURE__*/function (_ClickableComponent) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(PosterImage, _ClickableComponent);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(PosterImage, _ClickableComponent);
 
   /**
    * Create an instance of this class.
@@ -53085,7 +53684,7 @@ function tryUpdateStyle(el, style, rule) {
 
 
 var TextTrackDisplay = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(TextTrackDisplay, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(TextTrackDisplay, _Component);
 
   /**
    * Creates an instance of this class.
@@ -53119,7 +53718,7 @@ var TextTrackDisplay = /*#__PURE__*/function (_Component) {
     // Should probably be moved to an external track loader when we support
     // tracks that don't need a display.
 
-    player.ready(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), function () {
+    player.ready(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), function () {
       if (player.tech_ && player.tech_.featuresNativeTextTracks) {
         this.hide();
         return;
@@ -53446,7 +54045,7 @@ Component$1.registerComponent('TextTrackDisplay', TextTrackDisplay);
  */
 
 var LoadingSpinner = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(LoadingSpinner, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(LoadingSpinner, _Component);
 
   function LoadingSpinner() {
     return _Component.apply(this, arguments) || this;
@@ -53489,7 +54088,7 @@ Component$1.registerComponent('LoadingSpinner', LoadingSpinner);
  */
 
 var Button = /*#__PURE__*/function (_ClickableComponent) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(Button, _ClickableComponent);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(Button, _ClickableComponent);
 
   function Button() {
     return _ClickableComponent.apply(this, arguments) || this;
@@ -53609,7 +54208,7 @@ var Button = /*#__PURE__*/function (_ClickableComponent) {
     // prevent the event from propagating through the DOM and triggering Player
     // hotkeys. We do not preventDefault here because we _want_ the browser to
     // handle it.
-    if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Space') || keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Enter')) {
+    if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Space') || keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Enter')) {
       event.stopPropagation();
       return;
     } // Pass keypress handling up for unsupported keys
@@ -53631,7 +54230,7 @@ Component$1.registerComponent('Button', Button);
  */
 
 var BigPlayButton = /*#__PURE__*/function (_Button) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(BigPlayButton, _Button);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(BigPlayButton, _Button);
 
   function BigPlayButton(player, options) {
     var _this;
@@ -53738,7 +54337,7 @@ Component$1.registerComponent('BigPlayButton', BigPlayButton);
  */
 
 var CloseButton = /*#__PURE__*/function (_Button) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(CloseButton, _Button);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(CloseButton, _Button);
 
   /**
   * Creates an instance of the this class.
@@ -53817,7 +54416,7 @@ var CloseButton = /*#__PURE__*/function (_Button) {
 
   _proto.handleKeyDown = function handleKeyDown(event) {
     // Esc button will trigger `click` event
-    if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Esc')) {
+    if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Esc')) {
       event.preventDefault();
       event.stopPropagation();
       this.trigger('click');
@@ -53839,7 +54438,7 @@ Component$1.registerComponent('CloseButton', CloseButton);
  */
 
 var PlayToggle = /*#__PURE__*/function (_Button) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(PlayToggle, _Button);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(PlayToggle, _Button);
 
   /**
    * Creates an instance of this class.
@@ -54099,7 +54698,7 @@ function formatTime(seconds, guide) {
  */
 
 var TimeDisplay = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(TimeDisplay, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(TimeDisplay, _Component);
 
   /**
    * Creates an instance of this class.
@@ -54259,7 +54858,7 @@ Component$1.registerComponent('TimeDisplay', TimeDisplay);
  */
 
 var CurrentTimeDisplay = /*#__PURE__*/function (_TimeDisplay) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(CurrentTimeDisplay, _TimeDisplay);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(CurrentTimeDisplay, _TimeDisplay);
 
   function CurrentTimeDisplay() {
     return _TimeDisplay.apply(this, arguments) || this;
@@ -54329,7 +54928,7 @@ Component$1.registerComponent('CurrentTimeDisplay', CurrentTimeDisplay);
  */
 
 var DurationDisplay = /*#__PURE__*/function (_TimeDisplay) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(DurationDisplay, _TimeDisplay);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(DurationDisplay, _TimeDisplay);
 
   /**
    * Creates an instance of this class.
@@ -54428,7 +55027,7 @@ Component$1.registerComponent('DurationDisplay', DurationDisplay);
  */
 
 var TimeDivider = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(TimeDivider, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(TimeDivider, _Component);
 
   function TimeDivider() {
     return _Component.apply(this, arguments) || this;
@@ -54475,7 +55074,7 @@ Component$1.registerComponent('TimeDivider', TimeDivider);
  */
 
 var RemainingTimeDisplay = /*#__PURE__*/function (_TimeDisplay) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(RemainingTimeDisplay, _TimeDisplay);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(RemainingTimeDisplay, _TimeDisplay);
 
   /**
    * Creates an instance of this class.
@@ -54521,9 +55120,12 @@ var RemainingTimeDisplay = /*#__PURE__*/function (_TimeDisplay) {
   _proto.createEl = function createEl$1() {
     var el = _TimeDisplay.prototype.createEl.call(this);
 
-    el.insertBefore(createEl('span', {}, {
-      'aria-hidden': true
-    }, '-'), this.contentEl_);
+    if (this.options_.displayNegative !== false) {
+      el.insertBefore(createEl('span', {}, {
+        'aria-hidden': true
+      }, '-'), this.contentEl_);
+    }
+
     return el;
   }
   /**
@@ -54586,7 +55188,7 @@ Component$1.registerComponent('RemainingTimeDisplay', RemainingTimeDisplay);
  */
 
 var LiveDisplay = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(LiveDisplay, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(LiveDisplay, _Component);
 
   /**
    * Creates an instance of this class.
@@ -54675,7 +55277,7 @@ Component$1.registerComponent('LiveDisplay', LiveDisplay);
  */
 
 var SeekToLive = /*#__PURE__*/function (_Button) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(SeekToLive, _Button);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(SeekToLive, _Button);
 
   /**
    * Creates an instance of this class.
@@ -54803,7 +55405,7 @@ var clamp = function clamp(number, min, max) {
  */
 
 var Slider = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(Slider, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(Slider, _Component);
 
   /**
   * Create an instance of this class
@@ -55000,7 +55602,7 @@ var Slider = /*#__PURE__*/function (_Component) {
     this.on(doc, 'mouseup', this.handleMouseUp_);
     this.on(doc, 'touchmove', this.handleMouseMove_);
     this.on(doc, 'touchend', this.handleMouseUp_);
-    this.handleMouseMove(event);
+    this.handleMouseMove(event, true);
   }
   /**
    * Handle the `mousemove`, `touchmove`, and `mousedown` events on this `Slider`.
@@ -55011,6 +55613,7 @@ var Slider = /*#__PURE__*/function (_Component) {
    * @param {EventTarget~Event} event
    *        `mousedown`, `mousemove`, `touchstart`, or `touchmove` event that triggered
    *        this function
+   * @param {boolean} mouseDown this is a flag that should be set to true if `handleMouseMove` is called directly. It allows us to skip things that should not happen if coming from mouse down but should happen on regular mouse move handler. Defaults to false.
    *
    * @listens mousemove
    * @listens touchmove
@@ -55133,11 +55736,11 @@ var Slider = /*#__PURE__*/function (_Component) {
 
   _proto.handleKeyDown = function handleKeyDown(event) {
     // Left and Down Arrows
-    if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Left') || keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Down')) {
+    if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Left') || keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Down')) {
       event.preventDefault();
       event.stopPropagation();
       this.stepBack(); // Up and Right Arrows
-    } else if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Right') || keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Up')) {
+    } else if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Right') || keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Up')) {
       event.preventDefault();
       event.stopPropagation();
       this.stepForward();
@@ -55202,7 +55805,7 @@ var percentify = function percentify(time, end) {
 
 
 var LoadProgressBar = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(LoadProgressBar, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(LoadProgressBar, _Component);
 
   /**
    * Creates an instance of this class.
@@ -55341,7 +55944,7 @@ Component$1.registerComponent('LoadProgressBar', LoadProgressBar);
  */
 
 var TimeTooltip = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(TimeTooltip, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(TimeTooltip, _Component);
 
   /**
    * Creates an instance of this class.
@@ -55356,7 +55959,7 @@ var TimeTooltip = /*#__PURE__*/function (_Component) {
     var _this;
 
     _this = _Component.call(this, player, options) || this;
-    _this.update = throttle(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), _this.update), UPDATE_REFRESH_INTERVAL);
+    _this.update = throttle(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), _this.update), UPDATE_REFRESH_INTERVAL);
     return _this;
   }
   /**
@@ -55504,7 +56107,7 @@ Component$1.registerComponent('TimeTooltip', TimeTooltip);
  */
 
 var PlayProgressBar = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(PlayProgressBar, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(PlayProgressBar, _Component);
 
   /**
    * Creates an instance of this class.
@@ -55519,7 +56122,7 @@ var PlayProgressBar = /*#__PURE__*/function (_Component) {
     var _this;
 
     _this = _Component.call(this, player, options) || this;
-    _this.update = throttle(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), _this.update), UPDATE_REFRESH_INTERVAL);
+    _this.update = throttle(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), _this.update), UPDATE_REFRESH_INTERVAL);
     return _this;
   }
   /**
@@ -55593,7 +56196,7 @@ Component$1.registerComponent('PlayProgressBar', PlayProgressBar);
  */
 
 var MouseTimeDisplay = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(MouseTimeDisplay, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(MouseTimeDisplay, _Component);
 
   /**
    * Creates an instance of this class.
@@ -55608,7 +56211,7 @@ var MouseTimeDisplay = /*#__PURE__*/function (_Component) {
     var _this;
 
     _this = _Component.call(this, player, options) || this;
-    _this.update = throttle(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), _this.update), UPDATE_REFRESH_INTERVAL);
+    _this.update = throttle(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), _this.update), UPDATE_REFRESH_INTERVAL);
     return _this;
   }
   /**
@@ -55674,7 +56277,7 @@ var PAGE_KEY_MULTIPLIER = 12;
  */
 
 var SeekBar = /*#__PURE__*/function (_Slider) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(SeekBar, _Slider);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(SeekBar, _Slider);
 
   /**
    * Creates an instance of this class.
@@ -55913,7 +56516,6 @@ var SeekBar = /*#__PURE__*/function (_Slider) {
 
 
     event.stopPropagation();
-    this.player_.scrubbing(true);
     this.videoWasPlaying = !this.player_.paused();
     this.player_.pause();
 
@@ -55924,14 +56526,23 @@ var SeekBar = /*#__PURE__*/function (_Slider) {
    *
    * @param {EventTarget~Event} event
    *        The `mousemove` event that caused this to run.
+   * @param {boolean} mouseDown this is a flag that should be set to true if `handleMouseMove` is called directly. It allows us to skip things that should not happen if coming from mouse down but should happen on regular mouse move handler. Defaults to false
    *
    * @listens mousemove
    */
   ;
 
-  _proto.handleMouseMove = function handleMouseMove(event) {
+  _proto.handleMouseMove = function handleMouseMove(event, mouseDown) {
+    if (mouseDown === void 0) {
+      mouseDown = false;
+    }
+
     if (!isSingleLeftClick(event)) {
       return;
+    }
+
+    if (!mouseDown && !this.player_.scrubbing()) {
+      this.player_.scrubbing(true);
     }
 
     var newTime;
@@ -56094,15 +56705,15 @@ var SeekBar = /*#__PURE__*/function (_Slider) {
   _proto.handleKeyDown = function handleKeyDown(event) {
     var liveTracker = this.player_.liveTracker;
 
-    if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Space') || keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Enter')) {
+    if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Space') || keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Enter')) {
       event.preventDefault();
       event.stopPropagation();
       this.handleAction(event);
-    } else if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Home')) {
+    } else if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Home')) {
       event.preventDefault();
       event.stopPropagation();
       this.userSeek_(0);
-    } else if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'End')) {
+    } else if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'End')) {
       event.preventDefault();
       event.stopPropagation();
 
@@ -56111,21 +56722,21 @@ var SeekBar = /*#__PURE__*/function (_Slider) {
       } else {
         this.userSeek_(this.player_.duration());
       }
-    } else if (/^[0-9]$/.test(keycode__WEBPACK_IMPORTED_MODULE_6___default()(event))) {
+    } else if (/^[0-9]$/.test(keycode__WEBPACK_IMPORTED_MODULE_3___default()(event))) {
       event.preventDefault();
       event.stopPropagation();
-      var gotoFraction = ((keycode__WEBPACK_IMPORTED_MODULE_6___default().codes)[keycode__WEBPACK_IMPORTED_MODULE_6___default()(event)] - (keycode__WEBPACK_IMPORTED_MODULE_6___default().codes[0])) * 10.0 / 100.0;
+      var gotoFraction = ((keycode__WEBPACK_IMPORTED_MODULE_3___default().codes)[keycode__WEBPACK_IMPORTED_MODULE_3___default()(event)] - (keycode__WEBPACK_IMPORTED_MODULE_3___default().codes[0])) * 10.0 / 100.0;
 
       if (liveTracker && liveTracker.isLive()) {
         this.userSeek_(liveTracker.seekableStart() + liveTracker.liveWindow() * gotoFraction);
       } else {
         this.userSeek_(this.player_.duration() * gotoFraction);
       }
-    } else if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'PgDn')) {
+    } else if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'PgDn')) {
       event.preventDefault();
       event.stopPropagation();
       this.userSeek_(this.player_.currentTime() - STEP_SECONDS * PAGE_KEY_MULTIPLIER);
-    } else if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'PgUp')) {
+    } else if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'PgUp')) {
       event.preventDefault();
       event.stopPropagation();
       this.userSeek_(this.player_.currentTime() + STEP_SECONDS * PAGE_KEY_MULTIPLIER);
@@ -56183,7 +56794,7 @@ Component$1.registerComponent('SeekBar', SeekBar);
  */
 
 var ProgressControl = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(ProgressControl, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(ProgressControl, _Component);
 
   /**
    * Creates an instance of this class.
@@ -56198,8 +56809,8 @@ var ProgressControl = /*#__PURE__*/function (_Component) {
     var _this;
 
     _this = _Component.call(this, player, options) || this;
-    _this.handleMouseMove = throttle(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), _this.handleMouseMove), UPDATE_REFRESH_INTERVAL);
-    _this.throttledHandleMouseSeek = throttle(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), _this.handleMouseSeek), UPDATE_REFRESH_INTERVAL);
+    _this.handleMouseMove = throttle(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), _this.handleMouseMove), UPDATE_REFRESH_INTERVAL);
+    _this.throttledHandleMouseSeek = throttle(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), _this.handleMouseSeek), UPDATE_REFRESH_INTERVAL);
 
     _this.handleMouseUpHandler_ = function (e) {
       return _this.handleMouseUp(e);
@@ -56436,7 +57047,7 @@ Component$1.registerComponent('ProgressControl', ProgressControl);
  */
 
 var PictureInPictureToggle = /*#__PURE__*/function (_Button) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(PictureInPictureToggle, _Button);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(PictureInPictureToggle, _Button);
 
   /**
    * Creates an instance of this class.
@@ -56556,7 +57167,7 @@ Component$1.registerComponent('PictureInPictureToggle', PictureInPictureToggle);
  */
 
 var FullscreenToggle = /*#__PURE__*/function (_Button) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(FullscreenToggle, _Button);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(FullscreenToggle, _Button);
 
   /**
    * Creates an instance of this class.
@@ -56681,7 +57292,7 @@ var checkVolumeSupport = function checkVolumeSupport(self, player) {
  */
 
 var VolumeLevel = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(VolumeLevel, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(VolumeLevel, _Component);
 
   function VolumeLevel() {
     return _Component.apply(this, arguments) || this;
@@ -56718,7 +57329,7 @@ Component$1.registerComponent('VolumeLevel', VolumeLevel);
  */
 
 var VolumeLevelTooltip = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(VolumeLevelTooltip, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(VolumeLevelTooltip, _Component);
 
   /**
    * Creates an instance of this class.
@@ -56733,7 +57344,7 @@ var VolumeLevelTooltip = /*#__PURE__*/function (_Component) {
     var _this;
 
     _this = _Component.call(this, player, options) || this;
-    _this.update = throttle(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), _this.update), UPDATE_REFRESH_INTERVAL);
+    _this.update = throttle(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), _this.update), UPDATE_REFRESH_INTERVAL);
     return _this;
   }
   /**
@@ -56863,7 +57474,7 @@ Component$1.registerComponent('VolumeLevelTooltip', VolumeLevelTooltip);
  */
 
 var MouseVolumeLevelDisplay = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(MouseVolumeLevelDisplay, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(MouseVolumeLevelDisplay, _Component);
 
   /**
    * Creates an instance of this class.
@@ -56878,7 +57489,7 @@ var MouseVolumeLevelDisplay = /*#__PURE__*/function (_Component) {
     var _this;
 
     _this = _Component.call(this, player, options) || this;
-    _this.update = throttle(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), _this.update), UPDATE_REFRESH_INTERVAL);
+    _this.update = throttle(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), _this.update), UPDATE_REFRESH_INTERVAL);
     return _this;
   }
   /**
@@ -56949,7 +57560,7 @@ Component$1.registerComponent('MouseVolumeLevelDisplay', MouseVolumeLevelDisplay
  */
 
 var VolumeBar = /*#__PURE__*/function (_Slider) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(VolumeBar, _Slider);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(VolumeBar, _Slider);
 
   /**
    * Creates an instance of this class.
@@ -57170,7 +57781,7 @@ Component$1.registerComponent('VolumeBar', VolumeBar);
  */
 
 var VolumeControl = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(VolumeControl, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(VolumeControl, _Component);
 
   /**
    * Creates an instance of this class.
@@ -57198,8 +57809,8 @@ var VolumeControl = /*#__PURE__*/function (_Component) {
 
     _this = _Component.call(this, player, options) || this; // hide this control if volume support is missing
 
-    checkVolumeSupport((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), player);
-    _this.throttledHandleMouseMove = throttle(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), _this.handleMouseMove), UPDATE_REFRESH_INTERVAL);
+    checkVolumeSupport((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), player);
+    _this.throttledHandleMouseMove = throttle(bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), _this.handleMouseMove), UPDATE_REFRESH_INTERVAL);
 
     _this.handleMouseUpHandler_ = function (e) {
       return _this.handleMouseUp(e);
@@ -57358,7 +57969,7 @@ var checkMuteSupport = function checkMuteSupport(self, player) {
  */
 
 var MuteToggle = /*#__PURE__*/function (_Button) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(MuteToggle, _Button);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(MuteToggle, _Button);
 
   /**
    * Creates an instance of this class.
@@ -57374,7 +57985,7 @@ var MuteToggle = /*#__PURE__*/function (_Button) {
 
     _this = _Button.call(this, player, options) || this; // hide this control if volume support is missing
 
-    checkMuteSupport((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), player);
+    checkMuteSupport((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), player);
 
     _this.on(player, ['loadstart', 'volumechange'], function (e) {
       return _this.update(e);
@@ -57514,7 +58125,7 @@ Component$1.registerComponent('MuteToggle', MuteToggle);
  */
 
 var VolumePanel = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(VolumePanel, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(VolumePanel, _Component);
 
   /**
    * Creates an instance of this class.
@@ -57670,7 +58281,7 @@ var VolumePanel = /*#__PURE__*/function (_Component) {
   ;
 
   _proto.handleVolumeControlKeyUp = function handleVolumeControlKeyUp(event) {
-    if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Esc')) {
+    if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Esc')) {
       this.muteToggle.focus();
     }
   }
@@ -57718,7 +58329,7 @@ var VolumePanel = /*#__PURE__*/function (_Component) {
   ;
 
   _proto.handleKeyPress = function handleKeyPress(event) {
-    if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Esc')) {
+    if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Esc')) {
       this.handleMouseOut();
     }
   };
@@ -57746,7 +58357,7 @@ Component$1.registerComponent('VolumePanel', VolumePanel);
  */
 
 var Menu = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(Menu, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(Menu, _Component);
 
   /**
    * Create an instance of this class.
@@ -57963,11 +58574,11 @@ var Menu = /*#__PURE__*/function (_Component) {
 
   _proto.handleKeyDown = function handleKeyDown(event) {
     // Left and Down Arrows
-    if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Left') || keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Down')) {
+    if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Left') || keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Down')) {
       event.preventDefault();
       event.stopPropagation();
       this.stepForward(); // Up and Right Arrows
-    } else if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Right') || keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Up')) {
+    } else if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Right') || keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Up')) {
       event.preventDefault();
       event.stopPropagation();
       this.stepBack();
@@ -58045,7 +58656,7 @@ Component$1.registerComponent('Menu', Menu);
  */
 
 var MenuButton = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(MenuButton, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(MenuButton, _Component);
 
   /**
    * Creates an instance of this class.
@@ -58352,19 +58963,19 @@ var MenuButton = /*#__PURE__*/function (_Component) {
 
   _proto.handleKeyDown = function handleKeyDown(event) {
     // Escape or Tab unpress the 'button'
-    if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Esc') || keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Tab')) {
+    if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Esc') || keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Tab')) {
       if (this.buttonPressed_) {
         this.unpressButton();
       } // Don't preventDefault for Tab key - we still want to lose focus
 
 
-      if (!keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Tab')) {
+      if (!keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Tab')) {
         event.preventDefault(); // Set focus back to the menu button's button
 
         this.menuButton_.focus();
       } // Up Arrow or Down Arrow also 'press' the button to open the menu
 
-    } else if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Up') || keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Down')) {
+    } else if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Up') || keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Down')) {
       if (!this.buttonPressed_) {
         event.preventDefault();
         this.pressButton();
@@ -58384,7 +58995,7 @@ var MenuButton = /*#__PURE__*/function (_Component) {
 
   _proto.handleMenuKeyUp = function handleMenuKeyUp(event) {
     // Escape hides popup menu
-    if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Esc') || keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Tab')) {
+    if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Esc') || keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Tab')) {
       this.removeClass('vjs-hover');
     }
   }
@@ -58414,13 +59025,13 @@ var MenuButton = /*#__PURE__*/function (_Component) {
 
   _proto.handleSubmenuKeyDown = function handleSubmenuKeyDown(event) {
     // Escape or Tab unpress the 'button'
-    if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Esc') || keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Tab')) {
+    if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Esc') || keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Tab')) {
       if (this.buttonPressed_) {
         this.unpressButton();
       } // Don't preventDefault for Tab key - we still want to lose focus
 
 
-      if (!keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Tab')) {
+      if (!keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Tab')) {
         event.preventDefault(); // Set focus back to the menu button's button
 
         this.menuButton_.focus();
@@ -58495,7 +59106,7 @@ Component$1.registerComponent('MenuButton', MenuButton);
  */
 
 var TrackButton = /*#__PURE__*/function (_MenuButton) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(TrackButton, _MenuButton);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(TrackButton, _MenuButton);
 
   /**
    * Creates an instance of this class.
@@ -58517,10 +59128,10 @@ var TrackButton = /*#__PURE__*/function (_MenuButton) {
     }
 
     if (!tracks) {
-      return (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this);
+      return (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this);
     }
 
-    var updateHandler = bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), _this.update);
+    var updateHandler = bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), _this.update);
     tracks.addEventListener('removetrack', updateHandler);
     tracks.addEventListener('addtrack', updateHandler);
     tracks.addEventListener('labelchange', updateHandler);
@@ -58561,7 +59172,7 @@ var MenuKeys = ['Tab', 'Esc', 'Up', 'Down', 'Right', 'Left'];
  */
 
 var MenuItem = /*#__PURE__*/function (_ClickableComponent) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(MenuItem, _ClickableComponent);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(MenuItem, _ClickableComponent);
 
   /**
    * Creates an instance of the this class.
@@ -58643,7 +59254,7 @@ var MenuItem = /*#__PURE__*/function (_ClickableComponent) {
 
   _proto.handleKeyDown = function handleKeyDown(event) {
     if (!MenuKeys.some(function (key) {
-      return keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, key);
+      return keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, key);
     })) {
       // Pass keydown handling up for unused keys
       _ClickableComponent.prototype.handleKeyDown.call(this, event);
@@ -58704,7 +59315,7 @@ Component$1.registerComponent('MenuItem', MenuItem);
  */
 
 var TextTrackMenuItem = /*#__PURE__*/function (_MenuItem) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(TextTrackMenuItem, _MenuItem);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(TextTrackMenuItem, _MenuItem);
 
   /**
    * Creates an instance of this class.
@@ -58734,7 +59345,7 @@ var TextTrackMenuItem = /*#__PURE__*/function (_MenuItem) {
         args[_key] = arguments[_key];
       }
 
-      _this.handleTracksChange.apply((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), args);
+      _this.handleTracksChange.apply((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), args);
     };
 
     var selectedLanguageChangeHandler = function selectedLanguageChangeHandler() {
@@ -58742,7 +59353,7 @@ var TextTrackMenuItem = /*#__PURE__*/function (_MenuItem) {
         args[_key2] = arguments[_key2];
       }
 
-      _this.handleSelectedLanguageChange.apply((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), args);
+      _this.handleSelectedLanguageChange.apply((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), args);
     };
 
     player.on(['loadstart', 'texttrackchange'], changeHandler);
@@ -58887,7 +59498,7 @@ Component$1.registerComponent('TextTrackMenuItem', TextTrackMenuItem);
  */
 
 var OffTextTrackMenuItem = /*#__PURE__*/function (_TextTrackMenuItem) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(OffTextTrackMenuItem, _TextTrackMenuItem);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(OffTextTrackMenuItem, _TextTrackMenuItem);
 
   /**
    * Creates an instance of this class.
@@ -58990,7 +59601,7 @@ Component$1.registerComponent('OffTextTrackMenuItem', OffTextTrackMenuItem);
  */
 
 var TextTrackButton = /*#__PURE__*/function (_TrackButton) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(TextTrackButton, _TrackButton);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(TextTrackButton, _TrackButton);
 
   /**
    * Creates an instance of this class.
@@ -59085,7 +59696,7 @@ Component$1.registerComponent('TextTrackButton', TextTrackButton);
  */
 
 var ChaptersTrackMenuItem = /*#__PURE__*/function (_MenuItem) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(ChaptersTrackMenuItem, _MenuItem);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(ChaptersTrackMenuItem, _MenuItem);
 
   /**
    * Creates an instance of this class.
@@ -59110,7 +59721,7 @@ var ChaptersTrackMenuItem = /*#__PURE__*/function (_MenuItem) {
     _this = _MenuItem.call(this, player, options) || this;
     _this.track = track;
     _this.cue = cue;
-    track.addEventListener('cuechange', bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), _this.update));
+    track.addEventListener('cuechange', bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), _this.update));
     return _this;
   }
   /**
@@ -59165,7 +59776,7 @@ Component$1.registerComponent('ChaptersTrackMenuItem', ChaptersTrackMenuItem);
  */
 
 var ChaptersButton = /*#__PURE__*/function (_TextTrackButton) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(ChaptersButton, _TextTrackButton);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(ChaptersButton, _TextTrackButton);
 
   /**
    * Creates an instance of this class.
@@ -59368,7 +59979,7 @@ Component$1.registerComponent('ChaptersButton', ChaptersButton);
  */
 
 var DescriptionsButton = /*#__PURE__*/function (_TextTrackButton) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(DescriptionsButton, _TextTrackButton);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(DescriptionsButton, _TextTrackButton);
 
   /**
    * Creates an instance of this class.
@@ -59387,7 +59998,7 @@ var DescriptionsButton = /*#__PURE__*/function (_TextTrackButton) {
 
     _this = _TextTrackButton.call(this, player, options, ready) || this;
     var tracks = player.textTracks();
-    var changeHandler = bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), _this.handleTracksChange);
+    var changeHandler = bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), _this.handleTracksChange);
     tracks.addEventListener('change', changeHandler);
 
     _this.on('dispose', function () {
@@ -59472,7 +60083,7 @@ Component$1.registerComponent('DescriptionsButton', DescriptionsButton);
  */
 
 var SubtitlesButton = /*#__PURE__*/function (_TextTrackButton) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(SubtitlesButton, _TextTrackButton);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(SubtitlesButton, _TextTrackButton);
 
   /**
    * Creates an instance of this class.
@@ -59535,7 +60146,7 @@ Component$1.registerComponent('SubtitlesButton', SubtitlesButton);
  */
 
 var CaptionSettingsMenuItem = /*#__PURE__*/function (_TextTrackMenuItem) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(CaptionSettingsMenuItem, _TextTrackMenuItem);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(CaptionSettingsMenuItem, _TextTrackMenuItem);
 
   /**
    * Creates an instance of this class.
@@ -59599,7 +60210,7 @@ Component$1.registerComponent('CaptionSettingsMenuItem', CaptionSettingsMenuItem
  */
 
 var CaptionsButton = /*#__PURE__*/function (_TextTrackButton) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(CaptionsButton, _TextTrackButton);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(CaptionsButton, _TextTrackButton);
 
   /**
    * Creates an instance of this class.
@@ -59683,7 +60294,7 @@ Component$1.registerComponent('CaptionsButton', CaptionsButton);
  */
 
 var SubsCapsMenuItem = /*#__PURE__*/function (_TextTrackMenuItem) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(SubsCapsMenuItem, _TextTrackMenuItem);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(SubsCapsMenuItem, _TextTrackMenuItem);
 
   function SubsCapsMenuItem() {
     return _TextTrackMenuItem.apply(this, arguments) || this;
@@ -59725,7 +60336,7 @@ Component$1.registerComponent('SubsCapsMenuItem', SubsCapsMenuItem);
  */
 
 var SubsCapsButton = /*#__PURE__*/function (_TextTrackButton) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(SubsCapsButton, _TextTrackButton);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(SubsCapsButton, _TextTrackButton);
 
   function SubsCapsButton(player, options) {
     var _this;
@@ -59815,7 +60426,7 @@ Component$1.registerComponent('SubsCapsButton', SubsCapsButton);
  */
 
 var AudioTrackMenuItem = /*#__PURE__*/function (_MenuItem) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(AudioTrackMenuItem, _MenuItem);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(AudioTrackMenuItem, _MenuItem);
 
   /**
    * Creates an instance of this class.
@@ -59844,7 +60455,7 @@ var AudioTrackMenuItem = /*#__PURE__*/function (_MenuItem) {
         args[_key] = arguments[_key];
       }
 
-      _this.handleTracksChange.apply((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), args);
+      _this.handleTracksChange.apply((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), args);
     };
 
     tracks.addEventListener('change', changeHandler);
@@ -59858,20 +60469,20 @@ var AudioTrackMenuItem = /*#__PURE__*/function (_MenuItem) {
 
   var _proto = AudioTrackMenuItem.prototype;
 
-  _proto.createEl = function createEl(type, props, attrs) {
+  _proto.createEl = function createEl$1(type, props, attrs) {
     var el = _MenuItem.prototype.createEl.call(this, type, props, attrs);
 
     var parentSpan = el.querySelector('.vjs-menu-item-text');
 
     if (this.options_.track.kind === 'main-desc') {
-      parentSpan.appendChild(_MenuItem.prototype.createEl.call(this, 'span', {
+      parentSpan.appendChild(createEl('span', {
         className: 'vjs-icon-placeholder'
       }, {
         'aria-hidden': true
       }));
-      parentSpan.appendChild(_MenuItem.prototype.createEl.call(this, 'span', {
+      parentSpan.appendChild(createEl('span', {
         className: 'vjs-control-text',
-        textContent: this.localize('Descriptions')
+        textContent: ' ' + this.localize('Descriptions')
       }));
     }
 
@@ -59895,7 +60506,21 @@ var AudioTrackMenuItem = /*#__PURE__*/function (_MenuItem) {
     // off for us.
 
 
-    this.track.enabled = true;
+    this.track.enabled = true; // when native audio tracks are used, we want to make sure that other tracks are turned off
+
+    if (this.player_.tech_.featuresNativeAudioTracks) {
+      var tracks = this.player_.audioTracks();
+
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i]; // skip the current track since we enabled it above
+
+        if (track === this.track) {
+          continue;
+        }
+
+        track.enabled = track === this.track;
+      }
+    }
   }
   /**
    * Handle any {@link AudioTrack} change.
@@ -59923,7 +60548,7 @@ Component$1.registerComponent('AudioTrackMenuItem', AudioTrackMenuItem);
  */
 
 var AudioTrackButton = /*#__PURE__*/function (_TrackButton) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(AudioTrackButton, _TrackButton);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(AudioTrackButton, _TrackButton);
 
   /**
    * Creates an instance of this class.
@@ -60013,7 +60638,7 @@ Component$1.registerComponent('AudioTrackButton', AudioTrackButton);
  */
 
 var PlaybackRateMenuItem = /*#__PURE__*/function (_MenuItem) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(PlaybackRateMenuItem, _MenuItem);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(PlaybackRateMenuItem, _MenuItem);
 
   /**
    * Creates an instance of this class.
@@ -60098,7 +60723,7 @@ Component$1.registerComponent('PlaybackRateMenuItem', PlaybackRateMenuItem);
  */
 
 var PlaybackRateMenuButton = /*#__PURE__*/function (_MenuButton) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(PlaybackRateMenuButton, _MenuButton);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(PlaybackRateMenuButton, _MenuButton);
 
   /**
    * Creates an instance of this class.
@@ -60220,18 +60845,11 @@ var PlaybackRateMenuButton = /*#__PURE__*/function (_MenuButton) {
   _proto.handleClick = function handleClick(event) {
     // select next rate option
     var currentRate = this.player().playbackRate();
-    var rates = this.playbackRates(); // this will select first one if the last one currently selected
+    var rates = this.playbackRates();
+    var currentIndex = rates.indexOf(currentRate); // this get the next rate and it will select first one if the last one currently selected
 
-    var newRate = rates[0];
-
-    for (var i = 0; i < rates.length; i++) {
-      if (rates[i] > currentRate) {
-        newRate = rates[i];
-        break;
-      }
-    }
-
-    this.player().playbackRate(newRate);
+    var newIndex = (currentIndex + 1) % rates.length;
+    this.player().playbackRate(rates[newIndex]);
   }
   /**
    * On playbackrateschange, update the menu to account for the new items.
@@ -60321,7 +60939,7 @@ Component$1.registerComponent('PlaybackRateMenuButton', PlaybackRateMenuButton);
  */
 
 var Spacer = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(Spacer, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(Spacer, _Component);
 
   function Spacer() {
     return _Component.apply(this, arguments) || this;
@@ -60378,7 +60996,7 @@ Component$1.registerComponent('Spacer', Spacer);
  */
 
 var CustomControlSpacer = /*#__PURE__*/function (_Spacer) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(CustomControlSpacer, _Spacer);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(CustomControlSpacer, _Spacer);
 
   function CustomControlSpacer() {
     return _Spacer.apply(this, arguments) || this;
@@ -60424,7 +61042,7 @@ Component$1.registerComponent('CustomControlSpacer', CustomControlSpacer);
  */
 
 var ControlBar = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(ControlBar, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(ControlBar, _Component);
 
   function ControlBar() {
     return _Component.apply(this, arguments) || this;
@@ -60473,7 +61091,7 @@ Component$1.registerComponent('ControlBar', ControlBar);
  */
 
 var ErrorDisplay = /*#__PURE__*/function (_ModalDialog) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(ErrorDisplay, _ModalDialog);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(ErrorDisplay, _ModalDialog);
 
   /**
    * Creates an instance of this class.
@@ -60710,7 +61328,7 @@ function setSelectedOption(el, value, parser) {
 
 
 var TextTrackSettings = /*#__PURE__*/function (_ModalDialog) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(TextTrackSettings, _ModalDialog);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(TextTrackSettings, _ModalDialog);
 
   /**
    * Creates an instance of this class.
@@ -60726,7 +61344,7 @@ var TextTrackSettings = /*#__PURE__*/function (_ModalDialog) {
 
     options.temporary = false;
     _this = _ModalDialog.call(this, player, options) || this;
-    _this.updateDisplay = _this.updateDisplay.bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this)); // fill the modal and pretend we have opened it
+    _this.updateDisplay = _this.updateDisplay.bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this)); // fill the modal and pretend we have opened it
 
     _this.fill();
 
@@ -61058,7 +61676,7 @@ Component$1.registerComponent('TextTrackSettings', TextTrackSettings);
  */
 
 var ResizeManager = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(ResizeManager, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(ResizeManager, _Component);
 
   /**
    * Create the ResizeManager.
@@ -61093,7 +61711,7 @@ var ResizeManager = /*#__PURE__*/function (_Component) {
     _this.resizeObserver_ = null;
     _this.debouncedHandler_ = debounce(function () {
       _this.resizeHandler();
-    }, 100, false, (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
+    }, 100, false, (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this));
 
     if (RESIZE_OBSERVER_AVAILABLE) {
       _this.resizeObserver_ = new _this.ResizeObserver(_this.debouncedHandler_);
@@ -61205,7 +61823,7 @@ var defaults = {
  */
 
 var LiveTracker = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(LiveTracker, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(LiveTracker, _Component);
 
   /**
    * Creates an instance of this class.
@@ -61267,7 +61885,7 @@ var LiveTracker = /*#__PURE__*/function (_Component) {
     // may not have the proper values for things like seekableEnd until then
 
 
-    _this.one(_this.player_, 'canplay', function () {
+    _this.on(_this.player_, 'canplay', function () {
       return _this.toggleTracking();
     }); // we don't need to track live playback if the document is hidden,
     // also, tracking when the document is hidden can
@@ -61977,7 +62595,7 @@ var defineLazyProperty = function defineLazyProperty(obj, key, getValue, setter)
  */
 
 var Html5 = /*#__PURE__*/function (_Tech) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(Html5, _Tech);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(Html5, _Tech);
 
   /**
   * Create an instance of this Tech.
@@ -62610,7 +63228,11 @@ var Html5 = /*#__PURE__*/function (_Tech) {
     var endFn = function endFn() {
       this.trigger('fullscreenchange', {
         isFullscreen: false
-      });
+      }); // Safari will sometimes set contols on the videoelement when existing fullscreen.
+
+      if (this.el_.controls && !this.options_.nativeControlsForTouch && this.controls()) {
+        this.el_.controls = false;
+      }
     };
 
     var beginFn = function beginFn() {
@@ -63020,7 +63642,23 @@ Html5.canControlVolume = function () {
   try {
     var volume = Html5.TEST_VID.volume;
     Html5.TEST_VID.volume = volume / 2 + 0.1;
-    return volume !== Html5.TEST_VID.volume;
+    var canControl = volume !== Html5.TEST_VID.volume; // With the introduction of iOS 15, there are cases where the volume is read as
+    // changed but reverts back to its original state at the start of the next tick.
+    // To determine whether volume can be controlled on iOS,
+    // a timeout is set and the volume is checked asynchronously.
+    // Since `features` doesn't currently work asynchronously, the value is manually set.
+
+    if (canControl && IS_IOS) {
+      global_window__WEBPACK_IMPORTED_MODULE_0___default().setTimeout(function () {
+        if (Html5 && Html5.prototype) {
+          Html5.prototype.featuresVolumeControl = volume !== Html5.TEST_VID.volume;
+        }
+      }); // default iOS to false, which will be updated in the timeout above.
+
+      return false;
+    }
+
+    return canControl;
   } catch (e) {
     return false;
   }
@@ -63214,13 +63852,14 @@ Html5.Events = ['loadstart', 'suspend', 'abort', 'error', 'emptied', 'stalled', 
  * @default {@link Html5.supportsNativeAudioTracks}
  */
 
-[['featuresVolumeControl', 'canControlVolume'], ['featuresMuteControl', 'canMuteVolume'], ['featuresPlaybackRate', 'canControlPlaybackRate'], ['featuresSourceset', 'canOverrideAttributes'], ['featuresNativeTextTracks', 'supportsNativeTextTracks'], ['featuresNativeVideoTracks', 'supportsNativeVideoTracks'], ['featuresNativeAudioTracks', 'supportsNativeAudioTracks']].forEach(function (_ref) {
+[['featuresMuteControl', 'canMuteVolume'], ['featuresPlaybackRate', 'canControlPlaybackRate'], ['featuresSourceset', 'canOverrideAttributes'], ['featuresNativeTextTracks', 'supportsNativeTextTracks'], ['featuresNativeVideoTracks', 'supportsNativeVideoTracks'], ['featuresNativeAudioTracks', 'supportsNativeAudioTracks']].forEach(function (_ref) {
   var key = _ref[0],
       fn = _ref[1];
   defineLazyProperty(Html5.prototype, key, function () {
     return Html5[fn]();
   }, true);
 });
+Html5.prototype.featuresVolumeControl = Html5.canControlVolume();
 /**
  * Boolean indicating whether the `HTML5` tech currently supports the media element
  * moving in the DOM. iOS breaks if you move the media element, so this is set this to
@@ -64241,7 +64880,7 @@ var DEFAULT_BREAKPOINTS = {
  */
 
 var Player = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(Player, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(Player, _Component);
 
   /**
    * Create an instance of this class.
@@ -64431,7 +65070,7 @@ var Player = /*#__PURE__*/function (_Component) {
     _this.scrubbing_ = false;
     _this.el_ = _this.createEl(); // Make this an evented object and use `el_` as its event bus.
 
-    evented((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), {
+    evented((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), {
       eventBusKey: 'el_'
     }); // listen to document and player fullscreenchange handlers so we receive those events
     // before a user can receive them so we can update isFullscreen appropriately.
@@ -64514,7 +65153,7 @@ var Player = /*#__PURE__*/function (_Component) {
     } // Make player easily findable by ID
 
 
-    Player.players[_this.id_] = (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this); // Add a major version class to aid css in plugins
+    Player.players[_this.id_] = (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this); // Add a major version class to aid css in plugins
 
     var majorVersion = version$5.split('.')[0];
 
@@ -66143,9 +66782,14 @@ var Player = /*#__PURE__*/function (_Component) {
   ;
 
   _proto.handleTechFullscreenChange_ = function handleTechFullscreenChange_(event, data) {
+    var _this9 = this;
+
     if (data) {
       if (data.nativeIOSFullscreen) {
-        this.toggleClass('vjs-ios-native-fs');
+        this.addClass('vjs-ios-native-fs');
+        this.tech_.one('webkitendfullscreen', function () {
+          _this9.removeClass('vjs-ios-native-fs');
+        });
       }
 
       this.isFullscreen(data.isFullscreen);
@@ -66367,13 +67011,13 @@ var Player = /*#__PURE__*/function (_Component) {
   ;
 
   _proto.play = function play() {
-    var _this9 = this;
+    var _this10 = this;
 
     var PromiseClass = this.options_.Promise || (global_window__WEBPACK_IMPORTED_MODULE_0___default().Promise);
 
     if (PromiseClass) {
       return new PromiseClass(function (resolve) {
-        _this9.play_(resolve);
+        _this10.play_(resolve);
       });
     }
 
@@ -66391,7 +67035,7 @@ var Player = /*#__PURE__*/function (_Component) {
   ;
 
   _proto.play_ = function play_(callback) {
-    var _this10 = this;
+    var _this11 = this;
 
     if (callback === void 0) {
       callback = silencePromise;
@@ -66409,7 +67053,7 @@ var Player = /*#__PURE__*/function (_Component) {
 
     if (!this.isReady_ || !isSrcReady) {
       this.waitToPlay_ = function (e) {
-        _this10.play_();
+        _this11.play_();
       };
 
       this.one(['ready', 'loadstart'], this.waitToPlay_); // if we are in Safari, there is a high chance that loadstart will trigger after the gesture timeperiod
@@ -66926,7 +67570,7 @@ var Player = /*#__PURE__*/function (_Component) {
   };
 
   _proto.requestFullscreenHelper_ = function requestFullscreenHelper_(fullscreenOptions) {
-    var _this11 = this;
+    var _this12 = this;
 
     var fsOptions; // Only pass fullscreen options to requestFullscreen in spec-compliant browsers.
     // Use defaults or player configured option unless passed directly to this method.
@@ -66951,9 +67595,9 @@ var Player = /*#__PURE__*/function (_Component) {
 
       if (promise) {
         promise.then(function () {
-          return _this11.isFullscreen(true);
+          return _this12.isFullscreen(true);
         }, function () {
-          return _this11.isFullscreen(false);
+          return _this12.isFullscreen(false);
         });
       }
 
@@ -67012,7 +67656,7 @@ var Player = /*#__PURE__*/function (_Component) {
   };
 
   _proto.exitFullscreenHelper_ = function exitFullscreenHelper_() {
-    var _this12 = this;
+    var _this13 = this;
 
     if (this.fsApi_.requestFullscreen) {
       var promise = (global_document__WEBPACK_IMPORTED_MODULE_1___default())[this.fsApi_.exitFullscreen]();
@@ -67021,7 +67665,7 @@ var Player = /*#__PURE__*/function (_Component) {
         // we're splitting the promise here, so, we want to catch the
         // potential error so that this chain doesn't have unhandled errors
         silencePromise(promise.then(function () {
-          return _this12.isFullscreen(false);
+          return _this13.isFullscreen(false);
         }));
       }
 
@@ -67068,7 +67712,7 @@ var Player = /*#__PURE__*/function (_Component) {
   ;
 
   _proto.fullWindowOnEscKey = function fullWindowOnEscKey(event) {
-    if (keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(event, 'Esc')) {
+    if (keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(event, 'Esc')) {
       if (this.isFullscreen() === true) {
         if (!this.isFullWindow) {
           this.exitFullscreen();
@@ -67261,15 +67905,15 @@ var Player = /*#__PURE__*/function (_Component) {
 
     var _hotkeys$fullscreenKe = hotkeys.fullscreenKey,
         fullscreenKey = _hotkeys$fullscreenKe === void 0 ? function (keydownEvent) {
-      return keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(keydownEvent, 'f');
+      return keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(keydownEvent, 'f');
     } : _hotkeys$fullscreenKe,
         _hotkeys$muteKey = hotkeys.muteKey,
         muteKey = _hotkeys$muteKey === void 0 ? function (keydownEvent) {
-      return keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(keydownEvent, 'm');
+      return keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(keydownEvent, 'm');
     } : _hotkeys$muteKey,
         _hotkeys$playPauseKey = hotkeys.playPauseKey,
         playPauseKey = _hotkeys$playPauseKey === void 0 ? function (keydownEvent) {
-      return keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(keydownEvent, 'k') || keycode__WEBPACK_IMPORTED_MODULE_6___default().isEventKey(keydownEvent, 'Space');
+      return keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(keydownEvent, 'k') || keycode__WEBPACK_IMPORTED_MODULE_3___default().isEventKey(keydownEvent, 'Space');
     } : _hotkeys$playPauseKey;
 
     if (fullscreenKey.call(this, event)) {
@@ -67349,7 +67993,7 @@ var Player = /*#__PURE__*/function (_Component) {
   ;
 
   _proto.selectSource = function selectSource(sources) {
-    var _this13 = this;
+    var _this14 = this;
 
     // Get only the techs specified in `techOrder` that exist and are supported by the
     // current platform
@@ -67397,7 +68041,7 @@ var Player = /*#__PURE__*/function (_Component) {
       var techName = _ref2[0],
           tech = _ref2[1];
 
-      if (tech.canPlaySource(source, _this13.options_[techName.toLowerCase()])) {
+      if (tech.canPlaySource(source, _this14.options_[techName.toLowerCase()])) {
         return {
           source: source,
           tech: techName
@@ -67437,7 +68081,7 @@ var Player = /*#__PURE__*/function (_Component) {
   ;
 
   _proto.handleSrc_ = function handleSrc_(source, isRetry) {
-    var _this14 = this;
+    var _this15 = this;
 
     // getter usage
     if (typeof source === 'undefined') {
@@ -67476,25 +68120,25 @@ var Player = /*#__PURE__*/function (_Component) {
     this.updateSourceCaches_(sources[0]); // middlewareSource is the source after it has been changed by middleware
 
     setSource(this, sources[0], function (middlewareSource, mws) {
-      _this14.middleware_ = mws; // since sourceSet is async we have to update the cache again after we select a source since
+      _this15.middleware_ = mws; // since sourceSet is async we have to update the cache again after we select a source since
       // the source that is selected could be out of order from the cache update above this callback.
 
       if (!isRetry) {
-        _this14.cache_.sources = sources;
+        _this15.cache_.sources = sources;
       }
 
-      _this14.updateSourceCaches_(middlewareSource);
+      _this15.updateSourceCaches_(middlewareSource);
 
-      var err = _this14.src_(middlewareSource);
+      var err = _this15.src_(middlewareSource);
 
       if (err) {
         if (sources.length > 1) {
-          return _this14.handleSrc_(sources.slice(1));
+          return _this15.handleSrc_(sources.slice(1));
         }
 
-        _this14.changingSrc_ = false; // We need to wrap this in a timeout to give folks a chance to add error event handlers
+        _this15.changingSrc_ = false; // We need to wrap this in a timeout to give folks a chance to add error event handlers
 
-        _this14.setTimeout(function () {
+        _this15.setTimeout(function () {
           this.error({
             code: 4,
             message: this.localize(this.options_.notSupportedMessage)
@@ -67503,33 +68147,33 @@ var Player = /*#__PURE__*/function (_Component) {
         // this needs a better comment about why this is needed
 
 
-        _this14.triggerReady();
+        _this15.triggerReady();
 
         return;
       }
 
-      setTech(mws, _this14.tech_);
+      setTech(mws, _this15.tech_);
     }); // Try another available source if this one fails before playback.
 
     if (this.options_.retryOnError && sources.length > 1) {
       var retry = function retry() {
         // Remove the error modal
-        _this14.error(null);
+        _this15.error(null);
 
-        _this14.handleSrc_(sources.slice(1), true);
+        _this15.handleSrc_(sources.slice(1), true);
       };
 
       var stopListeningForErrors = function stopListeningForErrors() {
-        _this14.off('error', retry);
+        _this15.off('error', retry);
       };
 
       this.one('error', retry);
       this.one('playing', stopListeningForErrors);
 
       this.resetRetryOnError_ = function () {
-        _this14.off('error', retry);
+        _this15.off('error', retry);
 
-        _this14.off('playing', stopListeningForErrors);
+        _this15.off('playing', stopListeningForErrors);
       };
     }
   }
@@ -67569,7 +68213,7 @@ var Player = /*#__PURE__*/function (_Component) {
   ;
 
   _proto.src_ = function src_(source) {
-    var _this15 = this;
+    var _this16 = this;
 
     var sourceTech = this.selectSource([source]);
 
@@ -67582,7 +68226,7 @@ var Player = /*#__PURE__*/function (_Component) {
 
       this.loadTech_(sourceTech.tech, sourceTech.source);
       this.tech_.ready(function () {
-        _this15.changingSrc_ = false;
+        _this16.changingSrc_ = false;
       });
       return false;
     } // wait until the tech is ready to set the source
@@ -67620,7 +68264,7 @@ var Player = /*#__PURE__*/function (_Component) {
   ;
 
   _proto.reset = function reset() {
-    var _this16 = this;
+    var _this17 = this;
 
     var PromiseClass = this.options_.Promise || (global_window__WEBPACK_IMPORTED_MODULE_0___default().Promise);
 
@@ -67629,7 +68273,7 @@ var Player = /*#__PURE__*/function (_Component) {
     } else {
       var playPromise = this.play();
       silencePromise(playPromise.then(function () {
-        return _this16.doReset_();
+        return _this17.doReset_();
       }));
     }
   };
@@ -68063,7 +68707,7 @@ var Player = /*#__PURE__*/function (_Component) {
   ;
 
   _proto.error = function error(err) {
-    var _this17 = this;
+    var _this18 = this;
 
     if (err === undefined) {
       return this.error_ || null;
@@ -68071,10 +68715,10 @@ var Player = /*#__PURE__*/function (_Component) {
 
 
     hooks('beforeerror').forEach(function (hookFunction) {
-      var newErr = hookFunction(_this17, err);
+      var newErr = hookFunction(_this18, err);
 
       if (!(isObject(newErr) && !Array.isArray(newErr) || typeof newErr === 'string' || typeof newErr === 'number' || newErr === null)) {
-        _this17.log.error('please return a value that MediaError expects in beforeerror hooks');
+        _this18.log.error('please return a value that MediaError expects in beforeerror hooks');
 
         return;
       }
@@ -68122,7 +68766,7 @@ var Player = /*#__PURE__*/function (_Component) {
     this.trigger('error'); // notify hooks of the per player error
 
     hooks('error').forEach(function (hookFunction) {
-      return hookFunction(_this17, _this17.error_);
+      return hookFunction(_this18, _this18.error_);
     });
     return;
   }
@@ -68598,14 +69242,14 @@ var Player = /*#__PURE__*/function (_Component) {
   ;
 
   _proto.createModal = function createModal(content, options) {
-    var _this18 = this;
+    var _this19 = this;
 
     options = options || {};
     options.content = content || '';
     var modal = new ModalDialog(this, options);
     this.addChild(modal);
     modal.on('dispose', function () {
-      _this18.removeChild(modal);
+      _this19.removeChild(modal);
     });
     modal.open();
     return modal;
@@ -68836,7 +69480,7 @@ var Player = /*#__PURE__*/function (_Component) {
   ;
 
   _proto.loadMedia = function loadMedia(media, ready) {
-    var _this19 = this;
+    var _this20 = this;
 
     if (!media || typeof media !== 'object') {
       return;
@@ -68868,7 +69512,7 @@ var Player = /*#__PURE__*/function (_Component) {
 
     if (Array.isArray(textTracks)) {
       textTracks.forEach(function (tt) {
-        return _this19.addRemoteTextTrack(tt, false);
+        return _this20.addRemoteTextTrack(tt, false);
       });
     }
 
@@ -68946,7 +69590,7 @@ var Player = /*#__PURE__*/function (_Component) {
     if (dataSetup !== null) {
       // Parse options JSON
       // If empty string, make it a parsable json object.
-      var _safeParseTuple = safe_json_parse_tuple__WEBPACK_IMPORTED_MODULE_5___default()(dataSetup || '{}'),
+      var _safeParseTuple = safe_json_parse_tuple__WEBPACK_IMPORTED_MODULE_6___default()(dataSetup || '{}'),
           err = _safeParseTuple[0],
           data = _safeParseTuple[1];
 
@@ -70388,7 +71032,7 @@ videojs.addLanguage('en', {
   'Non-Fullscreen': 'Exit Fullscreen'
 });
 
-/*! @name @videojs/http-streaming @version 2.12.0 @license Apache-2.0 */
+/*! @name @videojs/http-streaming @version 2.13.1 @license Apache-2.0 */
 /**
  * @file resolve-url.js - Handling how URLs are resolved and manipulated
  */
@@ -72266,7 +72910,7 @@ var refreshDelay = function refreshDelay(media, update) {
 
 
 var PlaylistLoader = /*#__PURE__*/function (_EventTarget) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(PlaylistLoader, _EventTarget);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(PlaylistLoader, _EventTarget);
 
   function PlaylistLoader(src, vhs, options) {
     var _this;
@@ -72303,7 +72947,7 @@ var PlaylistLoader = /*#__PURE__*/function (_EventTarget) {
 
     _this.state = 'HAVE_NOTHING'; // live playlist staleness timeout
 
-    _this.handleMediaupdatetimeout_ = _this.handleMediaupdatetimeout_.bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
+    _this.handleMediaupdatetimeout_ = _this.handleMediaupdatetimeout_.bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this));
 
     _this.on('mediaupdatetimeout', _this.handleMediaupdatetimeout_);
 
@@ -72923,8 +73567,15 @@ var xhrFactory = function xhrFactory() {
 var byterangeStr = function byterangeStr(byterange) {
   // `byterangeEnd` is one less than `offset + length` because the HTTP range
   // header uses inclusive ranges
-  var byterangeEnd = byterange.offset + byterange.length - 1;
+  var byterangeEnd;
   var byterangeStart = byterange.offset;
+
+  if (typeof byterange.offset === 'bigint' || typeof byterange.length === 'bigint') {
+    byterangeEnd = global_window__WEBPACK_IMPORTED_MODULE_0___default().BigInt(byterange.offset) + global_window__WEBPACK_IMPORTED_MODULE_0___default().BigInt(byterange.length) - global_window__WEBPACK_IMPORTED_MODULE_0___default().BigInt(1);
+  } else {
+    byterangeEnd = byterange.offset + byterange.length - 1;
+  }
+
   return 'bytes=' + byterangeStart + '-' + byterangeEnd;
 };
 /**
@@ -73631,14 +74282,16 @@ var parseMasterXml = function parseMasterXml(_ref) {
   var masterXml = _ref.masterXml,
       srcUrl = _ref.srcUrl,
       clientOffset = _ref.clientOffset,
-      sidxMapping = _ref.sidxMapping;
-  var master = (0,mpd_parser__WEBPACK_IMPORTED_MODULE_15__.parse)(masterXml, {
+      sidxMapping = _ref.sidxMapping,
+      previousManifest = _ref.previousManifest;
+  var manifest = (0,mpd_parser__WEBPACK_IMPORTED_MODULE_15__.parse)(masterXml, {
     manifestUri: srcUrl,
     clientOffset: clientOffset,
-    sidxMapping: sidxMapping
+    sidxMapping: sidxMapping,
+    previousManifest: previousManifest
   });
-  addPropertiesToMaster(master, srcUrl);
-  return master;
+  addPropertiesToMaster(manifest, srcUrl);
+  return manifest;
 };
 /**
  * Returns a new master manifest that is the result of merging an updated master manifest
@@ -73659,7 +74312,8 @@ var updateMaster = function updateMaster(oldMaster, newMaster, sidxMapping) {
   var update = mergeOptions(oldMaster, {
     // These are top level properties that can be updated
     duration: newMaster.duration,
-    minimumUpdatePeriod: newMaster.minimumUpdatePeriod
+    minimumUpdatePeriod: newMaster.minimumUpdatePeriod,
+    timelineStarts: newMaster.timelineStarts
   }); // First update the playlists in playlist list
 
   for (var i = 0; i < newMaster.playlists.length; i++) {
@@ -73766,7 +74420,7 @@ var filterChangedSidxMappings = function filterChangedSidxMappings(master, oldSi
 };
 
 var DashPlaylistLoader = /*#__PURE__*/function (_EventTarget) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(DashPlaylistLoader, _EventTarget); // DashPlaylistLoader must accept either a src url or a playlist because subsequent
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(DashPlaylistLoader, _EventTarget); // DashPlaylistLoader must accept either a src url or a playlist because subsequent
   // playlist loader setups from media groups will expect to be able to pass a playlist
   // (since there aren't external URLs to media playlists with DASH)
 
@@ -73779,7 +74433,7 @@ var DashPlaylistLoader = /*#__PURE__*/function (_EventTarget) {
     }
 
     _this = _EventTarget.call(this) || this;
-    _this.masterPlaylistLoader_ = masterPlaylistLoader || (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this);
+    _this.masterPlaylistLoader_ = masterPlaylistLoader || (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this);
 
     if (!masterPlaylistLoader) {
       _this.isMaster_ = true;
@@ -74253,13 +74907,14 @@ var DashPlaylistLoader = /*#__PURE__*/function (_EventTarget) {
   _proto.handleMaster_ = function handleMaster_() {
     // clear media request
     this.mediaRequest_ = null;
+    var oldMaster = this.masterPlaylistLoader_.master;
     var newMaster = parseMasterXml({
       masterXml: this.masterPlaylistLoader_.masterXml_,
       srcUrl: this.masterPlaylistLoader_.srcUrl,
       clientOffset: this.masterPlaylistLoader_.clientOffset_,
-      sidxMapping: this.masterPlaylistLoader_.sidxMapping_
-    });
-    var oldMaster = this.masterPlaylistLoader_.master; // if we have an old master to compare the new master against
+      sidxMapping: this.masterPlaylistLoader_.sidxMapping_,
+      previousManifest: oldMaster
+    }); // if we have an old master to compare the new master against
 
     if (oldMaster) {
       newMaster = updateMaster(oldMaster, newMaster, this.masterPlaylistLoader_.sidxMapping_);
@@ -74488,7 +75143,7 @@ var transform = function transform(code) {
 var getWorkerString = function getWorkerString(fn) {
   return fn.toString().replace(/^function.+?{/, '').slice(0, -1);
 };
-/* rollup-plugin-worker-factory start for worker!/Users/gkatsevman/p/http-streaming-release/src/transmuxer-worker.js */
+/* rollup-plugin-worker-factory start for worker!/Users/gsinger/repos/clean/http-streaming/src/transmuxer-worker.js */
 
 
 var workerCode$1 = transform(getWorkerString(function () {
@@ -74643,17 +75298,30 @@ var workerCode$1 = transform(getWorkerString(function () {
   };
 
   var stream = Stream;
-  /**
-   * mux.js
-   *
-   * Copyright (c) Brightcove
-   * Licensed Apache-2.0 https://github.com/videojs/mux.js/blob/master/LICENSE
-   *
-   * Functions that generate fragmented MP4s suitable for use with Media
-   * Source Extensions.
-   */
+  var MAX_UINT32$1 = Math.pow(2, 32);
 
-  var UINT32_MAX = Math.pow(2, 32) - 1;
+  var getUint64$2 = function getUint64(uint8) {
+    var dv = new DataView(uint8.buffer, uint8.byteOffset, uint8.byteLength);
+    var value;
+
+    if (dv.getBigUint64) {
+      value = dv.getBigUint64(0);
+
+      if (value < Number.MAX_SAFE_INTEGER) {
+        return Number(value);
+      }
+
+      return value;
+    }
+
+    return dv.getUint32(0) * MAX_UINT32$1 + dv.getUint32(4);
+  };
+
+  var numbers = {
+    getUint64: getUint64$2,
+    MAX_UINT32: MAX_UINT32$1
+  };
+  var MAX_UINT32 = numbers.MAX_UINT32;
   var box, dinf, esds, ftyp, mdat, mfhd, minf, moof, moov, mvex, mvhd, trak, tkhd, mdia, mdhd, hdlr, sdtp, stbl, stsd, traf, trex, trun$1, types, MAJOR_BRAND, MINOR_VERSION, AVC1_BRAND, VIDEO_HDLR, AUDIO_HDLR, HDLR_TYPES, VMHD, SMHD, DREF, STCO, STSC, STSZ, STTS; // pre-calculate constants
 
   (function () {
@@ -75070,8 +75738,8 @@ var workerCode$1 = transform(getWorkerString(function () {
     0x00, 0x00, 0x00, 0x00, // default_sample_size
     0x00, 0x00, 0x00, 0x00 // default_sample_flags
     ]));
-    upperWordBaseMediaDecodeTime = Math.floor(track.baseMediaDecodeTime / (UINT32_MAX + 1));
-    lowerWordBaseMediaDecodeTime = Math.floor(track.baseMediaDecodeTime % (UINT32_MAX + 1));
+    upperWordBaseMediaDecodeTime = Math.floor(track.baseMediaDecodeTime / MAX_UINT32);
+    lowerWordBaseMediaDecodeTime = Math.floor(track.baseMediaDecodeTime % MAX_UINT32);
     trackFragmentDecodeTime = box(types.tfdt, new Uint8Array([0x01, // version 1
     0x00, 0x00, 0x00, // flags
     // baseMediaDecodeTime
@@ -81118,17 +81786,18 @@ var workerCode$1 = transform(getWorkerString(function () {
 
   var findBox_1 = findBox;
   var toUnsigned$1 = bin.toUnsigned;
+  var getUint64$1 = numbers.getUint64;
 
   var tfdt = function tfdt(data) {
     var result = {
       version: data[0],
-      flags: new Uint8Array(data.subarray(1, 4)),
-      baseMediaDecodeTime: toUnsigned$1(data[4] << 24 | data[5] << 16 | data[6] << 8 | data[7])
+      flags: new Uint8Array(data.subarray(1, 4))
     };
 
     if (result.version === 1) {
-      result.baseMediaDecodeTime *= Math.pow(2, 32);
-      result.baseMediaDecodeTime += toUnsigned$1(data[8] << 24 | data[9] << 16 | data[10] << 8 | data[11]);
+      result.baseMediaDecodeTime = getUint64$1(data.subarray(4));
+    } else {
+      result.baseMediaDecodeTime = toUnsigned$1(data[4] << 24 | data[5] << 16 | data[6] << 8 | data[7]);
     }
 
     return result;
@@ -81304,6 +81973,20 @@ var workerCode$1 = transform(getWorkerString(function () {
   };
 
   var parseTfhd = tfhd;
+  var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof __webpack_require__.g !== 'undefined' ? __webpack_require__.g : typeof self !== 'undefined' ? self : {};
+  var win;
+
+  if (typeof window !== "undefined") {
+    win = window;
+  } else if (typeof commonjsGlobal !== "undefined") {
+    win = commonjsGlobal;
+  } else if (typeof self !== "undefined") {
+    win = self;
+  } else {
+    win = {};
+  }
+
+  var window_1 = win;
   var discardEmulationPreventionBytes = captionPacketParser.discardEmulationPreventionBytes;
   var CaptionStream = captionStream.CaptionStream;
   /**
@@ -81408,7 +82091,7 @@ var workerCode$1 = transform(getWorkerString(function () {
     * the absolute presentation and decode timestamps of each sample.
     *
     * @param {Array<Uint8Array>} truns - The Trun Run boxes to be parsed
-    * @param {Number} baseMediaDecodeTime - base media decode time from tfdt
+    * @param {Number|BigInt} baseMediaDecodeTime - base media decode time from tfdt
         @see ISO-BMFF-12/2015, Section 8.8.12
     * @param {Object} tfhd - The parsed Track Fragment Header
     *   @see inspect.parseTfhd
@@ -81446,8 +82129,13 @@ var workerCode$1 = transform(getWorkerString(function () {
           sample.compositionTimeOffset = 0;
         }
 
-        sample.pts = currentDts + sample.compositionTimeOffset;
-        currentDts += sample.duration;
+        if (typeof currentDts === 'bigint') {
+          sample.pts = currentDts + window_1.BigInt(sample.compositionTimeOffset);
+          currentDts += window_1.BigInt(sample.duration);
+        } else {
+          sample.pts = currentDts + sample.compositionTimeOffset;
+          currentDts += sample.duration;
+        }
       });
       allSamples = allSamples.concat(samples);
     });
@@ -81762,6 +82450,7 @@ var workerCode$1 = transform(getWorkerString(function () {
   var captionParser = CaptionParser;
   var toUnsigned = bin.toUnsigned;
   var toHexString = bin.toHexString;
+  var getUint64 = numbers.getUint64;
   var timescale, startTime, compositionStartTime, getVideoTrackIds, getTracks, getTimescaleFromMediaHeader;
   /**
    * Parses an MP4 initialization segment and extracts the timescale
@@ -81828,38 +82517,47 @@ var workerCode$1 = transform(getWorkerString(function () {
 
 
   startTime = function startTime(timescale, fragment) {
-    var trafs, baseTimes, result; // we need info from two childrend of each track fragment box
+    var trafs; // we need info from two childrend of each track fragment box
 
     trafs = findBox_1(fragment, ['moof', 'traf']); // determine the start times for each track
 
-    baseTimes = [].concat.apply([], trafs.map(function (traf) {
-      return findBox_1(traf, ['tfhd']).map(function (tfhd) {
-        var id, scale, baseTime; // get the track id from the tfhd
+    var lowestTime = trafs.reduce(function (acc, traf) {
+      var tfhd = findBox_1(traf, ['tfhd'])[0]; // get the track id from the tfhd
 
-        id = toUnsigned(tfhd[4] << 24 | tfhd[5] << 16 | tfhd[6] << 8 | tfhd[7]); // assume a 90kHz clock if no timescale was specified
+      var id = toUnsigned(tfhd[4] << 24 | tfhd[5] << 16 | tfhd[6] << 8 | tfhd[7]); // assume a 90kHz clock if no timescale was specified
 
-        scale = timescale[id] || 90e3; // get the base media decode time from the tfdt
+      var scale = timescale[id] || 90e3; // get the base media decode time from the tfdt
 
-        baseTime = findBox_1(traf, ['tfdt']).map(function (tfdt) {
-          var version, result;
-          version = tfdt[0];
-          result = toUnsigned(tfdt[4] << 24 | tfdt[5] << 16 | tfdt[6] << 8 | tfdt[7]);
+      var tfdt = findBox_1(traf, ['tfdt'])[0];
+      var dv = new DataView(tfdt.buffer, tfdt.byteOffset, tfdt.byteLength);
+      var baseTime; // version 1 is 64 bit
 
-          if (version === 1) {
-            result *= Math.pow(2, 32);
-            result += toUnsigned(tfdt[8] << 24 | tfdt[9] << 16 | tfdt[10] << 8 | tfdt[11]);
-          }
+      if (tfdt[0] === 1) {
+        baseTime = getUint64(tfdt.subarray(4, 12));
+      } else {
+        baseTime = dv.getUint32(4);
+      } // convert base time to seconds if it is a valid number.
 
-          return result;
-        })[0];
-        baseTime = typeof baseTime === 'number' && !isNaN(baseTime) ? baseTime : Infinity; // convert base time to seconds
 
-        return baseTime / scale;
-      });
-    })); // return the minimum
+      var seconds;
 
-    result = Math.min.apply(null, baseTimes);
-    return isFinite(result) ? result : 0;
+      if (typeof baseTime === 'bigint') {
+        seconds = baseTime / window_1.BigInt(scale);
+      } else if (typeof baseTime === 'number' && !isNaN(baseTime)) {
+        seconds = baseTime / scale;
+      }
+
+      if (seconds < Number.MAX_SAFE_INTEGER) {
+        seconds = Number(seconds);
+      }
+
+      if (seconds < acc) {
+        acc = seconds;
+      }
+
+      return acc;
+    }, Infinity);
+    return typeof lowestTime === 'bigint' || isFinite(lowestTime) ? lowestTime : 0;
   };
   /**
    * Determine the composition start, in seconds, for an MP4
@@ -81919,7 +82617,18 @@ var workerCode$1 = transform(getWorkerString(function () {
 
     var timescale = timescales[trackId] || 90e3; // return the composition start time, in seconds
 
-    return (baseMediaDecodeTime + compositionTimeOffset) / timescale;
+    if (typeof baseMediaDecodeTime === 'bigint') {
+      compositionTimeOffset = window_1.BigInt(compositionTimeOffset);
+      timescale = window_1.BigInt(timescale);
+    }
+
+    var result = (baseMediaDecodeTime + compositionTimeOffset) / timescale;
+
+    if (typeof result === 'bigint' && result < Number.MAX_SAFE_INTEGER) {
+      result = Number(result);
+    }
+
+    return result;
   };
   /**
     * Find the trackIds of the video tracks in this source.
@@ -83240,7 +83949,7 @@ var workerCode$1 = transform(getWorkerString(function () {
   };
 }));
 var TransmuxWorker = factory(workerCode$1);
-/* rollup-plugin-worker-factory end for worker!/Users/gkatsevman/p/http-streaming-release/src/transmuxer-worker.js */
+/* rollup-plugin-worker-factory end for worker!/Users/gsinger/repos/clean/http-streaming/src/transmuxer-worker.js */
 
 var handleData_ = function handleData_(event, transmuxedData, callback) {
   var _event$data$segment = event.data.segment,
@@ -86089,10 +86798,36 @@ var shouldWaitForTimelineChange = function shouldWaitForTimelineChange(_ref2) {
   return false;
 };
 
-var mediaDuration = function mediaDuration(audioTimingInfo, videoTimingInfo) {
-  var audioDuration = audioTimingInfo && typeof audioTimingInfo.start === 'number' && typeof audioTimingInfo.end === 'number' ? audioTimingInfo.end - audioTimingInfo.start : 0;
-  var videoDuration = videoTimingInfo && typeof videoTimingInfo.start === 'number' && typeof videoTimingInfo.end === 'number' ? videoTimingInfo.end - videoTimingInfo.start : 0;
-  return Math.max(audioDuration, videoDuration);
+var mediaDuration = function mediaDuration(timingInfos) {
+  var maxDuration = 0;
+  ['video', 'audio'].forEach(function (type) {
+    var typeTimingInfo = timingInfos[type + "TimingInfo"];
+
+    if (!typeTimingInfo) {
+      return;
+    }
+
+    var start = typeTimingInfo.start,
+        end = typeTimingInfo.end;
+    var duration;
+
+    if (typeof start === 'bigint' || typeof end === 'bigint') {
+      duration = global_window__WEBPACK_IMPORTED_MODULE_0___default().BigInt(end) - global_window__WEBPACK_IMPORTED_MODULE_0___default().BigInt(start);
+    } else if (typeof start === 'number' && typeof end === 'number') {
+      duration = end - start;
+    }
+
+    if (typeof duration !== 'undefined' && duration > maxDuration) {
+      maxDuration = duration;
+    }
+  }); // convert back to a number if it is lower than MAX_SAFE_INTEGER
+  // as we only need BigInt when we are above that.
+
+  if (typeof maxDuration === 'bigint' && maxDuration < Number.MAX_SAFE_INTEGER) {
+    maxDuration = Number(maxDuration);
+  }
+
+  return maxDuration;
 };
 
 var segmentTooLong = function segmentTooLong(_ref3) {
@@ -86125,7 +86860,10 @@ var getTroublesomeSegmentDurationMessage = function getTroublesomeSegmentDuratio
     return null;
   }
 
-  var segmentDuration = mediaDuration(segmentInfo.audioTimingInfo, segmentInfo.videoTimingInfo); // Don't report if we lack information.
+  var segmentDuration = mediaDuration({
+    audioTimingInfo: segmentInfo.audioTimingInfo,
+    videoTimingInfo: segmentInfo.videoTimingInfo
+  }); // Don't report if we lack information.
   //
   // If the segment has a duration of 0 it is either a lack of information or a
   // metadata only segment and shouldn't be reported here.
@@ -86164,7 +86902,7 @@ var getTroublesomeSegmentDurationMessage = function getTroublesomeSegmentDuratio
 
 
 var SegmentLoader = /*#__PURE__*/function (_videojs$EventTarget) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(SegmentLoader, _videojs$EventTarget);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(SegmentLoader, _videojs$EventTarget);
 
   function SegmentLoader(settings, options) {
     var _this;
@@ -86283,7 +87021,7 @@ var SegmentLoader = /*#__PURE__*/function (_videojs$EventTarget) {
 
     _this.fetchAtBuffer_ = false;
     _this.logger_ = logger("SegmentLoader[" + _this.loaderType_ + "]");
-    Object.defineProperty((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), 'state', {
+    Object.defineProperty((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), 'state', {
       get: function get() {
         return this.state_;
       },
@@ -89136,7 +89874,7 @@ var onUpdateend = function onUpdateend(type, sourceUpdater) {
 
 
 var SourceUpdater = /*#__PURE__*/function (_videojs$EventTarget) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(SourceUpdater, _videojs$EventTarget);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(SourceUpdater, _videojs$EventTarget);
 
   function SourceUpdater(mediaSource) {
     var _this;
@@ -89145,7 +89883,7 @@ var SourceUpdater = /*#__PURE__*/function (_videojs$EventTarget) {
     _this.mediaSource = mediaSource;
 
     _this.sourceopenListener_ = function () {
-      return shiftQueue('mediaSource', (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
+      return shiftQueue('mediaSource', (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this));
     };
 
     _this.mediaSource.addEventListener('sourceopen', _this.sourceopenListener_);
@@ -89162,8 +89900,8 @@ var SourceUpdater = /*#__PURE__*/function (_videojs$EventTarget) {
     _this.delayedAudioAppendQueue_ = [];
     _this.videoAppendQueued_ = false;
     _this.codecs = {};
-    _this.onVideoUpdateEnd_ = onUpdateend('video', (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
-    _this.onAudioUpdateEnd_ = onUpdateend('audio', (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
+    _this.onVideoUpdateEnd_ = onUpdateend('video', (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this));
+    _this.onAudioUpdateEnd_ = onUpdateend('audio', (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this));
 
     _this.onVideoError_ = function (e) {
       // used for debugging
@@ -89757,7 +90495,7 @@ var VTT_LINE_TERMINATORS = new Uint8Array('\n\n'.split('').map(function (_char3)
  */
 
 var VTTSegmentLoader = /*#__PURE__*/function (_SegmentLoader) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(VTTSegmentLoader, _SegmentLoader);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(VTTSegmentLoader, _SegmentLoader);
 
   function VTTSegmentLoader(settings, options) {
     var _this;
@@ -90500,7 +91238,7 @@ var syncPointStrategies = [// Stategy "VOD": Handle the VOD-case where the sync-
 }];
 
 var SyncController = /*#__PURE__*/function (_videojs$EventTarget) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(SyncController, _videojs$EventTarget);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(SyncController, _videojs$EventTarget);
 
   function SyncController(options) {
     var _this;
@@ -90909,7 +91647,7 @@ var SyncController = /*#__PURE__*/function (_videojs$EventTarget) {
 
 
 var TimelineChangeController = /*#__PURE__*/function (_videojs$EventTarget) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(TimelineChangeController, _videojs$EventTarget);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(TimelineChangeController, _videojs$EventTarget);
 
   function TimelineChangeController() {
     var _this;
@@ -90971,7 +91709,7 @@ var TimelineChangeController = /*#__PURE__*/function (_videojs$EventTarget) {
 
   return TimelineChangeController;
 }(videojs.EventTarget);
-/* rollup-plugin-worker-factory start for worker!/Users/gkatsevman/p/http-streaming-release/src/decrypter-worker.js */
+/* rollup-plugin-worker-factory start for worker!/Users/gsinger/repos/clean/http-streaming/src/decrypter-worker.js */
 
 
 var workerCode = transform(getWorkerString(function () {
@@ -91651,7 +92389,7 @@ var workerCode = transform(getWorkerString(function () {
   };
 }));
 var Decrypter = factory(workerCode);
-/* rollup-plugin-worker-factory end for worker!/Users/gkatsevman/p/http-streaming-release/src/decrypter-worker.js */
+/* rollup-plugin-worker-factory end for worker!/Users/gsinger/repos/clean/http-streaming/src/decrypter-worker.js */
 
 /**
  * Convert the properties of an HLS track into an audioTrackKind.
@@ -92653,7 +93391,7 @@ var shouldSwitchToMedia = function shouldSwitchToMedia(_ref) {
 
 
 var MasterPlaylistController = /*#__PURE__*/function (_videojs$EventTarget) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(MasterPlaylistController, _videojs$EventTarget);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(MasterPlaylistController, _videojs$EventTarget);
 
   function MasterPlaylistController(options) {
     var _this;
@@ -92712,9 +93450,9 @@ var MasterPlaylistController = /*#__PURE__*/function (_videojs$EventTarget) {
 
     _this.mediaTypes_ = createMediaTypes();
     _this.mediaSource = new (global_window__WEBPACK_IMPORTED_MODULE_0___default().MediaSource)();
-    _this.handleDurationChange_ = _this.handleDurationChange_.bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
-    _this.handleSourceOpen_ = _this.handleSourceOpen_.bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
-    _this.handleSourceEnded_ = _this.handleSourceEnded_.bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this));
+    _this.handleDurationChange_ = _this.handleDurationChange_.bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this));
+    _this.handleSourceOpen_ = _this.handleSourceOpen_.bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this));
+    _this.handleSourceEnded_ = _this.handleSourceEnded_.bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this));
 
     _this.mediaSource.addEventListener('durationchange', _this.handleDurationChange_); // load the media source into the player
 
@@ -92815,7 +93553,7 @@ var MasterPlaylistController = /*#__PURE__*/function (_videojs$EventTarget) {
 
 
     loaderStats.forEach(function (stat) {
-      _this[stat + '_'] = sumLoaderStat.bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this), stat);
+      _this[stat + '_'] = sumLoaderStat.bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), stat);
     });
     _this.logger_ = logger('MPC');
     _this.triggeredFmp4Usage = false;
@@ -94044,10 +94782,27 @@ var MasterPlaylistController = /*#__PURE__*/function (_videojs$EventTarget) {
   };
 
   _proto.onSyncInfoUpdate_ = function onSyncInfoUpdate_() {
-    var audioSeekable; // If we have two source buffers and only one is created then the seekable range will be incorrect.
-    // We should wait until all source buffers are created.
+    var audioSeekable; // TODO check for creation of both source buffers before updating seekable
+    //
+    // A fix was made to this function where a check for
+    // this.sourceUpdater_.hasCreatedSourceBuffers
+    // was added to ensure that both source buffers were created before seekable was
+    // updated. However, it originally had a bug where it was checking for a true and
+    // returning early instead of checking for false. Setting it to check for false to
+    // return early though created other issues. A call to play() would check for seekable
+    // end without verifying that a seekable range was present. In addition, even checking
+    // for that didn't solve some issues, as handleFirstPlay is sometimes worked around
+    // due to a media update calling load on the segment loaders, skipping a seek to live,
+    // thereby starting live streams at the beginning of the stream rather than at the end.
+    //
+    // This conditional should be fixed to wait for the creation of two source buffers at
+    // the same time as the other sections of code are fixed to properly seek to live and
+    // not throw an error due to checking for a seekable end when no seekable range exists.
+    //
+    // For now, fall back to the older behavior, with the understanding that the seekable
+    // range may not be completely correct, leading to a suboptimal initial live point.
 
-    if (!this.masterPlaylistLoader_ || this.sourceUpdater_.hasCreatedSourceBuffers()) {
+    if (!this.masterPlaylistLoader_) {
       return;
     }
 
@@ -95469,9 +96224,9 @@ var reloadSourceOnError = function reloadSourceOnError(options) {
   initPlugin(this, options);
 };
 
-var version$4 = "2.12.0";
-var version$3 = "5.14.1";
-var version$2 = "0.19.2";
+var version$4 = "2.13.1";
+var version$3 = "6.0.1";
+var version$2 = "0.21.0";
 var version$1 = "4.7.0";
 var version = "3.1.2";
 var Vhs = {
@@ -95907,7 +96662,7 @@ var Component = videojs.getComponent('Component');
  */
 
 var VhsHandler = /*#__PURE__*/function (_Component) {
-  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_4__["default"])(VhsHandler, _Component);
+  (0,_babel_runtime_helpers_inheritsLoose__WEBPACK_IMPORTED_MODULE_5__["default"])(VhsHandler, _Component);
 
   function VhsHandler(source, tech, options) {
     var _this;
@@ -95938,7 +96693,7 @@ var VhsHandler = /*#__PURE__*/function (_Component) {
               type: 'usage',
               name: 'hls-player-access'
             });
-            return (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this);
+            return (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this);
           },
           configurable: true
         });
@@ -95952,7 +96707,7 @@ var VhsHandler = /*#__PURE__*/function (_Component) {
               type: 'usage',
               name: 'vhs-player-access'
             });
-            return (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this);
+            return (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this);
           },
           configurable: true
         });
@@ -95962,7 +96717,7 @@ var VhsHandler = /*#__PURE__*/function (_Component) {
         Object.defineProperty(_player, 'dash', {
           get: function get() {
             videojs.log.warn('player.dash is deprecated. Use player.tech().vhs instead.');
-            return (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_3__["default"])(_this);
+            return (0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this);
           },
           configurable: true
         });
@@ -96428,44 +97183,12 @@ var VhsHandler = /*#__PURE__*/function (_Component) {
 
     this.mediaSourceUrl_ = global_window__WEBPACK_IMPORTED_MODULE_0___default().URL.createObjectURL(this.masterPlaylistController_.mediaSource);
     this.tech_.src(this.mediaSourceUrl_);
-  }
-  /**
-   * If necessary and EME is available, sets up EME options and waits for key session
-   * creation.
-   *
-   * This function also updates the source updater so taht it can be used, as for some
-   * browsers, EME must be configured before content is appended (if appending unencrypted
-   * content before encrypted content).
-   */
-  ;
+  };
 
-  _proto.setupEme_ = function setupEme_() {
+  _proto.createKeySessions_ = function createKeySessions_() {
     var _this4 = this;
 
     var audioPlaylistLoader = this.masterPlaylistController_.mediaTypes_.AUDIO.activePlaylistLoader;
-    var didSetupEmeOptions = setupEmeOptions({
-      player: this.player_,
-      sourceKeySystems: this.source_.keySystems,
-      media: this.playlists.media(),
-      audioMedia: audioPlaylistLoader && audioPlaylistLoader.media()
-    });
-    this.player_.tech_.on('keystatuschange', function (e) {
-      if (e.status === 'output-restricted') {
-        _this4.masterPlaylistController_.blacklistCurrentPlaylist({
-          playlist: _this4.masterPlaylistController_.media(),
-          message: "DRM keystatus changed to " + e.status + ". Playlist will fail to play. Check for HDCP content.",
-          blacklistDuration: Infinity
-        });
-      }
-    }); // In IE11 this is too early to initialize media keys, and IE11 does not support
-    // promises.
-
-    if (videojs.browser.IE_VERSION === 11 || !didSetupEmeOptions) {
-      // If EME options were not set up, we've done all we could to initialize EME.
-      this.masterPlaylistController_.sourceUpdater_.initializedEme();
-      return;
-    }
-
     this.logger_('waiting for EME key session creation');
     waitForKeySessionCreation({
       player: this.player_,
@@ -96484,6 +97207,60 @@ var VhsHandler = /*#__PURE__*/function (_Component) {
         code: 3
       });
     });
+  };
+
+  _proto.handleWaitingForKey_ = function handleWaitingForKey_() {
+    // If waitingforkey is fired, it's possible that the data that's necessary to retrieve
+    // the key is in the manifest. While this should've happened on initial source load, it
+    // may happen again in live streams where the keys change, and the manifest info
+    // reflects the update.
+    //
+    // Because videojs-contrib-eme compares the PSSH data we send to that of PSSH data it's
+    // already requested keys for, we don't have to worry about this generating extraneous
+    // requests.
+    this.logger_('waitingforkey fired, attempting to create any new key sessions');
+    this.createKeySessions_();
+  }
+  /**
+   * If necessary and EME is available, sets up EME options and waits for key session
+   * creation.
+   *
+   * This function also updates the source updater so taht it can be used, as for some
+   * browsers, EME must be configured before content is appended (if appending unencrypted
+   * content before encrypted content).
+   */
+  ;
+
+  _proto.setupEme_ = function setupEme_() {
+    var _this5 = this;
+
+    var audioPlaylistLoader = this.masterPlaylistController_.mediaTypes_.AUDIO.activePlaylistLoader;
+    var didSetupEmeOptions = setupEmeOptions({
+      player: this.player_,
+      sourceKeySystems: this.source_.keySystems,
+      media: this.playlists.media(),
+      audioMedia: audioPlaylistLoader && audioPlaylistLoader.media()
+    });
+    this.player_.tech_.on('keystatuschange', function (e) {
+      if (e.status === 'output-restricted') {
+        _this5.masterPlaylistController_.blacklistCurrentPlaylist({
+          playlist: _this5.masterPlaylistController_.media(),
+          message: "DRM keystatus changed to " + e.status + ". Playlist will fail to play. Check for HDCP content.",
+          blacklistDuration: Infinity
+        });
+      }
+    });
+    this.handleWaitingForKey_ = this.handleWaitingForKey_.bind(this);
+    this.player_.tech_.on('waitingforkey', this.handleWaitingForKey_); // In IE11 this is too early to initialize media keys, and IE11 does not support
+    // promises.
+
+    if (videojs.browser.IE_VERSION === 11 || !didSetupEmeOptions) {
+      // If EME options were not set up, we've done all we could to initialize EME.
+      this.masterPlaylistController_.sourceUpdater_.initializedEme();
+      return;
+    }
+
+    this.createKeySessions_();
   }
   /**
    * Initializes the quality levels and sets listeners to update them.
@@ -96494,7 +97271,7 @@ var VhsHandler = /*#__PURE__*/function (_Component) {
   ;
 
   _proto.setupQualityLevels_ = function setupQualityLevels_() {
-    var _this5 = this;
+    var _this6 = this;
 
     var player = videojs.players[this.tech_.options_.playerId]; // if there isn't a player or there isn't a qualityLevels plugin
     // or qualityLevels_ listeners have already been setup, do nothing.
@@ -96505,10 +97282,10 @@ var VhsHandler = /*#__PURE__*/function (_Component) {
 
     this.qualityLevels_ = player.qualityLevels();
     this.masterPlaylistController_.on('selectedinitialmedia', function () {
-      handleVhsLoadedMetadata(_this5.qualityLevels_, _this5);
+      handleVhsLoadedMetadata(_this6.qualityLevels_, _this6);
     });
     this.playlists.on('mediachange', function () {
-      handleVhsMediaChange(_this5.qualityLevels_, _this5.playlists);
+      handleVhsMediaChange(_this6.qualityLevels_, _this6.playlists);
     });
   }
   /**
@@ -96607,6 +97384,10 @@ var VhsHandler = /*#__PURE__*/function (_Component) {
       this.mediaSourceUrl_ = null;
     }
 
+    if (this.tech_) {
+      this.tech_.off('waitingforkey', this.handleWaitingForKey_);
+    }
+
     _Component.prototype.dispose.call(this);
   };
 
@@ -96689,11 +97470,17 @@ var VhsSourceHandler = {
     }
 
     var _videojs$mergeOptions = videojs.mergeOptions(videojs.options, options),
-        _videojs$mergeOptions2 = _videojs$mergeOptions.vhs.overrideNative,
-        overrideNative = _videojs$mergeOptions2 === void 0 ? !videojs.browser.IS_ANY_SAFARI : _videojs$mergeOptions2;
+        _videojs$mergeOptions2 = _videojs$mergeOptions.vhs;
 
+    _videojs$mergeOptions2 = _videojs$mergeOptions2 === void 0 ? {} : _videojs$mergeOptions2;
+    var _videojs$mergeOptions3 = _videojs$mergeOptions2.overrideNative,
+        overrideNative = _videojs$mergeOptions3 === void 0 ? !videojs.browser.IS_ANY_SAFARI : _videojs$mergeOptions3,
+        _videojs$mergeOptions4 = _videojs$mergeOptions.hls;
+    _videojs$mergeOptions4 = _videojs$mergeOptions4 === void 0 ? {} : _videojs$mergeOptions4;
+    var _videojs$mergeOptions5 = _videojs$mergeOptions4.overrideNative,
+        legacyOverrideNative = _videojs$mergeOptions5 === void 0 ? false : _videojs$mergeOptions5;
     var supportedType = (0,_videojs_vhs_utils_es_media_types_js__WEBPACK_IMPORTED_MODULE_14__.simpleTypeFromSourceType)(type);
-    var canUseMsePlayback = supportedType && (!Vhs.supportsTypeNatively(supportedType) || overrideNative);
+    var canUseMsePlayback = supportedType && (!Vhs.supportsTypeNatively(supportedType) || legacyOverrideNative || overrideNative);
     return canUseMsePlayback ? 'maybe' : '';
   }
 };
@@ -98666,23 +99453,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _PartyList_vue_vue_type_template_id_4e37d66e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PartyList.vue?vue&type=template&id=4e37d66e& */ "./resources/js/components/PartyList.vue?vue&type=template&id=4e37d66e&");
+/* harmony import */ var _PartyList_vue_vue_type_template_id_4e37d66e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PartyList.vue?vue&type=template&id=4e37d66e&scoped=true& */ "./resources/js/components/PartyList.vue?vue&type=template&id=4e37d66e&scoped=true&");
 /* harmony import */ var _PartyList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PartyList.vue?vue&type=script&lang=js& */ "./resources/js/components/PartyList.vue?vue&type=script&lang=js&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _PartyList_vue_vue_type_style_index_0_id_4e37d66e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PartyList.vue?vue&type=style&index=0&id=4e37d66e&scoped=true&lang=css& */ "./resources/js/components/PartyList.vue?vue&type=style&index=0&id=4e37d66e&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
+;
 
 
 /* normalize component */
-;
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _PartyList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _PartyList_vue_vue_type_template_id_4e37d66e___WEBPACK_IMPORTED_MODULE_0__.render,
-  _PartyList_vue_vue_type_template_id_4e37d66e___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  _PartyList_vue_vue_type_template_id_4e37d66e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _PartyList_vue_vue_type_template_id_4e37d66e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
   null,
-  null,
+  "4e37d66e",
   null
   
 )
@@ -98781,6 +99570,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/PartyList.vue?vue&type=style&index=0&id=4e37d66e&scoped=true&lang=css&":
+/*!********************************************************************************************************!*\
+  !*** ./resources/js/components/PartyList.vue?vue&type=style&index=0&id=4e37d66e&scoped=true&lang=css& ***!
+  \********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PartyList_vue_vue_type_style_index_0_id_4e37d66e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./PartyList.vue?vue&type=style&index=0&id=4e37d66e&scoped=true&lang=css& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PartyList.vue?vue&type=style&index=0&id=4e37d66e&scoped=true&lang=css&");
+
+
+/***/ }),
+
 /***/ "./resources/js/components/PartyChat.vue?vue&type=template&id=4347eafa&":
 /*!******************************************************************************!*\
   !*** ./resources/js/components/PartyChat.vue?vue&type=template&id=4347eafa& ***!
@@ -98798,19 +99600,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/PartyList.vue?vue&type=template&id=4e37d66e&":
-/*!******************************************************************************!*\
-  !*** ./resources/js/components/PartyList.vue?vue&type=template&id=4e37d66e& ***!
-  \******************************************************************************/
+/***/ "./resources/js/components/PartyList.vue?vue&type=template&id=4e37d66e&scoped=true&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/components/PartyList.vue?vue&type=template&id=4e37d66e&scoped=true& ***!
+  \******************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PartyList_vue_vue_type_template_id_4e37d66e___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PartyList_vue_vue_type_template_id_4e37d66e___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PartyList_vue_vue_type_template_id_4e37d66e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PartyList_vue_vue_type_template_id_4e37d66e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PartyList_vue_vue_type_template_id_4e37d66e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./PartyList.vue?vue&type=template&id=4e37d66e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PartyList.vue?vue&type=template&id=4e37d66e&");
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PartyList_vue_vue_type_template_id_4e37d66e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./PartyList.vue?vue&type=template&id=4e37d66e&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PartyList.vue?vue&type=template&id=4e37d66e&scoped=true&");
 
 
 /***/ }),
@@ -98934,10 +99736,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PartyList.vue?vue&type=template&id=4e37d66e&":
-/*!*********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PartyList.vue?vue&type=template&id=4e37d66e& ***!
-  \*********************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PartyList.vue?vue&type=template&id=4e37d66e&scoped=true&":
+/*!*********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/PartyList.vue?vue&type=template&id=4e37d66e&scoped=true& ***!
+  \*********************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -98959,92 +99761,82 @@ var render = function () {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "pt-9 max-w-5xl mx-auto sm:px-6 lg:px-8 w:full" },
+            {
+              staticClass:
+                "party-object pt-9 max-w-5xl mx-auto sm:px-6 lg:px-8 w:full shadow-2xl bg-white sm:rounded-lg",
+            },
             [
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "bg-gray overflow-hidden shadow-sm sm:rounded-lg",
-                },
-                [
-                  _c(
-                    "div",
-                    { staticClass: "p-6 bg-blue-100 border-b border-gray-200" },
-                    [
+              _c("div", { staticClass: "bg-gray overflow-hidden" }, [
+                _c("div", { staticClass: "flex flex-row content-evenly" }, [
+                  _c("div", { staticClass: "w-1/2" }, [
+                    _c("a", { attrs: { href: "/profiles/" + party.host.id } }, [
+                      _vm._v(
+                        "\n                                " +
+                          _vm._s(party.host.username) +
+                          "\n                            "
+                      ),
+                    ]),
+                    _vm._v(
+                      " \n                            invited you to watch\n                            "
+                    ),
+                    _c("a", { attrs: { href: "/movies/" + party.movie.id } }, [
+                      _vm._v(
+                        "\n                                " +
+                          _vm._s(party.movie.title) +
+                          "  \n                            "
+                      ),
+                    ]),
+                  ]),
+                ]),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "party-list flex flex-row content-evenly" },
+                  [
+                    _c("div", { staticClass: "party-button-parent" }, [
                       _c(
                         "div",
-                        { staticClass: "flex flex-row content-evenly" },
+                        { staticClass: "party-button button-first w-1/6 px-4" },
                         [
-                          _c("div", { staticClass: "w-1/2" }, [
-                            _c(
-                              "a",
-                              { attrs: { href: "/profiles/" + party.host.id } },
-                              [
-                                _vm._v(
-                                  "\n                                " +
-                                    _vm._s(party.host.username) +
-                                    "\n                            "
-                                ),
-                              ]
-                            ),
-                            _vm._v(
-                              " \n                            invited you to watch\n                            "
-                            ),
-                            _c(
-                              "a",
-                              { attrs: { href: "/movies/" + party.movie.id } },
-                              [
-                                _vm._v(
-                                  "\n                                " +
-                                    _vm._s(party.movie.title) +
-                                    "  \n                            "
-                                ),
-                              ]
-                            ),
-                          ]),
+                          _c(
+                            "a",
+                            {
+                              staticClass:
+                                "float-left text-right bg-gradient-to-br from-lime-400 via-green-500 to-emerald-400 hover:bg-green-700 text-white font-bold px-6 rounded-lg",
+                              attrs: { href: "/watchparty/" + party.id },
+                            },
+                            [_vm._v("Accept")]
+                          ),
                         ]
                       ),
-                      _vm._v(" "),
-                      _c("br"),
-                      _vm._v(" "),
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "party-button-parent" }, [
                       _c(
                         "div",
-                        { staticClass: "flex flex-row content-evenly" },
+                        {
+                          staticClass: "party-button button-second w-1/6 px-4",
+                        },
                         [
-                          _c("div", { staticClass: "w-1/3" }, [
-                            _c(
-                              "a",
-                              {
-                                staticClass:
-                                  "float-right text-right bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full",
-                                attrs: { href: "/watchparty/" + party.id },
-                              },
-                              [_vm._v("Join Party")]
-                            ),
-                          ]),
-                          _vm._v(" "),
-                          _vm._m(0, true),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "w-1/2" }, [
-                            _c(
-                              "a",
-                              {
-                                staticClass:
-                                  "float-right text-right bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-6 rounded-full",
-                                attrs: { href: "/watchparty/" + party.id },
-                              },
-                              [_vm._v("Leave Party")]
-                            ),
-                          ]),
+                          _c(
+                            "a",
+                            {
+                              staticClass:
+                                "px-4 float-left text-right bg-transparent bg-gradient-to-br from-red-500 via-orange-500 to-red-500 text-white font-semibold hover:text-white px-4 hover:border-transparent rounded-lg px-6",
+                              attrs: { href: "/watchparty/" + party.id },
+                            },
+                            [_vm._v("Decline")]
+                          ),
                         ]
                       ),
-                      _vm._v(" "),
-                      _c("br"),
-                    ]
-                  ),
-                ]
-              ),
+                    ]),
+                  ]
+                ),
+                _vm._v(" "),
+                _c("br"),
+              ]),
             ]
           ),
         ])
@@ -99055,19 +99847,7 @@ var render = function () {
     2
   )
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "w-1/3" }, [
-      _c("a", {
-        staticClass:
-          "float-right text-right bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full",
-      }),
-    ])
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -99104,7 +99884,7 @@ var render = function () {
         "button",
         {
           staticClass:
-            "float-right text-right bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full",
+            "float-left text-right bg-cyan-500 hover:bg-red-700 text-white py-2 px-6 rounded-full",
           on: { click: _vm.presetVid },
         },
         [_vm._v("Load Preselected File")]
@@ -99131,13 +99911,14 @@ var render = function () {
       _vm._v(" "),
       _c("video", {
         ref: "video-player",
-        staticClass: "video-js vjs-big-play-centered",
+        staticClass:
+          "video-js vjs-theme-sea vjs-big-play-centered vjs-static-controls",
         attrs: {
           id: "my-video",
           controls: "",
           preload: "auto",
           width: "1280",
-          height: "720",
+          height: "750",
           "data-setup": "{}",
         },
       }),

@@ -4,7 +4,7 @@
             <input type="file" accept="video/*" id="uploadedFile" />
             <br>
             <br>
-            <button v-on:click="presetVid" class="float-right text-right bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full" >Load Preselected File</button>
+            <button v-on:click="presetVid" class="float-left text-right bg-cyan-500 hover:bg-red-700 text-white py-2 px-6 rounded-full" >Load Preselected File</button>
             <br>
             <br> <ul class="chat">
                 <div v-for="message in messages" :message="message" :key="message.id">
@@ -13,12 +13,12 @@
                 </div>
             </ul>
             <video ref="video-player" 
-                    class="video-js vjs-big-play-centered"
+                    class="video-js vjs-theme-sea vjs-big-play-centered vjs-static-controls"
                     id="my-video" 
                     controls
                     preload="auto"
                     width="1280" 
-                    height="720" 
+                    height="750" 
                     data-setup='{}'>
 
                     <!-- <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"/> -->
@@ -27,9 +27,10 @@
     </div>
 </template>
 
+
 <script>
 import videojs from 'video.js';
-import 'video.js/dist/video-js.css'
+import 'video.js/dist/video-js.css';
 var playToggle = 0;
 export default {
     name: "VideoPlayer",

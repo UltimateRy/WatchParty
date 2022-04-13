@@ -20,11 +20,12 @@
         "postcss": "^8.2.1",
         "postcss-import": "^14.0.1",
         "tailwindcss": "^3.0.15",
-        "video.js": "^7.17.0",
+        "video.js": "^7.18.1",
         "vue-loader": "^15.9.8",
         "vue-template-compiler": "^2.6.14"
     },
     "dependencies": {
+        "@videojs/themes": "^1.0.1",
         "laravel-echo": "^1.11.3",
         "laravel-mix-tailwind": "^0.1.2",
         "pusher-js": "^7.0.3",
