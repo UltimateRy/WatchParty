@@ -5,16 +5,28 @@
            <div class="party-object pt-9 max-w-5xl mx-auto sm:px-6 lg:px-8 w:full shadow-2xl bg-white sm:rounded-lg">
                 <div class="bg-gray overflow-hidden">
                         <div class="flex flex-row content-evenly">
-                            <div class="w-1/2">
+                                <!-- <img  v-bind:src="'images/' + party.host.id"> -->
                                 <a v-bind:href="'/profiles/'+ party.host.id">
-                                    {{party.host.username}}
+                                    <div class="flex"> 
+                                        <div class="relative w-16 h-16" >
+                                            <img class="rounded-full" v-bind:src="'images/sunset.png'">
+                                            <div class="absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-green-400 z-2"></div>
+                                        </div>
+                                        <div class="pt-4 px-6 text-xl">
+                                            {{party.host.username}}
+                                        </div>
+                                    </div>
                                 </a> 
-                                invited you to watch
-                                <a v-bind:href="'/movies/'+ party.movie.id">
-                                    {{party.movie.title}}  
-                                </a> 
-                            </div>
                         </div> 
+                        <br>
+                        <div class="float-left">
+                            invited you to <br>
+                            <a v-bind:href="'/movies/'+ party.movie.id">
+                                {{party.movie.title}}  
+                            </a> 
+                        </div>
+                        <br>
+                        <br>
                         <br>
                         <div class="party-list flex flex-row content-evenly">
                             <div class="party-button-parent">

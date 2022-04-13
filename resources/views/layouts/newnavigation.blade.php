@@ -5,9 +5,20 @@
     
         <div class="flex justify-between">
             <div class="flex space-x-32">
-                <!-- Logo -->
+                <!-- Logo 
                 <a href="{{ route('dashboard') }}">
                     <img class="banner-logo h-32" src="{{ asset('/images/watchparty-banner-logo3.png') }}" />
+                </a>-->
+
+                <a href="{{ route('dashboard') }}">
+                    <svg class="fill-indigo-500 tab home-tab hidden p-4 w-24 h-24 sm:-my-px sm:ml-10 sm:flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" 
+                        style="enable-background:new 0 0 500 500" xml:space="preserve">
+                        <linearGradient id="a" gradientUnits="userSpaceOnUse" x1="17" y1="250" x2="483" y2="250">
+                            <stop offset="0" style="stop-color:#3ddeed"/><stop offset="1" style="stop-color:#3f61ff"/>
+                        </linearGradient>
+                            <path d="M250 47.2C121.32 47.2 17 138 17 250c0 51.61 22.16 98.71 58.64 134.51l-15.68 56.32c-1.35 4.83 3.49 9.08 8.11 7.11l59.57-25.33c35.56 19.14 77.48 30.2 122.36 30.2 128.68 0 233-90.8 233-202.8S378.68 47.2 250 47.2zm92.51 210.79-131.85 76.12c-6.15 3.55-13.83-.89-13.83-7.99V173.88c0-7.1 7.69-11.54 13.83-7.99l131.85 76.12c6.15 3.55 6.15 12.43 0 15.98z" 
+                        style="fill:url(#a)"/>
+                    </svg>
                 </a>
 
                 <!-- Navigation Links -->

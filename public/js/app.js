@@ -11437,6 +11437,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var default_layout = "default";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['initialParties', 'user'],
@@ -99767,26 +99779,49 @@ var render = function () {
           [
             _c("div", { staticClass: "bg-gray overflow-hidden" }, [
               _c("div", { staticClass: "flex flex-row content-evenly" }, [
-                _c("div", { staticClass: "w-1/2" }, [
-                  _c("a", { attrs: { href: "/profiles/" + party.host.id } }, [
-                    _vm._v(
-                      "\n                                " +
-                        _vm._s(party.host.username) +
-                        "\n                            "
-                    ),
-                  ]),
-                  _vm._v(
-                    " \n                            invited you to watch\n                            "
-                  ),
-                  _c("a", { attrs: { href: "/movies/" + party.movie.id } }, [
-                    _vm._v(
-                      "\n                                " +
-                        _vm._s(party.movie.title) +
-                        "  \n                            "
-                    ),
+                _c("a", { attrs: { href: "/profiles/" + party.host.id } }, [
+                  _c("div", { staticClass: "flex" }, [
+                    _c("div", { staticClass: "relative w-16 h-16" }, [
+                      _c("img", {
+                        staticClass: "rounded-full",
+                        attrs: { src: "images/sunset.png" },
+                      }),
+                      _vm._v(" "),
+                      _c("div", {
+                        staticClass:
+                          "absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-green-400 z-2",
+                      }),
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "pt-4 px-6 text-xl" }, [
+                      _vm._v(
+                        "\n                                        " +
+                          _vm._s(party.host.username) +
+                          "\n                                    "
+                      ),
+                    ]),
                   ]),
                 ]),
               ]),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v(" "),
+              _c("div", { staticClass: "float-left" }, [
+                _vm._v("\n                        invited you to "),
+                _c("br"),
+                _vm._v(" "),
+                _c("a", { attrs: { href: "/movies/" + party.movie.id } }, [
+                  _vm._v(
+                    "\n                            " +
+                      _vm._s(party.movie.title) +
+                      "  \n                        "
+                  ),
+                ]),
+              ]),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v(" "),
+              _c("br"),
               _vm._v(" "),
               _c("br"),
               _vm._v(" "),
