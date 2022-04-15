@@ -4,7 +4,8 @@
         <div class="online-list party-object pt-9 max-w-5xl h-96 mx-auto sm:px-6 lg:px-8 w:full shadow-2xl bg-white sm:rounded-lg">
             
             <div class="bg-gray overflow-hidden">
-                <span v-if="!users.length"> No friends online </span>
+                <span v-if="users.length > 0"> No friends online </span>
+                
                 <div v-for="user in users" :user="user" :key="user.id">
                     <div class="flex"> 
                          <div class="relative w-16 h-16" >

@@ -645,9 +645,6 @@ select {
 .top-0 {
   top: 0px;
 }
-.bottom-1 {
-  bottom: 0.25rem;
-}
 .bottom-0 {
   bottom: 0px;
 }
@@ -779,23 +776,6 @@ select {
 .h-96 {
   height: 24rem;
 }
-.h-full {
-  height: 100%;
-}
-.h-48 {
-  height: 12rem;
-}
-.h-max {
-  height: -webkit-max-content;
-  height: -moz-max-content;
-  height: max-content;
-}
-.h-auto {
-  height: auto;
-}
-.h-14 {
-  height: 3.5rem;
-}
 .min-h-screen {
   min-height: 100vh;
 }
@@ -877,20 +857,11 @@ select {
 .grow {
   flex-grow: 1;
 }
-.basis-9\/12 {
-  flex-basis: 75%;
-}
 .basis-1\/2 {
   flex-basis: 50%;
 }
-.basis-28 {
-  flex-basis: 7rem;
-}
-.basis-full {
-  flex-basis: 100%;
-}
-.basis-96 {
-  flex-basis: 24rem;
+.basis-9\/12 {
+  flex-basis: 75%;
 }
 .origin-top-left {
   transform-origin: top left;
@@ -937,12 +908,6 @@ select {
 }
 .flex-col {
   flex-direction: column;
-}
-.flex-col-reverse {
-  flex-direction: column-reverse;
-}
-.flex-nowrap {
-  flex-wrap: nowrap;
 }
 .content-evenly {
   align-content: space-evenly;
@@ -1082,10 +1047,6 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(191 219 254 / var(--tw-bg-opacity));
 }
-.bg-violet-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(221 214 254 / var(--tw-bg-opacity));
-}
 .bg-indigo-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(238 242 255 / var(--tw-bg-opacity));
@@ -1114,6 +1075,10 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(154 212 254 / var(--tw-bg-opacity));
 }
+.bg-violet-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(221 214 254 / var(--tw-bg-opacity));
+}
 .bg-green-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(34 197 94 / var(--tw-bg-opacity));
@@ -1122,20 +1087,16 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(74 222 128 / var(--tw-bg-opacity));
 }
+.bg-gray-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(156 163 175 / var(--tw-bg-opacity));
+}
 .bg-transparent {
   background-color: transparent;
 }
 .bg-cyan-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(6 182 212 / var(--tw-bg-opacity));
-}
-.bg-gray-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(156 163 175 / var(--tw-bg-opacity));
-}
-.bg-black {
-  --tw-bg-opacity: 1;
-  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
 .fill-current {
   fill: currentColor;

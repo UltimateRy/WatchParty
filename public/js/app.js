@@ -11337,6 +11337,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['initialUsers', 'user'],
   data: function data() {
@@ -99879,7 +99880,7 @@ var render = function () {
           "div",
           { staticClass: "bg-gray overflow-hidden" },
           [
-            !_vm.users.length
+            _vm.users.length > 0
               ? _c("span", [_vm._v(" No friends online ")])
               : _vm._e(),
             _vm._v(" "),
