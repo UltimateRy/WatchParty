@@ -18,6 +18,11 @@
                                 <a class="text-center bg-blue-500 hover:bg-blue-700 text-white font-bold px-3 w-1/4 rounded-full" 
                                  href="{{route('profiles.show', [ 'id' => $follows->id ]) }}"> {{$follows->username}}</a>
                                  <br>
+                                 @if(Cache::has('user-is-online-'.$follows->id))
+                                    <span class="text-primary"> Online </span>
+                                 @else
+                                    <span class="text-grey-300"> Offline </span>
+                                 @endif
                                  <br>
                                  <a href="{{route('profiles.show', [ 'id' => $follows->id ]) }}"><b>
                                 <p class="text-blue-400 transparent text-2xl font-bold">{{$follows->name}} </p></b></a>

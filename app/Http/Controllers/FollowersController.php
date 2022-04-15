@@ -16,4 +16,7 @@ class FollowersController extends Controller
             'followers' => $followers
         ]);
     }
+
+
+
 }

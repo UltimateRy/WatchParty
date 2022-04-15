@@ -10,7 +10,12 @@
                                     <div class="flex"> 
                                         <div class="relative w-16 h-16" >
                                             <img class="rounded-full" v-bind:src="'images/sunset.png'">
-                                            <div class="absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-green-400 z-2"></div>
+                                            <span v-if="party.host.isOnline == 'True'"> 
+                                                <div class="absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-green-400 z-2"></div>
+                                            </span>
+                                            <span v-if="party.host.isOnline == 'False'"> 
+                                                <div class="absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-gray-400 z-2"></div>
+                                            </span>
                                         </div>
                                         <div class="pt-4 px-6 text-xl">
                                             {{party.host.username}}
@@ -31,13 +36,13 @@
                         <div class="party-list flex flex-row content-evenly">
                             <div class="party-button-parent">
                                 <div class="party-button button-first w-1/6 px-4">
-                                    <a class="float-left text-right bg-gradient-to-br from-lime-400 via-green-500 to-emerald-400 hover:bg-green-700 text-white font-bold px-6 rounded-lg" 
+                                    <a class="float-left text-right bg-primary border-2 border-primary text-white px-6 rounded-lg" 
                                     v-bind:href="'/watchparty/'+ party.id">Accept</a>
                                 </div>
                             </div>
                             <div class="party-button-parent">
                                 <div class="party-button button-second w-1/6 px-4">
-                                    <a class="px-4 float-left text-right bg-transparent bg-gradient-to-br from-red-500 via-orange-500 to-red-500 text-white font-semibold hover:text-white px-4 hover:border-transparent rounded-lg px-6" 
+                                    <a class="px-4 float-left text-right bg-transparent border-transparent hover:border-primary text-primary px-4 border-2 rounded-lg px-6" 
                                     v-bind:href="'/watchparty/'+ party.id">Decline</a>
                                 </div>
                             </div>

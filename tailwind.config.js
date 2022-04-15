@@ -9,9 +9,15 @@ module.exports = {
     ],
 
     theme: {
+        
         extend: {
+            colors: {
+                primary: '#90323D',
+                primaryLight: '#4D1E24',
+            },
             fontFamily: {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],
+                myfont: ['Poppins', 'sans-serif'],
             },
         },
     },

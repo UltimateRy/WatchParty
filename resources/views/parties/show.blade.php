@@ -13,12 +13,9 @@
             <div class="px-4 bg-blue-200 col-span-4 shadow-sm sm:rounded-3xl">
                 <video-player :party="{{$p}}" :key="{{$id}}" :user="{{$user}}">  </video-player> 
             </div>
-            <div class="bg-violet-200 shadow-sm sm:rounded-3xl">
-                <br>
-                <p class="px-4"> Chat </p>
-                <br>
+            
                 <party-chat :party="{{$p}}" :key="{{$id}}" :user="{{$user}}" class="px-4">></party-chat>
-            </div>
+            
         </div>
     </div>
 </body>

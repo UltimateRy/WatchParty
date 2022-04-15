@@ -41,7 +41,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 //FOLLOWING & FOLLOWERS
 
-Route::get('/following', [FollowsController::class, 'index'])
+Route::get('/following', [FollowsController::class, 'indexOnlyOnline'])
     ->name('following')->middleware(['auth']);
 
 Route::get('/followers', [FollowersController::class, 'index'])
