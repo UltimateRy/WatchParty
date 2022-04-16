@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="window py-12 bg-primary mx-auto h-screen sm:px-6 lg:px-8">
+    <div class="window py-12 bg-gray-200 mx-auto h-screen sm:px-6 lg:px-8">
         
             <div id="app" class = "mx-auto justify-center max-w-8xl" >
                
@@ -18,9 +18,6 @@
                             <svg class="fill-primary pt-2 w-9 h-9" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                 <path d="M10 12.5c-5.92 0-9 3.5-9 5.5v1h18v-1c0-2-3.08-5.5-9-5.5z"/><circle cx="10" cy="6" r="5"/>
                             </svg>
-                           
-                            
-
                                 <span class="text-2xl h-6 text-center"> 
                                     ONLINE
                                 </span>
@@ -30,7 +27,6 @@
                             <friends-online :initial-users="{{ $onlineFollowing }}" > </friends-online>
                         </div>
                     </div>
-
                     <div class ="pl-12 pr-12 w-8/12 mx-auto sm:px-12">
                         <div class="w-full overflow-hidden shadow-sm sm:rounded-lg bg-white shadow-lg py-6 px-4">
                             <!--<div class="pb-4 pt-4 px-4 w:full sm:-my-px ">  -->
@@ -42,19 +38,19 @@
                                     </a>  
                         </div>
                         <br>
-                        <div class="w-full overflow-hidden shadow-sm sm:rounded-lg bg-white shadow-lg py-6 px-4 text-primary text-lg text-center">
+                        <div class="popular-movies no-scrollbar w-full h-[57rem] overflow-y-scroll shadow-sm sm:rounded-lg bg-white shadow-lg py-6 px-4 text-primary text-lg text-center">
+                            <div>
                             <span class="create-party-button-wrapper text-3xl h-8 text-center">     
                                 POPULAR  
                             </span> 
                             <br>
                             <br>
+                            </div>
                             <div class="border-t border-primary"> </div>
                             <br>
-                            
+                            <popular-movies :popular-movies="{{ $popularMovies }}" :user="{{ $user }}" class=""> </popular-movies>
                         </div>
-                        
                     </div>
-                    
                     
                     <div class="w-4/12 pr-12 h-0 bg-primary text-primary text-lg text-center sm:rounded-lg"  >
                         <div class="bg-white sm:rounded-lg py-6 px-6 shadow-lg">
@@ -74,8 +70,6 @@
                         </div>
                     </div>
                 </div>
-                  
-
             </div>
     </div> 
 </x-app-layout>
@@ -97,6 +91,13 @@
 }
 .create-party-button-wrapper:hover {
     animation: animatePartyButton 1s forwards;
+}
+.popular-movies {
+    opacity: 0;
+    animation: animatePopularMovies 2s forwards;
+}
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
 }
 @keyframes revealInvites {
     0% {
@@ -132,6 +133,15 @@
     }
     100% {
         transform: scale(1.5);
+    }
+}
+@keyframes animatePopularMovies {
+    0% {
+        transform: translateY(300px);
+    }
+    100% {
+        opacity: 1;
+        transform: none;
     }
 }
 

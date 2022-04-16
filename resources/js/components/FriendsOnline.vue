@@ -1,21 +1,30 @@
 <template>
     <div>
         <br>
-        <div class="online-list party-object pt-9 max-w-5xl h-96 mx-auto sm:px-6 lg:px-8 w:full shadow-2xl bg-white sm:rounded-lg">
+        <div class="online-list party-object pt-9 max-w-5xl h-[60rem] mx-auto sm:px-6 lg:px-8 w:full shadow-2xl bg-white sm:rounded-lg">
             
             <div class="bg-gray overflow-hidden">
-                <span v-if="users.length > 0"> No friends online </span>
-                
-                <div v-for="user in users" :user="user" :key="user.id">
-                    <div class="flex"> 
-                         <div class="relative w-16 h-16" >
-                            <img class="rounded-full" v-bind:src="'images/sunset.png'">
-                        </div>
-                        <div class="pt-4 px-6 text-xl">
-                            {{user.username}}
+                <span v-if="!users.length"> 
+                    No friends online 
+                </span>
+                <span v-else>
+                    <div v-for="user in users" :user="user" :key="user.id">
+                        <div v-if="user.isOnline == 'True'">
+                            
+                            <a v-bind:href="'/profiles/'+ user.id">
+                                <div class="flex bg-gray-100 p-4 rounded-lg"> 
+                                    <div class="relative w-16 h-16" >
+                                        <img class="rounded-full" v-bind:src="'images/sunset.png'">
+                                        <div class="absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-green-400 z-2"></div>
+                                    </div>
+                                    <div class="pt-4 px-6 text-xl">
+                                        {{user.username}}
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
-                </div>
+                </span>
             </div>
         </div>
     </div>
@@ -31,7 +40,7 @@
             }
         }, 
         mounted() {
-            this.users = this.initialUsers;
+            this.users = this.initialUsers.filter(entry => entry.isOnline == 'True');
         }
     }
 </script>

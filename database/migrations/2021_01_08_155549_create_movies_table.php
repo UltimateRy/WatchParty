@@ -18,7 +18,6 @@ class CreateMoviesTable extends Migration
             $table->string('title');
             $table->string('synopsis');
             $table->integer('length');
-
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateMoviesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('party_users');
+        Schema::dropIfExists('movies');
     }
 }

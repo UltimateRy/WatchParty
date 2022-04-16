@@ -30,6 +30,6 @@ class CreateMovieImagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('party_users');
+        Schema::dropIfExists('movie_images');
     }
 }

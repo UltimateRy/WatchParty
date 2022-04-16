@@ -36,8 +36,8 @@
                         <div class="party-list flex flex-row content-evenly">
                             <div class="party-button-parent">
                                 <div class="party-button button-first w-1/6 px-4">
-                                    <a class="float-left text-right bg-primary border-2 border-primary text-white px-6 rounded-lg" 
-                                    v-bind:href="'/watchparty/'+ party.id">Accept</a>
+                                    <a class="float-left text-right bg-primary border-2 border-primary text-white px-10 rounded-lg" 
+                                    v-bind:href="'/watchparty/'+ party.id">Join</a>
                                 </div>
                             </div>
                             <div class="party-button-parent">
