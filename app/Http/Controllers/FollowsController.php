@@ -19,7 +19,7 @@ class FollowsController extends Controller
         ]);
     }
     
-    public function indexOnline()
+    public function indexWithOnline()
     {
         $following = Auth::user()->follows;
 

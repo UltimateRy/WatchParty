@@ -13,7 +13,7 @@
                 </div>
             </ul>
             <video ref="video-player" 
-                    class="video-js vjs-theme-sea vjs-big-play-centered vjs-static-controls"
+                    class="video-js vjs-theme-sea vjs-big-play-centered vjs-static-controls rounded-2xl"
                     id="my-video" 
                     controls
                     preload="auto"
@@ -112,8 +112,7 @@ export default {
         presetVid: function (event) {
             this.player = videojs(this.$refs['video-player']);
             this.player.src("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4");
-
-
+            
         },
         listenForControl() {          
             //Listen for external commands:

@@ -1,8 +1,7 @@
 <template>
-    <div>
+    <div class="h-[57rem] overflow-auto rounded-lg no-scrollbar">
         <div v-for="party in parties" :party="party" :key="party.id">
-            <br>
-           <div class="party-object pt-9 max-w-5xl mx-auto sm:px-6 lg:px-8 w:full shadow-2xl bg-white sm:rounded-lg">
+           <div class="party-object pt-9 max-w-5xl mx-auto sm:px-6 lg:px-8 w:full shadow-lg bg-white sm:rounded-lg">
                 <div class="bg-gray overflow-hidden">
                         <div class="flex flex-row content-evenly">
                                 <!-- <img  v-bind:src="'images/' + party.host.id"> -->
@@ -51,6 +50,7 @@
                     
                 </div>
             </div>
+            <br>
         </div>
     </div>
 </template>

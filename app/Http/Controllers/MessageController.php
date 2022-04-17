@@ -15,7 +15,7 @@ class MessageController extends Controller
         $message = $request->input('message');
         
         $sender = User::findOrFail($user);
-        $message_wrap = $sender->username . " : " . $message;
+        $message_wrap = $sender->username . ": " . $message;
 
         Broadcast(new NewMessage($user, $party, $message_wrap))->toOthers();
         return $message_wrap;

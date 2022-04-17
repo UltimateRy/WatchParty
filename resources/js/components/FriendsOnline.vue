@@ -1,7 +1,7 @@
 <template>
     <div>
         <br>
-        <div class="online-list party-object pt-9 max-w-5xl h-[60rem] mx-auto sm:px-6 lg:px-8 w:full shadow-2xl bg-white sm:rounded-lg">
+        <div class="online-list pt-9 max-w-5xl h-[57rem] mx-auto sm:px-6 lg:px-8 w:full shadow-lg bg-white sm:rounded-lg">
             
             <div class="bg-gray overflow-hidden">
                 <span v-if="!users.length"> 
@@ -10,7 +10,6 @@
                 <span v-else>
                     <div v-for="user in users" :user="user" :key="user.id">
                         <div v-if="user.isOnline == 'True'">
-                            
                             <a v-bind:href="'/profiles/'+ user.id">
                                 <div class="flex bg-gray-100 p-4 rounded-lg"> 
                                     <div class="relative w-16 h-16" >

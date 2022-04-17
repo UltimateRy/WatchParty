@@ -9,6 +9,8 @@ import PartyList from './components/PartyList.vue';
 import VideoPlayer from './components/VideoPlayer.vue';
 import PartyChat from './components/PartyChat.vue';
 import FriendsOnline from './components/FriendsOnline.vue';
+import FriendsList from './components/FriendsList.vue';
+import FriendRequests from './components/FriendRequests.vue';
 import PopularMovies from './components/PopularMovies.vue';
 
 window.Vue = require('vue');
@@ -21,6 +23,8 @@ const app = new Vue({
         VideoPlayer,
         PartyChat,
         FriendsOnline,
+        FriendsList,
+        FriendRequests,
         PopularMovies,
     }
 });
