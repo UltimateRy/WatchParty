@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\VideoPlayerController;
+use App\Http\Controllers\FollowsController;
 
 
 /*
@@ -20,6 +21,12 @@ use App\Http\Controllers\VideoPlayerController;
 
 Route::post('/sendmessage', [MessageController::class, 'apiSend'])
     ->name('api.message.send');
+
+Route::post('/addfriend', [FollowsController::class, 'apiAddFriend']);
+
+Route::post('/acceptfriendrequest', [FollowsController::class, 'apiAcceptRequest']);
+
+Route::post('/declinefriendrequest', [FollowsController::class, 'apiDeclineRequest']);
 
 Route::post('/pausevideo', [VideoPlayerController::class, 'apiPause'])
     ->name('api.video.pause');

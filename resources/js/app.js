@@ -12,6 +12,8 @@ import FriendsOnline from './components/FriendsOnline.vue';
 import FriendsList from './components/FriendsList.vue';
 import FriendRequests from './components/FriendRequests.vue';
 import PopularMovies from './components/PopularMovies.vue';
+import AddFriends from './components/AddFriends.vue';
+
 
 window.Vue = require('vue');
 window.Bus = new Vue();
@@ -26,6 +28,7 @@ const app = new Vue({
         FriendsList,
         FriendRequests,
         PopularMovies,
+        AddFriends,
     }
 });
 

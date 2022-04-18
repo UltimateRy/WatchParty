@@ -23,9 +23,9 @@
                                 </a> 
                         </div> 
                         <br>
-                        <div class="float-left">
-                            invited you to <br>
-                            <a v-bind:href="'/movies/'+ party.movie.id">
+                        <div class="float-left text-left">
+                            invited you to watch: <br>
+                            <a class="text-xl text-underline" v-bind:href="'/movies/'+ party.movie.id">
                                 {{party.movie.title}}  
                             </a> 
                         </div>

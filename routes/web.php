@@ -36,7 +36,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])
+Route::get('/home', [DashboardController::class, 'index'])
     ->name('dashboard')->middleware(['auth']);
 
 //FOLLOWING & FOLLOWERS
@@ -44,8 +44,12 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 Route::get('/following', [FollowsController::class, 'indexWithOnline'])
     ->name('following')->middleware(['auth']);
 
-Route::get('/followers', [FollowersController::class, 'index'])
+Route::get('/followers', [FollowsController::class, 'indexFollowedBy'])
     ->name('followers')->middleware(['auth']);
+
+Route::get('/friends', [FollowsController::class, 'indexFriends'])
+    ->name('friends')->middleware(['auth']);
+
 
 //USER ROUTE (ADMIN ONLY)
 

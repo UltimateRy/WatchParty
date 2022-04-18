@@ -48,6 +48,7 @@
                 if (this.newMessage != "" && this.newMessage != " ") {
 
                     //console.log(this.newMessage);
+                    //console.log(this.user);
 
                     axios.post("/api/sendmessage", 
                     {

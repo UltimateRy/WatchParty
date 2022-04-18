@@ -1,14 +1,20 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Following') }}
+            {{ __('Friends') }}
         </h2>
     </x-slot>
    
-    <div id="app" class="window no-scrollbar py-8 bg-gray-200 mx-auto h-screen sm:px-6 lg:px-8" >
+    <div id="app" class="window no-scrollbar py-4 bg-gray-200 mx-auto h-screen sm:px-6 lg:px-8" >
         <div class="mx-auto justify-center max-w-8xl" >
             <div class = "flex items-start gap-x-12 justify-center">
-                <friends-list :initial-users="{{ $following }}" class="w-4/12"> </friends-list>  
+
+
+                <add-friends :user="{{$user}}" class="add-friends w-3/12 py-6"> </add-friends>
+
+                <friends-list :initial-users="{{ $friends }}"  class="w-4/12"> </friends-list>  
+
+
                 <div class="requests-column w-3/12 py-6">
                     <div class="requests-title bg-white rounded-xl p-8 text-primary text-2xl shadow-lg text-center">
                         <div class=" inline-flex items-center">
@@ -20,8 +26,10 @@
                             </span>
                         </div>
                     </div>
-                    <friend-requests  class="request-list pt-9">   </friend-requests>
+                    <friend-requests :initial-users="{{ $requests }}" :user="{{$user}}" class="request-list pt-9">   </friend-requests>
                 </div>
+
+
             </div>
         </div>
     </div>
@@ -47,6 +55,10 @@
     .request-list {
         opacity: 0;
         animation: revealRequests .7s forwards;
+    }
+    .add-friends {
+        opacity 0;
+        animation: revealAddFriends 1s forwards;
     }
     @keyframes revealWindow {
         0% {
@@ -91,34 +103,16 @@
             opacity: 1;
         }
     }
+    @keyframes revealAddFriends {
+        0% {
+            transform: translateX(-300px)
+        }
+        100% {
+            transform: none;
+            opacity: 1;
+        }
+    }
 
 </style>
 
 
- <!--div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                <div class="p-6 bg-white border-b border-gray-200">
-                                    <p class="text-blue-400 text-xl font-bold "> You are Following: </p>
-                                </div> 
-                                <br> @foreach ($following as $follows)
-                                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        
-                                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                    <div class="p-6 bg-blue-100 border-b border-gray-200">
-                                        <a class="text-center bg-blue-500 hover:bg-blue-700 text-white font-bold px-3 w-1/4 rounded-full" 
-                                        href="{{route('profiles.show', [ 'id' => $follows->id ]) }}"> {{$follows->username}}</a>
-                                        <br>
-                                        @if(Cache::has('user-is-online-'.$follows->id))
-                                            <span class="text-primary"> Online </span>
-                                        @else
-                                            <span class="text-grey-300"> Offline </span>
-                                        @endif
-                                        <br>
-                                        <a href="{{route('profiles.show', [ 'id' => $follows->id ]) }}"><b>
-                                        <p class="text-blue-400 transparent text-2xl font-bold">{{$follows->name}} </p></b></a>
-                                    </div>
-                                </div>
-                            <br>
-                        </div>       
-                        @endforeach
-                    </div-->

@@ -38,7 +38,7 @@
                     </x-nav-link>
                 </div>
                 <div class="tab friends-tab hidden w-32 sm:-my-px sm:ml-10 sm:flex px-4">
-                    <x-nav-link :href="route('following')" :active="request()->routeIs('following')" class="px-16">
+                    <x-nav-link :href="route('friends')" :active="request()->routeIs('friends')" class="px-16">
                         
                     <svg class="fill-primary fill-current h-10 w-10 rounded-lg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
                         <path d="M192 256c61.9 0 112-50.1 112-112S253.9 32 192 32 80 82.1 80 144s50.1 112 112 112zm76.8 32h-8.3c-20.8 10-43.9 16-68.5 16s-47.6-6-68.5-16h-8.3C51.6 288 0 339.6 0 403.2V432c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48v-28.8c0-63.6-51.6-115.2-115.2-115.2zM480 256c53 0 96-43 96-96s-43-96-96-96-96 43-96 96 43 96 96 96zm48 32h-3.8c-13.9 4.8-28.6 8-44.2 8s-30.3-3.2-44.2-8H432c-20.4 0-39.2 5.9-55.7 15.4 24.4 26.3 39.7 61.2 39.7 99.8v38.4c0 2.2-.5 4.3-.6 6.4H592c26.5 0 48-21.5 48-48 0-61.9-50.1-112-112-112z"/>
@@ -53,7 +53,7 @@
                         <path d="m.979 8.954 14.916-3.523-.98-4.056L0 4.898l.979 4.056Zm11.508-3.597-1.448-2.312 2.01-.486 1.449 2.312-2.011.486Zm-3.35.81L7.688 3.855l2.009-.485 1.45 2.312-2.01.485Zm-3.352.81L4.337 4.665l2.01-.485 1.449 2.312-2.011.485Zm-3.349.81L.987 5.475l2.009-.485 1.449 2.312-2.009.485ZM1 9.037v8h15v-8H1Zm6.904 6.13v-4.25l3.232 2.169-3.232 2.081Z"
                         />
                     </svg>
-                    <p class="pt-4 px-2 text-primary text-lg"> Films </p>
+                    <p class="pt-4 px-2 text-primary text-lg"> Movies </p>
                     
 
                     </x-nav-link>

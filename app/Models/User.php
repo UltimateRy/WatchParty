@@ -24,7 +24,13 @@ class User extends Authenticatable
 
     public function isFollowing(User $user)
     {
-        return !! $this->following()->where('following_id', $user->id)->count();
+        return !! $this->follows()->where('follow_id', $user->id)->count();
+    }
+
+    public function isFollowedBy(User $user) {
+
+        return !! $user->follows()->where('follow_id', $this->id)->count();
+
     }
 
     public function follow(User $user)
