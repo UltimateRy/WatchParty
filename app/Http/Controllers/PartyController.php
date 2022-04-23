@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Auth;
 use App\Models\User;
 use App\Models\Party;
+use App\Models\Movie;
+use App\Models\MovieImage;
 use App\Events\PartyCreated;
 use Illuminate\Http\Request;
 
@@ -19,6 +21,7 @@ class PartyController extends Controller
     {
         $parties = Party::all();
         return view('parties.index', [
+            'user' => Auth::user(),
             'parties' => $parties
         ]);
     }
@@ -33,8 +36,23 @@ class PartyController extends Controller
         //
         //ALLOW THE USER TO CREATE A NEW PARTY HERE
 
+        $user = Auth::user();
+
+        $followings = Auth::user()->follows;
+        $followedBy = Auth::user()->followedBy;
+        $friends = $followings->intersect($followedBy);
+
+        $movies = Movie::all();
+
+        foreach ($movies as $movie) {
+            $movieImage = MovieImage::find($movie->id);
+            $movie['image'] = $movieImage->file_path;
+        }
+
         return view('parties.create', [
-            'user' => Auth::user()
+            'user' => Auth::user(),
+            'movies' => $movies,
+            'friends' => $friends
         ]);
     }
 

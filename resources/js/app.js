@@ -13,7 +13,8 @@ import FriendsList from './components/FriendsList.vue';
 import FriendRequests from './components/FriendRequests.vue';
 import PopularMovies from './components/PopularMovies.vue';
 import AddFriends from './components/AddFriends.vue';
-
+import SelectMovie from './components/SelectMovie.vue';
+import InviteFriends from './components/InviteFriends.vue';
 
 window.Vue = require('vue');
 window.Bus = new Vue();
@@ -29,6 +30,8 @@ const app = new Vue({
         FriendRequests,
         PopularMovies,
         AddFriends,
+        SelectMovie,
+        InviteFriends
     }
 });
 
