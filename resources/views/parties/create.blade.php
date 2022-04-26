@@ -7,34 +7,46 @@
 
 <body>  
 
-<br>
+<a class="float-left text-left bg-yellow-500 hover:bg-yellow-700 text-white py-2 px-6 rounded-full" 
+                    href="{{ route('parties.store') }}"> Create a new watchparty
+                </a>
+<div id="app" class="window no-scrollbar justify-center py-8 bg-gray-200 mx-auto h-screen sm:px-6 lg:px-8">
 
-<div id="app" class="window py-8 bg-gray-200 mx-auto h-screen sm:px-6 lg:px-8">
-
-    <div class="max-w-[100rem] mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+    <div class="flex items-start">
+        <div class="max-w-[114rem] mx-auto sm:px-6 lg:px-8">
+            <div class="p-6 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <select-movie :movies="{{ $movies }}" :user="{{ $user }}"> </select-movie>
+                <span class="text-3xl h-8 text-center text-primary">     
+                            SELECT MOVIE  
+                            </span> 
+                            <br>
+                            </div>
+                            <div class="border-t border-primary"> </div>
+                            <br>
+                    <select-movie :movies="{{ $movies }}" :user="{{ $user }}" :friends="{{ $friends }}"> </select-movie>
                 </div>
-           
-            
-            <a class="float-left text-left bg-yellow-500 hover:bg-yellow-700 text-white py-2 px-6 rounded-full" 
-                href="{{ route('parties.store') }}"> Create a new watchparty
-            </a>
-         </div>
-    </div>
-   
-    <br>
-    <div class="max-w-[100rem] mx-auto sm:px-6 lg:px-8">
-        <div class="bg-gray-400 overflow-hidden shadow-sm sm:rounded-lg p-4">
-            <invite-friends class="px-12" :friends="{{ $friends }}" :user="{{ $user }}"> </invite-friends>
+                
+            </div>
         </div>
     </div>
-
-
 </div>
-
 
 
 </body>
 </x-app-layout>
+
+
+<style scoped>
+
+    
+    .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    .no-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+
+</style>
+

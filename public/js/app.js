@@ -11922,10 +11922,69 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var default_layout = "default";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['movies'],
-  computed: {}
+  props: ['movies', 'friends'],
+  computed: {},
+  data: function data() {
+    return {
+      optionText: null
+    };
+  },
+  methods: {
+    switchMovie: function switchMovie(event) {
+      this.optionText = event.target.value;
+      console.log(this.optionText);
+    },
+    createParty: function createParty(event) {
+      console.log(this.optionText);
+    }
+  }
 });
 
 /***/ }),
@@ -14382,7 +14441,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n[type=radio][data-v-10fce879] {\n    position: absolute;\n    opacity: 0;\n    width: 0;\n    height: 0;\n}\n[type=radio] + img[data-v-10fce879] {\n    cursor:pointer\n}\n[type=radio]:checked + img[data-v-10fce879] {\n    outline: 8px solid #ad0000;\n}\n\n\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n[type=radio][data-v-10fce879] {\n    position: absolute;\n    opacity: 0;\n    width: 0;\n    height: 0;\n}\n[type=radio] + img[data-v-10fce879] {\n    cursor:pointer\n}\n[type=radio]:checked + img[data-v-10fce879] {\n    outline: 8px solid #ad0000;\n}\n.no-scrollbar[data-v-10fce879]::-webkit-scrollbar {\n        display: none;\n}\n.no-scrollbar[data-v-10fce879] {\n    -ms-overflow-style: none;  /* IE and Edge */\n    scrollbar-width: none;  /* Firefox */\n}\n\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -101991,33 +102050,124 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass:
-        "flex flex-wrap items-center align-center bg-gray-200 rounded-xl",
-    },
-    _vm._l(_vm.movies, function (movie) {
-      return _c(
+  return _c("div", { staticClass: "flex flex-row gap-x-12" }, [
+    _c("div", { staticClass: "flex flex-col text-center" }, [
+      _c(
         "div",
-        { key: movie.id, staticClass: "m-3", attrs: { movie: movie } },
+        {
+          staticClass:
+            "flex flex-shrink-0 flex-wrap items-center align-center bg-gray-200 rounded-xl h-[58rem] overflow-y-scroll  no-scrollbar",
+        },
+        _vm._l(_vm.movies, function (movie) {
+          return _c(
+            "div",
+            { key: movie.id, staticClass: "m-3", attrs: { movie: movie } },
+            [
+              _c(
+                "label",
+                { staticClass: "text-center bg-white rounded-lg w-96" },
+                [
+                  _c("input", {
+                    attrs: { name: "Movie", type: "radio", id: movie.id },
+                    domProps: { value: movie.id },
+                    on: {
+                      change: function ($event) {
+                        return _vm.switchMovie($event)
+                      },
+                    },
+                  }),
+                  _vm._v(" "),
+                  _c("img", {
+                    staticClass: "w-[14rem] rounded-lg",
+                    attrs: {
+                      src: "/images/movie-images/" + movie.image + ".jpg",
+                    },
+                  }),
+                ]
+              ),
+            ]
+          )
+        }),
+        0
+      ),
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "w-[60rem]" }, [
+      _c(
+        "div",
+        {
+          staticClass:
+            "online-list party-object pt-9 max-w-7xl h-[58rem] mx-auto sm:px-6 lg:px-8 w:full shadow-lg bg-gray-200 sm:rounded-lg p-12",
+        },
         [
-          _c("label", { staticClass: "text-center bg-white rounded-lg w-96" }, [
-            _c("input", {
-              attrs: { name: "Movie", type: "radio", id: movie.id },
-              domProps: { value: movie.title },
+          _c(
+            "div",
+            { staticClass: "bg-gray overflow-hidden text-primary p-4" },
+            _vm._l(_vm.friends, function (friend) {
+              return _c("div", { key: friend.id, attrs: { friend: friend } }, [
+                _c("input", {
+                  attrs: {
+                    type: "checkbox",
+                    id: "friend" + friend.id,
+                    name: "friend" + friend.id,
+                  },
+                  domProps: { value: friend.name },
+                }),
+                _vm._v(" "),
+                _c("label", { attrs: { for: "friend" + friend.id } }, [
+                  _vm._v(
+                    " \n                        " +
+                      _vm._s(friend.name) +
+                      " \n                        \n                        "
+                  ),
+                  _c(
+                    "div",
+                    { staticClass: "relative w-20 h-20 align-center" },
+                    [
+                      _c("img", {
+                        staticClass: "rounded-full",
+                        attrs: { src: "../images/profile-images/DEFAULT.jpg" },
+                      }),
+                      _vm._v(" "),
+                      friend.isOnline == "True"
+                        ? _c("span", [
+                            _c("div", {
+                              staticClass:
+                                "absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-green-400 z-2",
+                            }),
+                          ])
+                        : _c("span", [
+                            _c("div", {
+                              staticClass:
+                                "absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-gray-400 z-2",
+                            }),
+                          ]),
+                    ]
+                  ),
+                ]),
+                _c("br"),
+              ])
             }),
+            0
+          ),
+          _vm._v(" "),
+          _c("div", [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "float-left text-left bg-primary text-white py-2 px-6 rounded-full",
+                on: { click: _vm.createParty },
+              },
+              [_vm._v("CREATE\n                ")]
+            ),
             _vm._v(" "),
-            _c("img", {
-              staticClass: "w-[14rem] rounded-lg",
-              attrs: { src: "/images/movie-images/" + movie.image + ".jpg" },
-            }),
+            _c("p", { attrs: { id: "output" } }, [_vm._v(" Test ")]),
           ]),
         ]
-      )
-    }),
-    0
-  )
+      ),
+    ]),
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
