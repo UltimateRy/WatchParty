@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PartiesTableSeeder::class);
         $this->call(PartyUsersTableSeeder::class);
         $this->call(MovieImageSeeder::class);
+        $this->call(UserImageSeeder::class);
 
     }
 }

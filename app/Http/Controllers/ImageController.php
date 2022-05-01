@@ -17,6 +17,5 @@ class ImageController extends Controller
         //$path = 'images/'.$filename;
         return return response()->json("Hi");
         return return response()->download($path);
-
     }
 }
