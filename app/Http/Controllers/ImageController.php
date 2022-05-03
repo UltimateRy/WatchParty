@@ -14,8 +14,6 @@ class ImageController extends Controller
     public function getImage($filename) {
 
         $path = public_path().'images/'.$filename;
-        //$path = 'images/'.$filename;
-        return return response()->json("Hi");
-        return return response()->download($path);
+        return response()->download($path);
     }
 }

@@ -60,8 +60,6 @@ class FollowsController extends Controller
 
         $requests = $followedBy->whereNotIn('id', $followings->pluck('id'));
         
-        //dd($requests);
-
         return view('friends', [
             'user' => $user,
             'requests' => $requests,

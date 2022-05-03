@@ -11,7 +11,10 @@
     <div id="app" class="window bg-gray-200 no-scrollbar">
         <div class=" px-4 py-4 grid gap-4 grid-cols-5 grid-rows-1">
             <div class="px-4 bg-white col-span-4 shadow-sm sm:rounded-3xl">
-                <video-player :party="{{$p}}" :key="{{$id}}" :user="{{$user}}">  </video-player> 
+                <video-player :party="{{$p}}" :key="{{$id}}" :user="{{$user}}" :movie="{{$movie}}">  </video-player> 
+
+                
+
             </div>
             <party-chat :party="{{$p}}" :key="{{$id}}" :user="{{$user}}" class="px-4">></party-chat>
         </div>

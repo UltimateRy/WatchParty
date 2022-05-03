@@ -12032,12 +12032,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var playToggle = 0;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "VideoPlayer",
-  props: ['party', 'user'],
+  props: ['party', 'user', 'movie'],
   data: function data() {
     return {
       messages: [],
@@ -12070,10 +12078,9 @@ var playToggle = 0;
         //console.log( type );
         //this.player.src({src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", type: type});
         //player.currentTime(35);
-      };
+      }; //var inputNode = document.getElementById('uploadedFile')
+      //inputNode.addEventListener('change', playSelectedFile, false)
 
-      var inputNode = document.getElementById('uploadedFile');
-      inputNode.addEventListener('change', playSelectedFile, false);
     })(); //THIS LINE DISABLES THE PLAY BUTTON
     //COULD BE USED WHEN HOST PRIVILGES IS IMPLEMENTED
     //this.player.controlBar.playToggle.off("click");
@@ -12156,6 +12163,12 @@ var playToggle = 0;
           }
         }
       });
+    },
+    videoRequestTime: function videoRequestTime() {
+      console.log("Requesting current time from host"); //Implement request here
+    },
+    hostSendTime: function hostSendTime() {
+      console.log("Sending recipient current time"); //Implement send here
     },
     videoPauseAll: function videoPauseAll() {
       console.log("Sending pause command");
@@ -102194,28 +102207,6 @@ var render = function () {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "py-6" }, [
-      _c("input", {
-        attrs: { type: "file", accept: "video/*", id: "uploadedFile" },
-      }),
-      _vm._v(" "),
-      _c("br"),
-      _vm._v(" "),
-      _c("br"),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass:
-            "float-left text-right bg-cyan-500 hover:bg-red-700 text-white py-2 px-6 rounded-full",
-          on: { click: _vm.presetVid },
-        },
-        [_vm._v("Load Preselected File")]
-      ),
-      _vm._v(" "),
-      _c("br"),
-      _vm._v(" "),
-      _c("br"),
-      _vm._v(" "),
       _c(
         "ul",
         { staticClass: "chat" },
@@ -102231,19 +102222,52 @@ var render = function () {
         0
       ),
       _vm._v(" "),
-      _c("video", {
-        ref: "video-player",
-        staticClass:
-          "video-js vjs-theme-sea vjs-big-play-centered vjs-static-controls rounded-2xl",
-        attrs: {
-          id: "my-video",
-          controls: "",
-          preload: "auto",
-          width: "1280",
-          height: "750",
-          "data-setup": "{}",
+      _c(
+        "video",
+        {
+          ref: "video-player",
+          staticClass:
+            "video-js vjs-theme-sea vjs-big-play-centered vjs-static-controls",
+          attrs: {
+            id: "my-video",
+            controls: "",
+            preload: "auto",
+            width: "1280",
+            height: "750",
+            "data-setup": "{}",
+          },
         },
-      }),
+        [
+          _c("source", {
+            attrs: {
+              src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+            },
+          }),
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "flex gap-x-4 py-6" }, [
+        _c("div", { staticClass: "bg-white rounded-lg w-24" }, [
+          _c("img", {
+            staticClass: "card-image rounded-lg w-56",
+            attrs: {
+              src: "../images/movie-images/" + _vm.movie.image + ".jpg",
+            },
+          }),
+        ]),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "truncate text-ellipsis text-primary text-3xl" },
+          [
+            _vm._v(
+              " \n                " + _vm._s(_vm.movie.title) + "\n            "
+            ),
+          ]
+        ),
+      ]),
     ]),
   ])
 }

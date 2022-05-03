@@ -37,6 +37,8 @@ class PartyController extends Controller
         //ALLOW THE USER TO CREATE A NEW PARTY HERE
 
         $user = Auth::user();
+        $userImage = UserImage::find($user->id);
+
 
         $followings = Auth::user()->follows;
         $followedBy = Auth::user()->followedBy;
@@ -91,7 +93,7 @@ class PartyController extends Controller
 
         broadcast(new PartyCreated($p))->toOthers();
 
-        session()->flash('message', 'Post Successfully Created.');
+        //session()->flash('message', 'Party Successfully Created.');
         return redirect()->route('parties.show', [
             'id' => $p->id
         ]);
@@ -106,11 +108,19 @@ class PartyController extends Controller
     public function show($id)
     {
         $party = Party::findOrFail($id);
+        $party->load('host');
+        
+        $movie = Movie::findOrFail($party->movie_id);
+        
+        $movieImage = MovieImage::find($movie->id);
+        $movie['image'] = $movieImage->file_path;
+
 
         return view('parties.show', [
             'p' => $party,
             'id' => $party->id,
-            'user' => Auth::User()
+            'user' => Auth::User(),
+            'movie' => $movie,
         ]);
     }
 

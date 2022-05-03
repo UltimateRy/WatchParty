@@ -84,7 +84,6 @@ export default {
         //this.player.controlBar.playToggle.off("click");
 
         this.player.bigPlayButton.on('click', event => {
-                console.log("Clicked play");
                 this.videoSetTime(this.player.currentTime());
                 this.videoPlayAll();
         });
@@ -93,12 +92,10 @@ export default {
 
             if (playToggle == 0) {
                 playToggle = 1;
-                console.log("Clicked pause");
                 this.videoSetTime(this.player.currentTime());
                 this.videoPauseAll();
             } else if (playToggle == 1) {
                 playToggle = 0;
-                console.log("Clicked play");
                 this.videoSetTime(this.player.currentTime());
                 this.videoPlayAll();
             }
@@ -106,15 +103,10 @@ export default {
         });
 
         this.player.controlBar.progressControl.seekBar.on('mouseup', event => {
-                console.log("Seeking to : " + this.player.currentTime());
                 this.videoSetTime(this.player.currentTime());
         });
 
         this.listenForControl();
-        //this.player.src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
-        //this.player = videojs(this.$refs['video-player'], this.options, function onPlayerReady() {
-        //    console.log('onPlayerReady', this);
-        //})
     },
     methods: {
         presetVid: function (event) {
@@ -123,40 +115,26 @@ export default {
             
         },
         listenForControl() {          
-            //Listen for external commands:
-
+            //Listen for external video control commands:
             Echo.private('parties.' + this.party.id)
                 .listen('VideoScrub', (e) => {
-                    console.log(e);
-                    //this.messages.push(e);
                     this.player.currentTime(e.time);
                 }
             );
             Echo.private('parties.' + this.party.id)
                 .listen('VideoAction', (e) => {
-                    console.log(e);
-                    
                     if (e.action == "play") {
-                        console.log("Recieved play command");
-
                         if (this.player.paused()) {
                             playToggle = 0;
-                            console.log("Began playing Video");
                             this.player.play();
-                        } else {
-                            console.log("Video was already playing");
-                        }
+                        } 
                     }
                     if (e.action == "pause") {
-                        console.log("Recieved pause command");
-
                         if (this.player.paused()) {
-                            console.log("Video was already paused");
+                            
                         } else {
                             playToggle = 1;
-                            console.log("Paused the Video");
                             this.player.pause();
-                            
                         }
                     }
                 }
@@ -164,40 +142,26 @@ export default {
         },
         videoRequestTime() {
             console.log("Requesting current time from host")
-
             //Implement request here
-
         },
         hostSendTime() {
             console.log("Sending recipient current time")
-
             //Implement send here
-
         },
         videoPauseAll() {
-            console.log("Sending pause command");
             axios.post("/api/pausevideo", 
                 {
                     user: this.user, 
                     party: this.party, 
                     action: "pause",
-                })
-                .then((response) => {
-                    //this.messages.push(response.data);
-                    //this.player.pause();
                 });
         },
         videoPlayAll() {
-            console.log("Sending play command");
             axios.post("/api/playvideo", 
                 {
                     user: this.user, 
                     party: this.party, 
                     action: "play",
-                })
-                .then((response) => {
-                    //this.messages.push(response.data);
-                    //this.player.play();
                 });
         },
         videoSetTime(t) {
@@ -206,12 +170,7 @@ export default {
                     user: this.user, 
                     party: this.party, 
                     time: t
-                })
-                .then((response) => {
-                    //this.messages.push(response.data);
-                    //this.player.currentTime(t);
                 });
-            //this.player.currentTime(t);
         }
     },
 

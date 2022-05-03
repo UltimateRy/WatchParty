@@ -14,7 +14,7 @@ class VideoPlayerController extends Controller
         $party = $request->input('party.id');
         $action = $request->input('action');
         Broadcast(new VideoAction($user, $party, $action))->toOthers();
-        return "It works!";
+        return "Broadcast Play Command";
     }
     public function apiPause(Request $request)
     {
@@ -22,7 +22,7 @@ class VideoPlayerController extends Controller
         $party = $request->input('party.id');
         $action = $request->input('action');
         Broadcast(new VideoAction($user, $party, $action))->toOthers();
-        return "It works!";
+        return "Broadcast Pause Command";
     }
     public function apiScrub(Request $request)
     {
@@ -30,6 +30,6 @@ class VideoPlayerController extends Controller
         $party = $request->input('party.id');
         $time = $request->input('time');
         Broadcast(new VideoScrub($user, $party, $time))->toOthers();
-        return "It works!";
+        return "Broadcast Scrub Command";
     }
 }

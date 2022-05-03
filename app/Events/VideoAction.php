@@ -16,8 +16,6 @@ use Illuminate\Queue\SerializesModels;
 class VideoAction implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-
     public $user;
     public $party;
     public $action;
