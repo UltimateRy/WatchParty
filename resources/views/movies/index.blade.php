@@ -5,15 +5,21 @@
         </h2>
     </x-slot>
 
-    <div class="window py-8 bg-gray-200 mx-auto h-screen sm:px-6 lg:px-8">
+    <div id="app" class="window py-8 bg-gray-200 mx-auto h-screen sm:px-6 lg:px-8">
         
-            <div class = "mx-auto justify-center max-w-7xl" >
-                <div class="flex items-start">
-
-                    
-                    
+        <div class="popular-movies no-scrollbar w-full h-[57rem] overflow-y-scroll shadow-sm sm:rounded-lg bg-white shadow-lg py-6 px-4 text-primary text-lg text-center">
+            <div>
+                <span class="text-3xl h-8 text-center">     
+                    MOVIES  
+                </span> 
+                <br>
+                <br>
                 </div>
+                <div class="border-t border-primary"> </div>
+                <br>
+                <popular-movies :popular-movies="{{ $movies }}"> </popular-movies>
             </div>
+        </div>
     </div> 
 </x-app-layout>
 

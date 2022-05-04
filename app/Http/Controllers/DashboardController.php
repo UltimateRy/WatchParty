@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use Cache;
 use App\Models\User;
+use App\Models\UserImage;
 use App\Models\Party;
 use App\Models\Movie;
 use App\Models\MovieImage;
@@ -22,6 +23,10 @@ class DashboardController extends Controller
             } else {
                 $party->host['isOnline'] = "False";
             }
+
+            $hostImage = UserImage::find($party->host->id);
+            $party->host['image'] = $hostImage->file_path;
+
         }
         $parties->load('movie');
         
@@ -33,6 +38,9 @@ class DashboardController extends Controller
             } else {
                 $userFollowing['isOnline'] = "False";
             }
+
+            $userImage = UserImage::find($userFollowing->id);
+            $userFollowing['image'] = $userImage->file_path;
         }
 
         //Return the ids of the users that the current user is following
@@ -41,9 +49,10 @@ class DashboardController extends Controller
         //Return the current user
         $user = Auth::user();
 
-        //Return the most popular movies to watch
-        $popularMovies = Movie::all();//->take(8);
-        
+        //Return the most popular movies to watch        
+        $popularMovies = Movie::withCount('parties')->get();
+        $popularMovies->sortBy('parties');
+
         foreach ($popularMovies as $popularMovie) {
             $movieImage = MovieImage::find($popularMovie->id);
             $popularMovie['image'] = $movieImage->file_path;

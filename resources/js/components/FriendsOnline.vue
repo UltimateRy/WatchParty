@@ -13,7 +13,7 @@
                             <a v-bind:href="'/profiles/'+ user.id">
                                 <div class="flex bg-gray-100 p-4 rounded-lg"> 
                                     <div class="relative w-16 h-16" >
-                                        <img class="rounded-full" v-bind:src="'images/sunset.png'">
+                                        <img class="rounded-full" v-bind:src="'/images/profile-images/' + user.image + '.jpg'">
                                         <div class="absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-green-400 z-2"></div>
                                     </div>
                                     <div class="pt-4 px-6 text-xl">

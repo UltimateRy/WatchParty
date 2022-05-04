@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Party;
 use App\Models\Movie;
 use App\Models\MovieImage;
+use App\Models\UserImage;
 use App\Events\PartyCreated;
 use Illuminate\Http\Request;
 
@@ -38,6 +39,7 @@ class PartyController extends Controller
 
         $user = Auth::user();
         $userImage = UserImage::find($user->id);
+        $user['image'] = $userImage->file_path;
 
 
         $followings = Auth::user()->follows;
@@ -51,12 +53,38 @@ class PartyController extends Controller
             $movie['image'] = $movieImage->file_path;
         }
 
+        foreach ($friends as $friend) {
+            $friendImage = UserImage::find($friend->id);
+            $friend['image'] = $friendImage->file_path;
+        }   
+
         return view('parties.create', [
             'user' => Auth::user(),
             'movies' => $movies,
             'friends' => $friends
         ]);
     }
+
+    public function apiCreate(Request $request) {        
+        $user = $request->input('user.id');
+        $movie = $request->input('movie');
+        $friends = $request->input('friends');
+
+        $p = new Party;
+        $p->host_id = $user;
+        $p->movie_id = $movie;
+        $p->invite_only = 0;
+        $p->save();
+
+        foreach ($friends as $friend) {
+            $p->addToParty(User::findOrFail($friend));
+        }  
+
+        return $p->id;
+
+        //return "Party created!";
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -91,6 +119,10 @@ class PartyController extends Controller
         $p->load('host');
         $p->load('movie');
 
+        $hostImage = UserImage::find(Auth::user()->id);
+
+        $p->host['image'] = $hostImage->file_path;
+
         broadcast(new PartyCreated($p))->toOthers();
 
         //session()->flash('message', 'Party Successfully Created.');
@@ -124,6 +156,16 @@ class PartyController extends Controller
         ]);
     }
 
+    public function apiLeave(Request $request){
+
+        $user = $request->input('user.id');
+        $party = Party::findOrFail($request->input('party.id'));
+
+        $party->users()->detach($user);
+
+        return "Left the party!";
+
+    }
     /**
      * Show the form for editing the specified resource.
      *

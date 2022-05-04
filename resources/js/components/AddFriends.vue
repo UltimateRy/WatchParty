@@ -73,7 +73,7 @@
                         console.log(response.data);
 
                         if (response.data == "Success") {
-                            thi.responseAddYourself = 0;
+                            this.responseAddYourself = 0;
                             this.responseAlreadyFollowing = 0;
                             this.responseUnsuccessful = 0;
                             this.responseSuccessful = 1;

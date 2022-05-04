@@ -8,7 +8,7 @@
                                 <a v-bind:href="'/profiles/'+ party.host.id">
                                     <div class="flex"> 
                                         <div class="relative w-16 h-16" >
-                                            <img class="rounded-full" v-bind:src="'images/sunset.png'">
+                                            <img class="rounded-full" v-bind:src="'/images/profile-images/' + party.host.image + '.jpg'">
                                             <span v-if="party.host.isOnline == 'True'"> 
                                                 <div class="absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-green-400 z-2"></div>
                                             </span>
@@ -42,7 +42,7 @@
                             <div class="party-button-parent">
                                 <div class="party-button button-second w-1/6 px-4">
                                     <a class="px-4 float-left text-right bg-transparent border-transparent hover:border-primary text-primary px-4 border-2 rounded-lg px-6" 
-                                    v-bind:href="'/watchparty/'+ party.id">Decline</a>
+                                    @click="leaveParty(party)">Leave</a>
                                 </div>
                             </div>
                         </div>
@@ -56,6 +56,7 @@
 </template>
 
 <script>
+    import axios from 'axios';
     const default_layout = "default";
     export default {
         props: ['initialParties', 'user'],
@@ -80,7 +81,28 @@
                         //message = 'New Parties were found!';
                         this.parties.push(e.party);
                     });
-            }
+            },
+            leaveParty($partyToLeave) {
+
+                axios.post("/api/leaveparty", 
+                    {
+                        party: $partyToLeave, 
+                        user: this.user, 
+                    })
+                    .then((response) => {
+                        console.log(response.data);
+                });
+
+                //var arrayLength = this.parties.length;
+
+                //for (var i = 0; i < arrayLength; i++) {
+
+                //    console.log(this.parties[i]);
+                //}
+
+                var partyToSplice = this.parties.indexOf($partyToLeave)
+                this.parties.splice(partyToSplice, 1)
+            },
         }
     };
 </script>

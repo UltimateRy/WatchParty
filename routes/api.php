@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\VideoPlayerController;
 use App\Http\Controllers\FollowsController;
-
+use App\Http\Controllers\PartyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +36,16 @@ Route::post('/playvideo', [VideoPlayerController::class, 'apiPlay'])
 
 Route::post('/scrubvideo', [VideoPlayerController::class, 'apiScrub'])
     ->name('api.video.scrub');
+
+Route::post('/reaction', [VideoPlayerController::class, 'apiReact'])
+    ->name('api.video.react');
+
+Route::post('/endparty', [VideoPlayerController::class, 'apiEndParty'])
+    ->name('api.video.endparty');
+
+Route::post('/leaveparty', [PartyController::class, 'apiLeave']);
+
+Route::post('/createparty', [PartyController::class, 'apiCreate']);
 
 Route::get('image/{filename}', [ImageController::class, 'getImage']);
 

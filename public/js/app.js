@@ -11388,7 +11388,7 @@ var default_layout = "default";
         console.log(response.data);
 
         if (response.data == "Success") {
-          thi.responseAddYourself = 0;
+          _this.responseAddYourself = 0;
           _this.responseAlreadyFollowing = 0;
           _this.responseUnsuccessful = 0;
           _this.responseSuccessful = 1;
@@ -11495,19 +11495,23 @@ __webpack_require__.r(__webpack_exports__);
       console.log("Accept" + userToAccept);
       axios__WEBPACK_IMPORTED_MODULE_0___default().post("/api/acceptfriendrequest", {
         user: this.user,
-        userToAccept: userToAccept
+        userToAccept: userToAccept.id
       }).then(function (response) {
         console.log(response.data);
       });
+      var userToSplice = this.users.indexOf(userToAccept);
+      this.users.splice(userToSplice, 1);
     },
     declineFriendRequest: function declineFriendRequest(userToDecline) {
       console.log("Decline" + userToDecline);
       axios__WEBPACK_IMPORTED_MODULE_0___default().post("/api/declinefriendrequest", {
         user: this.user,
-        userToDecline: userToDecline
+        userToDecline: userToDecline.id
       }).then(function (response) {
         console.log(response.data);
       });
+      var userToSplice = this.users.indexOf(userToDecline);
+      this.users.splice(userToSplice, 1);
     }
   }
 });
@@ -11770,6 +11774,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -11827,6 +11833,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 var default_layout = "default";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['initialParties', 'user'],
@@ -11854,6 +11861,20 @@ var default_layout = "default";
         //message = 'New Parties were found!';
         _this2.parties.push(e.party);
       });
+    },
+    leaveParty: function leaveParty($partyToLeave) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post("/api/leaveparty", {
+        party: $partyToLeave,
+        user: this.user
+      }).then(function (response) {
+        console.log(response.data);
+      }); //var arrayLength = this.parties.length;
+      //for (var i = 0; i < arrayLength; i++) {
+      //    console.log(this.parties[i]);
+      //}
+
+      var partyToSplice = this.parties.indexOf($partyToLeave);
+      this.parties.splice(partyToSplice, 1);
     }
   }
 });
@@ -11967,9 +11988,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 var default_layout = "default";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['movies', 'friends'],
+  props: ['movies', 'user', 'friends'],
   computed: {},
   data: function data() {
     return {
@@ -11983,8 +12008,76 @@ var default_layout = "default";
     },
     createParty: function createParty(event) {
       console.log(this.optionText);
+      var array = [];
+      var checkboxes = document.querySelectorAll('input[type=checkbox]:checked');
+
+      for (var i = 0; i < checkboxes.length; i++) {
+        array.push(checkboxes[i].name);
+      }
+
+      console.log(array);
+      axios.post("/api/createparty", {
+        user: this.user,
+        movie: this.optionText,
+        friends: array
+      }).then(function (response) {
+        console.log(response);
+        window.location.replace('../watchparty/' + response.data);
+      });
     }
   }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ShowMovie.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ShowMovie.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var default_layout = "default";
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ['movie', 'movieimage'],
+  computed: {}
 });
 
 /***/ }),
@@ -12040,6 +12133,64 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var playToggle = 0;
@@ -12050,7 +12201,12 @@ var playToggle = 0;
     return {
       messages: [],
       player: null,
-      party_id: this.party.id
+      party_id: this.party.id,
+      smilereact: 0,
+      laughreact: 0,
+      charmreact: 0,
+      cryreact: 0,
+      scarereact: 0
     };
   },
   mounted: function mounted() {
@@ -12069,26 +12225,13 @@ var playToggle = 0;
       var URL = window.URL || window.webkitURL;
 
       var playSelectedFile = function playSelectedFile(event) {
-        alert('Did something!'); //var file = this.files[0]
-        //var type = file.type
-        //var videoNode = videojs('my-video')
-        //var canPlay = videoNode.canPlayType(type)
-        //var fileURL = URL.createObjectURL(file)
-        //console.log( fileURL );
-        //console.log( type );
-        //this.player.src({src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", type: type});
-        //player.currentTime(35);
-      }; //var inputNode = document.getElementById('uploadedFile')
-      //inputNode.addEventListener('change', playSelectedFile, false)
-
+        alert('Did something!');
+      };
     })(); //THIS LINE DISABLES THE PLAY BUTTON
-    //COULD BE USED WHEN HOST PRIVILGES IS IMPLEMENTED
     //this.player.controlBar.playToggle.off("click");
 
 
     this.player.bigPlayButton.on('click', function (event) {
-      console.log("Clicked play");
-
       _this.videoSetTime(_this.player.currentTime());
 
       _this.videoPlayAll();
@@ -12096,14 +12239,12 @@ var playToggle = 0;
     this.player.controlBar.playToggle.on("click", function (event) {
       if (playToggle == 0) {
         playToggle = 1;
-        console.log("Clicked pause");
 
         _this.videoSetTime(_this.player.currentTime());
 
         _this.videoPauseAll();
       } else if (playToggle == 1) {
         playToggle = 0;
-        console.log("Clicked play");
 
         _this.videoSetTime(_this.player.currentTime());
 
@@ -12111,14 +12252,11 @@ var playToggle = 0;
       }
     });
     this.player.controlBar.progressControl.seekBar.on('mouseup', function (event) {
-      console.log("Seeking to : " + _this.player.currentTime());
-
       _this.videoSetTime(_this.player.currentTime());
     });
-    this.listenForControl(); //this.player.src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
-    //this.player = videojs(this.$refs['video-player'], this.options, function onPlayerReady() {
-    //    console.log('onPlayerReady', this);
-    //})
+    this.listenForControl();
+    this.listenForReaction();
+    this.listenForPartyEnd();
   },
   methods: {
     presetVid: function presetVid(event) {
@@ -12128,40 +12266,73 @@ var playToggle = 0;
     listenForControl: function listenForControl() {
       var _this2 = this;
 
-      //Listen for external commands:
+      //Listen for external video control commands:
       Echo["private"]('parties.' + this.party.id).listen('VideoScrub', function (e) {
-        console.log(e); //this.messages.push(e);
-
         _this2.player.currentTime(e.time);
       });
       Echo["private"]('parties.' + this.party.id).listen('VideoAction', function (e) {
-        console.log(e);
-
         if (e.action == "play") {
-          console.log("Recieved play command");
-
           if (_this2.player.paused()) {
             playToggle = 0;
-            console.log("Began playing Video");
 
             _this2.player.play();
-          } else {
-            console.log("Video was already playing");
           }
         }
 
         if (e.action == "pause") {
-          console.log("Recieved pause command");
-
-          if (_this2.player.paused()) {
-            console.log("Video was already paused");
-          } else {
+          if (_this2.player.paused()) {} else {
             playToggle = 1;
-            console.log("Paused the Video");
 
             _this2.player.pause();
           }
         }
+      });
+    },
+    listenForReaction: function listenForReaction() {
+      var _this3 = this;
+
+      Echo["private"]('parties.' + this.party.id).listen('Reaction', function (e) {
+        console.log(e);
+
+        if (e.reaction == "smile") {
+          _this3.smilereact = 1;
+          setTimeout(function () {
+            return _this3.smilereact = false;
+          }, 1000);
+        }
+
+        if (e.reaction == "laugh") {
+          _this3.laughreact = 1;
+          setTimeout(function () {
+            return _this3.laughreact = false;
+          }, 1000);
+        }
+
+        if (e.reaction == "charm") {
+          _this3.charmreact = 1;
+          setTimeout(function () {
+            return _this3.charmreact = false;
+          }, 1000);
+        }
+
+        if (e.reaction == "cry") {
+          _this3.cryreact = 1;
+          setTimeout(function () {
+            return _this3.cryreact = false;
+          }, 1000);
+        }
+
+        if (e.reaction == "scare") {
+          _this3.scarereact = 1;
+          setTimeout(function () {
+            return _this3.scarereact = false;
+          }, 1000);
+        }
+      });
+    },
+    listenForPartyEnd: function listenForPartyEnd() {
+      Echo["private"]('parties.' + this.party.id).listen('PartyEnded', function (e) {
+        window.location.replace('../home');
       });
     },
     videoRequestTime: function videoRequestTime() {
@@ -12176,8 +12347,6 @@ var playToggle = 0;
         user: this.user,
         party: this.party,
         action: "pause"
-      }).then(function (response) {//this.messages.push(response.data);
-        //this.player.pause();
       });
     },
     videoPlayAll: function videoPlayAll() {
@@ -12186,8 +12355,6 @@ var playToggle = 0;
         user: this.user,
         party: this.party,
         action: "play"
-      }).then(function (response) {//this.messages.push(response.data);
-        //this.player.play();
       });
     },
     videoSetTime: function videoSetTime(t) {
@@ -12195,19 +12362,66 @@ var playToggle = 0;
         user: this.user,
         party: this.party,
         time: t
-      }).then(function (response) {//this.messages.push(response.data);
-        //this.player.currentTime(t);
-      }); //this.player.currentTime(t);
+      });
+    },
+    react: function react(reactionGiven) {
+      var _this4 = this;
+
+      console.log(reactionGiven);
+
+      if (reactionGiven == "smile") {
+        this.smilereact = 1;
+        setTimeout(function () {
+          return _this4.smilereact = false;
+        }, 1000);
+      }
+
+      if (reactionGiven == "laugh") {
+        this.laughreact = 1;
+        setTimeout(function () {
+          return _this4.laughreact = false;
+        }, 1000);
+      }
+
+      if (reactionGiven == "charm") {
+        this.charmreact = 1;
+        setTimeout(function () {
+          return _this4.charmreact = false;
+        }, 1000);
+      }
+
+      if (reactionGiven == "cry") {
+        this.cryreact = 1;
+        setTimeout(function () {
+          return _this4.cryreact = false;
+        }, 1000);
+      }
+
+      if (reactionGiven == "scare") {
+        this.scarereact = 1;
+        setTimeout(function () {
+          return _this4.scarereact = false;
+        }, 1000);
+      }
+
+      axios.post("/api/reaction", {
+        user: this.user,
+        party: this.party,
+        reaction: reactionGiven
+      }).then(function (response) {
+        console.log(response);
+      });
+    },
+    endparty: function endparty() {
+      console.log("Ending party");
+      axios.post("/api/endparty", {
+        user: this.user,
+        party: this.party
+      }).then(function (response) {
+        console.log(response);
+      });
     }
   },
-  //  fileChange(event) {
-  //      alert('Did something!')
-  //      var file = document.getElementById('#uploadedFile');
-  //      const element = this.$refs['video-player'];
-  //      player = videojs(element);
-  //      player.srcObject = file
-  //      this.$refs.videoPlayer.src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-  //  }
   beforeDestroy: function beforeDestroy() {
     if (this.player) {
       this.player.dispose();
@@ -12226,7 +12440,7 @@ var playToggle = 0;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var alpinejs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
 /* harmony import */ var _components_PartyList_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/PartyList.vue */ "./resources/js/components/PartyList.vue");
 /* harmony import */ var _components_VideoPlayer_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/VideoPlayer.vue */ "./resources/js/components/VideoPlayer.vue");
 /* harmony import */ var _components_PartyChat_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/PartyChat.vue */ "./resources/js/components/PartyChat.vue");
@@ -12237,6 +12451,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_AddFriends_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/AddFriends.vue */ "./resources/js/components/AddFriends.vue");
 /* harmony import */ var _components_SelectMovie_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/SelectMovie.vue */ "./resources/js/components/SelectMovie.vue");
 /* harmony import */ var _components_InviteFriends_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/InviteFriends.vue */ "./resources/js/components/InviteFriends.vue");
+/* harmony import */ var _components_ShowMovie_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/ShowMovie.vue */ "./resources/js/components/ShowMovie.vue");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
@@ -12253,9 +12468,10 @@ alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].start();
 
 
 
+
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-window.Bus = new vue__WEBPACK_IMPORTED_MODULE_11__["default"]();
-var app = new vue__WEBPACK_IMPORTED_MODULE_11__["default"]({
+window.Bus = new vue__WEBPACK_IMPORTED_MODULE_12__["default"]();
+var app = new vue__WEBPACK_IMPORTED_MODULE_12__["default"]({
   el: '#app',
   components: {
     PartyList: _components_PartyList_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
@@ -12267,7 +12483,8 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_11__["default"]({
     PopularMovies: _components_PopularMovies_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
     AddFriends: _components_AddFriends_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
     SelectMovie: _components_SelectMovie_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
-    InviteFriends: _components_InviteFriends_vue__WEBPACK_IMPORTED_MODULE_10__["default"]
+    InviteFriends: _components_InviteFriends_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
+    ShowMovie: _components_ShowMovie_vue__WEBPACK_IMPORTED_MODULE_11__["default"]
   }
 });
 
@@ -14454,7 +14671,55 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n[type=radio][data-v-10fce879] {\n    position: absolute;\n    opacity: 0;\n    width: 0;\n    height: 0;\n}\n[type=radio] + img[data-v-10fce879] {\n    cursor:pointer\n}\n[type=radio]:checked + img[data-v-10fce879] {\n    outline: 8px solid #ad0000;\n}\n.no-scrollbar[data-v-10fce879]::-webkit-scrollbar {\n        display: none;\n}\n.no-scrollbar[data-v-10fce879] {\n    -ms-overflow-style: none;  /* IE and Edge */\n    scrollbar-width: none;  /* Firefox */\n}\n\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n[type=radio][data-v-10fce879] {\n    position: absolute;\n    opacity: 0;\n    width: 0;\n    height: 0;\n}\n[type=radio] + img[data-v-10fce879] {\n    cursor:pointer\n}\n[type=radio]:checked + img[data-v-10fce879] {\n    outline: 6px solid #ad0000;\n}\n.no-scrollbar[data-v-10fce879]::-webkit-scrollbar {\n        display: none;\n}\n.no-scrollbar[data-v-10fce879] {\n    -ms-overflow-style: none;  /* IE and Edge */\n    scrollbar-width: none;  /* Firefox */\n}\n[type=checkbox][data-v-10fce879] {\n    position: absolute;\n    opacity: 0;\n    width: 0;\n    height: 0;\n}\n[type=checkbox]:checked + div[data-v-10fce879] {\n    /*outline: 8px solid #ad0000;*/\n    background-color: rgb(253, 164, 131);\n}\n.selectbox > input[type=\"checkbox\"][data-v-10fce879]:checked {\n\n    outline: 8px solid #ad0000;\n}\n\n", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ShowMovie.vue?vue&type=style&index=0&id=4e4a22d8&scoped=true&lang=css&":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ShowMovie.vue?vue&type=style&index=0&id=4e4a22d8&scoped=true&lang=css& ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "\n.movie-card[data-v-4e4a22d8]{\n    opacity: 0;\n    -webkit-animation: animateMovie-data-v-4e4a22d8 .7s forwards;\n            animation: animateMovie-data-v-4e4a22d8 .7s forwards\n}\n@-webkit-keyframes animateMovie-data-v-4e4a22d8 {\n0% {\n        transform: translateY(-300px)\n}\n100% {\n        opacity: 1;\n        transform: none;\n}\n}\n@keyframes animateMovie-data-v-4e4a22d8 {\n0% {\n        transform: translateY(-300px)\n}\n100% {\n        opacity: 1;\n        transform: none;\n}\n}\n\n", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoPlayer.vue?vue&type=style&index=0&id=9e3bdfbe&scoped=true&lang=css&":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoPlayer.vue?vue&type=style&index=0&id=9e3bdfbe&scoped=true&lang=css& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "\n.emote-icon[data-v-9e3bdfbe]{\n    opacity: 0;\n    -webkit-animation: revealEmote-data-v-9e3bdfbe 2s forwards;\n            animation: revealEmote-data-v-9e3bdfbe 2s forwards;\n}\n@-webkit-keyframes revealEmote-data-v-9e3bdfbe {\n60% {\n        opacity: 0.8;\n        transform: translateY(-80px)\n}\n100% {\n        opacity: 0;\n        transform: translateY(-30px)\n}\n}\n@keyframes revealEmote-data-v-9e3bdfbe {\n60% {\n        opacity: 0.8;\n        transform: translateY(-80px)\n}\n100% {\n        opacity: 0;\n        transform: translateY(-30px)\n}\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -43141,6 +43406,66 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectMovie_vue_vue_type_style_index_0_id_10fce879_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ShowMovie.vue?vue&type=style&index=0&id=4e4a22d8&scoped=true&lang=css&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ShowMovie.vue?vue&type=style&index=0&id=4e4a22d8&scoped=true&lang=css& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ShowMovie_vue_vue_type_style_index_0_id_4e4a22d8_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ShowMovie.vue?vue&type=style&index=0&id=4e4a22d8&scoped=true&lang=css& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ShowMovie.vue?vue&type=style&index=0&id=4e4a22d8&scoped=true&lang=css&");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ShowMovie_vue_vue_type_style_index_0_id_4e4a22d8_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ShowMovie_vue_vue_type_style_index_0_id_4e4a22d8_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoPlayer.vue?vue&type=style&index=0&id=9e3bdfbe&scoped=true&lang=css&":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoPlayer.vue?vue&type=style&index=0&id=9e3bdfbe&scoped=true&lang=css& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoPlayer_vue_vue_type_style_index_0_id_9e3bdfbe_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./VideoPlayer.vue?vue&type=style&index=0&id=9e3bdfbe&scoped=true&lang=css& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoPlayer.vue?vue&type=style&index=0&id=9e3bdfbe&scoped=true&lang=css&");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoPlayer_vue_vue_type_style_index_0_id_9e3bdfbe_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoPlayer_vue_vue_type_style_index_0_id_9e3bdfbe_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
 
 /***/ }),
 
@@ -100645,6 +100970,47 @@ component.options.__file = "resources/js/components/SelectMovie.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/ShowMovie.vue":
+/*!***********************************************!*\
+  !*** ./resources/js/components/ShowMovie.vue ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ShowMovie_vue_vue_type_template_id_4e4a22d8_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ShowMovie.vue?vue&type=template&id=4e4a22d8&scoped=true& */ "./resources/js/components/ShowMovie.vue?vue&type=template&id=4e4a22d8&scoped=true&");
+/* harmony import */ var _ShowMovie_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ShowMovie.vue?vue&type=script&lang=js& */ "./resources/js/components/ShowMovie.vue?vue&type=script&lang=js&");
+/* harmony import */ var _ShowMovie_vue_vue_type_style_index_0_id_4e4a22d8_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ShowMovie.vue?vue&type=style&index=0&id=4e4a22d8&scoped=true&lang=css& */ "./resources/js/components/ShowMovie.vue?vue&type=style&index=0&id=4e4a22d8&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+;
+
+
+/* normalize component */
+
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _ShowMovie_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ShowMovie_vue_vue_type_template_id_4e4a22d8_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _ShowMovie_vue_vue_type_template_id_4e4a22d8_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "4e4a22d8",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ShowMovie.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/VideoPlayer.vue":
 /*!*************************************************!*\
   !*** ./resources/js/components/VideoPlayer.vue ***!
@@ -100656,23 +101022,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _VideoPlayer_vue_vue_type_template_id_9e3bdfbe___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./VideoPlayer.vue?vue&type=template&id=9e3bdfbe& */ "./resources/js/components/VideoPlayer.vue?vue&type=template&id=9e3bdfbe&");
+/* harmony import */ var _VideoPlayer_vue_vue_type_template_id_9e3bdfbe_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./VideoPlayer.vue?vue&type=template&id=9e3bdfbe&scoped=true& */ "./resources/js/components/VideoPlayer.vue?vue&type=template&id=9e3bdfbe&scoped=true&");
 /* harmony import */ var _VideoPlayer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./VideoPlayer.vue?vue&type=script&lang=js& */ "./resources/js/components/VideoPlayer.vue?vue&type=script&lang=js&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _VideoPlayer_vue_vue_type_style_index_0_id_9e3bdfbe_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./VideoPlayer.vue?vue&type=style&index=0&id=9e3bdfbe&scoped=true&lang=css& */ "./resources/js/components/VideoPlayer.vue?vue&type=style&index=0&id=9e3bdfbe&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
+;
 
 
 /* normalize component */
-;
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _VideoPlayer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _VideoPlayer_vue_vue_type_template_id_9e3bdfbe___WEBPACK_IMPORTED_MODULE_0__.render,
-  _VideoPlayer_vue_vue_type_template_id_9e3bdfbe___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  _VideoPlayer_vue_vue_type_template_id_9e3bdfbe_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _VideoPlayer_vue_vue_type_template_id_9e3bdfbe_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
   null,
-  null,
+  "9e3bdfbe",
   null
   
 )
@@ -100828,6 +101196,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/ShowMovie.vue?vue&type=script&lang=js&":
+/*!************************************************************************!*\
+  !*** ./resources/js/components/ShowMovie.vue?vue&type=script&lang=js& ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ShowMovie_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ShowMovie.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ShowMovie.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ShowMovie_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/VideoPlayer.vue?vue&type=script&lang=js&":
 /*!**************************************************************************!*\
   !*** ./resources/js/components/VideoPlayer.vue?vue&type=script&lang=js& ***!
@@ -100931,6 +101315,32 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectMovie_vue_vue_type_style_index_0_id_10fce879_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SelectMovie.vue?vue&type=style&index=0&id=10fce879&scoped=true&lang=css& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/SelectMovie.vue?vue&type=style&index=0&id=10fce879&scoped=true&lang=css&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ShowMovie.vue?vue&type=style&index=0&id=4e4a22d8&scoped=true&lang=css&":
+/*!********************************************************************************************************!*\
+  !*** ./resources/js/components/ShowMovie.vue?vue&type=style&index=0&id=4e4a22d8&scoped=true&lang=css& ***!
+  \********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ShowMovie_vue_vue_type_style_index_0_id_4e4a22d8_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ShowMovie.vue?vue&type=style&index=0&id=4e4a22d8&scoped=true&lang=css& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ShowMovie.vue?vue&type=style&index=0&id=4e4a22d8&scoped=true&lang=css&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/VideoPlayer.vue?vue&type=style&index=0&id=9e3bdfbe&scoped=true&lang=css&":
+/*!**********************************************************************************************************!*\
+  !*** ./resources/js/components/VideoPlayer.vue?vue&type=style&index=0&id=9e3bdfbe&scoped=true&lang=css& ***!
+  \**********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoPlayer_vue_vue_type_style_index_0_id_9e3bdfbe_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./VideoPlayer.vue?vue&type=style&index=0&id=9e3bdfbe&scoped=true&lang=css& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoPlayer.vue?vue&type=style&index=0&id=9e3bdfbe&scoped=true&lang=css&");
 
 
 /***/ }),
@@ -101088,19 +101498,36 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/VideoPlayer.vue?vue&type=template&id=9e3bdfbe&":
-/*!********************************************************************************!*\
-  !*** ./resources/js/components/VideoPlayer.vue?vue&type=template&id=9e3bdfbe& ***!
-  \********************************************************************************/
+/***/ "./resources/js/components/ShowMovie.vue?vue&type=template&id=4e4a22d8&scoped=true&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/components/ShowMovie.vue?vue&type=template&id=4e4a22d8&scoped=true& ***!
+  \******************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoPlayer_vue_vue_type_template_id_9e3bdfbe___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoPlayer_vue_vue_type_template_id_9e3bdfbe___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ShowMovie_vue_vue_type_template_id_4e4a22d8_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ShowMovie_vue_vue_type_template_id_4e4a22d8_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoPlayer_vue_vue_type_template_id_9e3bdfbe___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./VideoPlayer.vue?vue&type=template&id=9e3bdfbe& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoPlayer.vue?vue&type=template&id=9e3bdfbe&");
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ShowMovie_vue_vue_type_template_id_4e4a22d8_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ShowMovie.vue?vue&type=template&id=4e4a22d8&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ShowMovie.vue?vue&type=template&id=4e4a22d8&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/VideoPlayer.vue?vue&type=template&id=9e3bdfbe&scoped=true&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/components/VideoPlayer.vue?vue&type=template&id=9e3bdfbe&scoped=true& ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoPlayer_vue_vue_type_template_id_9e3bdfbe_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoPlayer_vue_vue_type_template_id_9e3bdfbe_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoPlayer_vue_vue_type_template_id_9e3bdfbe_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./VideoPlayer.vue?vue&type=template&id=9e3bdfbe&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoPlayer.vue?vue&type=template&id=9e3bdfbe&scoped=true&");
 
 
 /***/ }),
@@ -101299,9 +101726,7 @@ var render = function () {
           !Object.keys(_vm.users).length > 0
             ? _c("span", [
                 _vm._v(
-                  " \n                No incoming requests\n                " +
-                    _vm._s(_vm.users.length) +
-                    "\n            "
+                  " \n                No incoming requests\n                \n            "
                 ),
               ])
             : _c(
@@ -101329,7 +101754,12 @@ var render = function () {
                               [
                                 _c("img", {
                                   staticClass: "rounded-full",
-                                  attrs: { src: "images/sunset.png" },
+                                  attrs: {
+                                    src:
+                                      "/images/profile-images/" +
+                                      user.image +
+                                      ".jpg",
+                                  },
                                 }),
                               ]
                             ),
@@ -101355,7 +101785,7 @@ var render = function () {
                                     on: {
                                       click: function ($event) {
                                         $event.preventDefault()
-                                        return _vm.acceptFriendRequest(user.id)
+                                        return _vm.acceptFriendRequest(user)
                                       },
                                     },
                                   },
@@ -101388,7 +101818,7 @@ var render = function () {
                                     on: {
                                       click: function ($event) {
                                         $event.preventDefault()
-                                        return _vm.declineFriendRequest(user.id)
+                                        return _vm.declineFriendRequest(user)
                                       },
                                     },
                                   },
@@ -101492,7 +101922,10 @@ var render = function () {
                                 _c("img", {
                                   staticClass: "rounded-full",
                                   attrs: {
-                                    src: "images/profile-images/DEFAULT.jpg",
+                                    src:
+                                      "/images/profile-images/" +
+                                      user.image +
+                                      ".jpg",
                                   },
                                 }),
                                 _vm._v(" "),
@@ -101591,7 +102024,12 @@ var render = function () {
                                   [
                                     _c("img", {
                                       staticClass: "rounded-full",
-                                      attrs: { src: "images/sunset.png" },
+                                      attrs: {
+                                        src:
+                                          "/images/profile-images/" +
+                                          user.image +
+                                          ".jpg",
+                                      },
                                     }),
                                     _vm._v(" "),
                                     _c("div", {
@@ -101854,7 +102292,12 @@ var render = function () {
                     _c("div", { staticClass: "relative w-16 h-16" }, [
                       _c("img", {
                         staticClass: "rounded-full",
-                        attrs: { src: "images/sunset.png" },
+                        attrs: {
+                          src:
+                            "/images/profile-images/" +
+                            party.host.image +
+                            ".jpg",
+                        },
                       }),
                       _vm._v(" "),
                       party.host.isOnline == "True"
@@ -101947,9 +102390,13 @@ var render = function () {
                           {
                             staticClass:
                               "px-4 float-left text-right bg-transparent border-transparent hover:border-primary text-primary px-4 border-2 rounded-lg px-6",
-                            attrs: { href: "/watchparty/" + party.id },
+                            on: {
+                              click: function ($event) {
+                                return _vm.leaveParty(party)
+                              },
+                            },
                           },
-                          [_vm._v("Decline")]
+                          [_vm._v("Leave")]
                         ),
                       ]
                     ),
@@ -102110,75 +102557,99 @@ var render = function () {
         "div",
         {
           staticClass:
-            "online-list party-object pt-9 max-w-7xl h-[58rem] mx-auto sm:px-6 lg:px-8 w:full shadow-lg bg-gray-200 sm:rounded-lg p-12",
+            "online-list party-object pt-2 max-w-7xl h-[53rem] mx-auto  w:full bg-gray-200 sm:rounded-lg py-12",
         },
         [
           _c(
             "div",
-            { staticClass: "bg-gray overflow-hidden text-primary p-4" },
+            {
+              staticClass:
+                "bg-gray text-primary overflow-y-scroll  no-scrollbar pt-4",
+            },
             _vm._l(_vm.friends, function (friend) {
-              return _c("div", { key: friend.id, attrs: { friend: friend } }, [
-                _c("input", {
-                  attrs: {
-                    type: "checkbox",
-                    id: "friend" + friend.id,
-                    name: "friend" + friend.id,
-                  },
-                  domProps: { value: friend.name },
-                }),
-                _vm._v(" "),
-                _c("label", { attrs: { for: "friend" + friend.id } }, [
-                  _vm._v(
-                    " \n                        " +
-                      _vm._s(friend.name) +
-                      " \n                        \n                        "
-                  ),
-                  _c(
-                    "div",
-                    { staticClass: "relative w-20 h-20 align-center" },
-                    [
-                      _c("img", {
-                        staticClass: "rounded-full",
-                        attrs: { src: "../images/profile-images/DEFAULT.jpg" },
-                      }),
-                      _vm._v(" "),
-                      friend.isOnline == "True"
-                        ? _c("span", [
-                            _c("div", {
-                              staticClass:
-                                "absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-green-400 z-2",
+              return _c(
+                "div",
+                {
+                  key: friend.id,
+                  staticClass: "px-5",
+                  attrs: { friend: friend },
+                },
+                [
+                  _c("label", { attrs: { for: "friend" + friend.id } }, [
+                    _c("input", {
+                      attrs: {
+                        type: "checkbox",
+                        id: "friend" + friend.id,
+                        name: friend.id,
+                      },
+                      domProps: { value: friend.name },
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "selectbox flex rounded-xl bg-white" },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "relative w-20 h-20 align-center p-2",
+                          },
+                          [
+                            _c("img", {
+                              staticClass: "rounded-full",
+                              attrs: {
+                                src:
+                                  "/images/profile-images/" +
+                                  friend.image +
+                                  ".jpg",
+                              },
                             }),
-                          ])
-                        : _c("span", [
-                            _c("div", {
-                              staticClass:
-                                "absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-gray-400 z-2",
-                            }),
-                          ]),
-                    ]
-                  ),
-                ]),
-                _c("br"),
-              ])
+                            _vm._v(" "),
+                            friend.isOnline == "True"
+                              ? _c("span", [
+                                  _c("div", {
+                                    staticClass:
+                                      "absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-green-400 z-2",
+                                  }),
+                                ])
+                              : _c("span", [
+                                  _c("div", {
+                                    staticClass:
+                                      "absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-gray-400 z-2",
+                                  }),
+                                ]),
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "p-6 text-xl" }, [
+                          _vm._v(" " + _vm._s(friend.name) + " "),
+                        ]),
+                      ]
+                    ),
+                  ]),
+                  _vm._v(" "),
+                  _c("br"),
+                ]
+              )
             }),
             0
           ),
-          _vm._v(" "),
-          _c("div", [
-            _c(
-              "button",
-              {
-                staticClass:
-                  "float-left text-left bg-primary text-white py-2 px-6 rounded-full",
-                on: { click: _vm.createParty },
-              },
-              [_vm._v("CREATE\n                ")]
-            ),
-            _vm._v(" "),
-            _c("p", { attrs: { id: "output" } }, [_vm._v(" Test ")]),
-          ]),
         ]
       ),
+      _vm._v(" "),
+      _c("div", { staticClass: "py-8 w-full" }, [
+        _c(
+          "button",
+          {
+            staticClass:
+              "float-left bg-primary text-white py-2 px-6 rounded-full w-full text-center text-2xl",
+            on: { click: _vm.createParty },
+          },
+          [_vm._v("CREATE\n            ")]
+        ),
+        _vm._v(" "),
+        _c("p", { attrs: { id: "output" } }),
+      ]),
     ]),
   ])
 }
@@ -102189,10 +102660,100 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoPlayer.vue?vue&type=template&id=9e3bdfbe&":
-/*!***********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoPlayer.vue?vue&type=template&id=9e3bdfbe& ***!
-  \***********************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ShowMovie.vue?vue&type=template&id=4e4a22d8&scoped=true&":
+/*!*********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ShowMovie.vue?vue&type=template&id=4e4a22d8&scoped=true& ***!
+  \*********************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "mx-auto justify-center max-w-8xl" }, [
+    _c(
+      "div",
+      { staticClass: "flex items-start gap-x-12 justify-center pt-12" },
+      [
+        _c(
+          "div",
+          {
+            staticClass:
+              "movie-card bg-white rounded-xl p-8 w-[60rem] text-primary text-2xl shadow-lg text-center flex-col",
+          },
+          [
+            _c("div", { staticClass: "flex pb-6" }, [
+              _c("img", {
+                staticClass: "card-image rounded-lg w-1/3",
+                attrs: {
+                  src:
+                    "../images/movie-images/" +
+                    _vm.movieimage.file_path +
+                    ".jpg",
+                },
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "flex flex-col" }, [
+                _c("div", { staticClass: "text-center" }, [
+                  _c("span", { staticClass: "text-6xl h-6 pl-8 text-center" }, [
+                    _vm._v(
+                      " \n                                " +
+                        _vm._s(_vm.movie.title) +
+                        "\n                            "
+                    ),
+                  ]),
+                ]),
+                _vm._v(" "),
+                _c(
+                  "span",
+                  { staticClass: "text-2xl h-12 pl-12 pt-12 text-left" },
+                  [
+                    _vm._v(
+                      " \n                            " +
+                        _vm._s(_vm.movie.length) +
+                        " minutes\n                        "
+                    ),
+                  ]
+                ),
+              ]),
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "bg-gray-200 pt-12 rounded-xl h-[30rem]" },
+              [
+                _c("div", { staticClass: "p-12" }, [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(_vm.movie.synopsis) +
+                      "\n                        \n                    "
+                  ),
+                ]),
+              ]
+            ),
+          ]
+        ),
+      ]
+    ),
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoPlayer.vue?vue&type=template&id=9e3bdfbe&scoped=true&":
+/*!***********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoPlayer.vue?vue&type=template&id=9e3bdfbe&scoped=true& ***!
+  \***********************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -102240,33 +102801,1204 @@ var render = function () {
         [
           _c("source", {
             attrs: {
-              src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+              src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
             },
           }),
         ]
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "flex gap-x-4 py-6" }, [
-        _c("div", { staticClass: "bg-white rounded-lg w-24" }, [
-          _c("img", {
-            staticClass: "card-image rounded-lg w-56",
-            attrs: {
-              src: "../images/movie-images/" + _vm.movie.image + ".jpg",
+      _c("div", { staticClass: "flex justify-between gap-x-4 py-6" }, [
+        _c("div", { staticClass: "flex gap-x-12" }, [
+          _c(
+            "div",
+            {
+              staticClass:
+                "truncate text-ellipsis text-primary pt-4 text-5xl max-w-[30rem]",
             },
-          }),
+            [
+              _vm._v(
+                " \n                    " +
+                  _vm._s(_vm.movie.title) +
+                  "\n                "
+              ),
+            ]
+          ),
+          _vm._v(" "),
+          _vm.party.host_id == _vm.user.id
+            ? _c("div", { staticClass: "pt-2" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass:
+                      "bg-primary p-4 text-white w-full text-lg rounded-2xl",
+                    attrs: { id: "btn-chat" },
+                    on: {
+                      click: function ($event) {
+                        $event.preventDefault()
+                        return _vm.endparty()
+                      },
+                    },
+                  },
+                  [_vm._v(" End Party ")]
+                ),
+              ])
+            : _vm._e(),
         ]),
         _vm._v(" "),
-        _c("br"),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "truncate text-ellipsis text-primary text-3xl" },
-          [
-            _vm._v(
-              " \n                " + _vm._s(_vm.movie.title) + "\n            "
+        _c("div", { staticClass: "flex" }, [
+          _c("div", { staticClass: "relative w-20 h-20" }, [
+            _vm.smilereact == 1
+              ? _c(
+                  "div",
+                  { staticClass: "absolute z-10 emote-icon w-20 h-20" },
+                  [
+                    _c(
+                      "svg",
+                      {
+                        staticClass: "absolute z-10 w-20 h-20 p-2 z-10",
+                        attrs: {
+                          xmlns: "http://www.w3.org/2000/svg",
+                          "xml:space": "preserve",
+                          viewBox: "0 0 128 128",
+                        },
+                      },
+                      [
+                        _c("path", {
+                          attrs: {
+                            d: "M127.59 93.59c0 13.94-28.46 25.25-63.59 25.25-35.12 0-63.6-11.31-63.6-25.25C.41 79.63 1.88 9.17 64 9.17c62.12 0 63.59 70.46 63.59 84.42",
+                            fill: "#FCC21B",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: {
+                            fill: "#fff",
+                            "fill-opacity": "1",
+                            "fill-rule": "nonzero",
+                            stroke: "none",
+                          },
+                          attrs: {
+                            d: "M26.514795 64.48954s3.414815 26.926562 38.071394 26.926562c34.656651 0 38.071191-26.926562 38.071191-26.926562s-11.55202 2.139409-38.071191 2.139409c-26.519109 0-38.071394-2.139409-38.071394-2.139409z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: {
+                            fill: "#2f2f2f",
+                            "fill-opacity": "1",
+                            "fill-rule": "nonzero",
+                            stroke: "none",
+                          },
+                          attrs: {
+                            d: "M37.195209 83.689282c-1.089838 0-2.034376-.452064-2.034376-1.024674V65.908075c0-.542438.944538-.994506 2.034376-.994506 1.162403 0 2.034273.452068 2.034273.994506v16.756533c0 .57261-.87187 1.024674-2.034273 1.024674zM50.8544 89.867417c-1.162471 0-2.034342-.556191-2.034342-1.260692v-20.61614c0-.667381.871871-1.223575 2.034342-1.223575 1.162402 0 2.034273.556194 2.034273 1.223575v20.61614c0 .704501-.871871 1.260692-2.034273 1.260692zM64.513522 92.544608c-1.162403 0-2.106941-.655356-2.106941-1.48547V66.76718c0-.786372.944538-1.441735 2.106941-1.441735 1.089838 0 2.034376.655363 2.034376 1.441735v24.291958c0 .830114-.944538 1.48547-2.034376 1.48547zM78.100084 91.514919c-1.089734 0-2.034277-.605774-2.034277-1.373081V67.687789c0-.726876.944543-1.332655 2.034277-1.332655 1.162462 0 2.107005.605779 2.107005 1.332655v22.454049c0 .767307-.944543 1.373081-2.107005 1.373081zM91.75927 84.513034c-1.162474 0-2.034277-.457021-2.034277-1.035913V66.536797c0-.548388.871803-1.005414 2.034277-1.005414 1.1625 0 2.03438.457026 2.03438 1.005414v16.940324c0 .578892-.87188 1.035913-2.03438 1.035913z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: {
+                            fill: "#2f2f2f",
+                            "fill-opacity": "1",
+                            "fill-rule": "nonzero",
+                            stroke: "none",
+                          },
+                          attrs: {
+                            d: "M64.586189 93.703039c-36.25502 0-40.323634-28.6233-40.323634-28.918401-.145198-.663947.145197-1.401678.653902-1.918058.5085-.516415 1.307703-.73773 1.961605-.590198.145198 0 11.77015 2.065626 37.708127 2.065626 25.937942 0 37.562891-2.065626 37.708191-2.065626.6536-.147428 1.45283.07389 1.9614.590198.5086.51638.79924 1.254111.65391 1.918058 0 .295204-4.14108 28.918401-40.323501 28.918401zM29.493675 67.292896c2.034375 6.639367 9.445172 21.836268 35.092514 21.836268 25.284147 0 32.912901-15.196901 35.092577-21.836268-5.231226.663947-16.492795 1.696742-35.092577 1.696742-18.672378 0-29.933959-1.032795-35.092514-1.696742z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#2f2f2f" },
+                          attrs: {
+                            d: "M40.799732 51.052885c-4.58-1.45-5.19-6.820001-2.89-10.520001 1.82-2.6 4.7-3.84 7.08-3.44 2.509999.46 4.829999 2.73 4.789999 6-.01 4.860001-3.889999 9.480001-8.979999 7.960001zM86.469736 51.052885c4.59-1.45 5.19-6.820001 2.88-10.520001-1.81-2.6-4.7-3.84-7.080005-3.44-2.51.46-4.82 2.73-4.8 6 .03 4.860001 3.91 9.480001 9.000005 7.960001z",
+                          },
+                        }),
+                      ]
+                    ),
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "svg",
+              {
+                staticClass: "absolute z-10 w-20 h-20 p-2 z-10",
+                attrs: {
+                  xmlns: "http://www.w3.org/2000/svg",
+                  "xml:space": "preserve",
+                  viewBox: "0 0 128 128",
+                },
+                on: {
+                  click: function ($event) {
+                    return _vm.react("smile")
+                  },
+                },
+              },
+              [
+                _c("path", {
+                  attrs: {
+                    d: "M127.59 93.59c0 13.94-28.46 25.25-63.59 25.25-35.12 0-63.6-11.31-63.6-25.25C.41 79.63 1.88 9.17 64 9.17c62.12 0 63.59 70.46 63.59 84.42",
+                    fill: "#FCC21B",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: {
+                    fill: "#fff",
+                    "fill-opacity": "1",
+                    "fill-rule": "nonzero",
+                    stroke: "none",
+                  },
+                  attrs: {
+                    d: "M26.514795 64.48954s3.414815 26.926562 38.071394 26.926562c34.656651 0 38.071191-26.926562 38.071191-26.926562s-11.55202 2.139409-38.071191 2.139409c-26.519109 0-38.071394-2.139409-38.071394-2.139409z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: {
+                    fill: "#2f2f2f",
+                    "fill-opacity": "1",
+                    "fill-rule": "nonzero",
+                    stroke: "none",
+                  },
+                  attrs: {
+                    d: "M37.195209 83.689282c-1.089838 0-2.034376-.452064-2.034376-1.024674V65.908075c0-.542438.944538-.994506 2.034376-.994506 1.162403 0 2.034273.452068 2.034273.994506v16.756533c0 .57261-.87187 1.024674-2.034273 1.024674zM50.8544 89.867417c-1.162471 0-2.034342-.556191-2.034342-1.260692v-20.61614c0-.667381.871871-1.223575 2.034342-1.223575 1.162402 0 2.034273.556194 2.034273 1.223575v20.61614c0 .704501-.871871 1.260692-2.034273 1.260692zM64.513522 92.544608c-1.162403 0-2.106941-.655356-2.106941-1.48547V66.76718c0-.786372.944538-1.441735 2.106941-1.441735 1.089838 0 2.034376.655363 2.034376 1.441735v24.291958c0 .830114-.944538 1.48547-2.034376 1.48547zM78.100084 91.514919c-1.089734 0-2.034277-.605774-2.034277-1.373081V67.687789c0-.726876.944543-1.332655 2.034277-1.332655 1.162462 0 2.107005.605779 2.107005 1.332655v22.454049c0 .767307-.944543 1.373081-2.107005 1.373081zM91.75927 84.513034c-1.162474 0-2.034277-.457021-2.034277-1.035913V66.536797c0-.548388.871803-1.005414 2.034277-1.005414 1.1625 0 2.03438.457026 2.03438 1.005414v16.940324c0 .578892-.87188 1.035913-2.03438 1.035913z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: {
+                    fill: "#2f2f2f",
+                    "fill-opacity": "1",
+                    "fill-rule": "nonzero",
+                    stroke: "none",
+                  },
+                  attrs: {
+                    d: "M64.586189 93.703039c-36.25502 0-40.323634-28.6233-40.323634-28.918401-.145198-.663947.145197-1.401678.653902-1.918058.5085-.516415 1.307703-.73773 1.961605-.590198.145198 0 11.77015 2.065626 37.708127 2.065626 25.937942 0 37.562891-2.065626 37.708191-2.065626.6536-.147428 1.45283.07389 1.9614.590198.5086.51638.79924 1.254111.65391 1.918058 0 .295204-4.14108 28.918401-40.323501 28.918401zM29.493675 67.292896c2.034375 6.639367 9.445172 21.836268 35.092514 21.836268 25.284147 0 32.912901-15.196901 35.092577-21.836268-5.231226.663947-16.492795 1.696742-35.092577 1.696742-18.672378 0-29.933959-1.032795-35.092514-1.696742z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#2f2f2f" },
+                  attrs: {
+                    d: "M40.799732 51.052885c-4.58-1.45-5.19-6.820001-2.89-10.520001 1.82-2.6 4.7-3.84 7.08-3.44 2.509999.46 4.829999 2.73 4.789999 6-.01 4.860001-3.889999 9.480001-8.979999 7.960001zM86.469736 51.052885c4.59-1.45 5.19-6.820001 2.88-10.520001-1.81-2.6-4.7-3.84-7.080005-3.44-2.51.46-4.82 2.73-4.8 6 .03 4.860001 3.91 9.480001 9.000005 7.960001z",
+                  },
+                }),
+              ]
             ),
-          ]
-        ),
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "relative w-20 h-20" }, [
+            _vm.laughreact == 1
+              ? _c(
+                  "div",
+                  { staticClass: "absolute z-10 emote-icon w-20 h-20" },
+                  [
+                    _c(
+                      "svg",
+                      {
+                        staticClass: "absolute z-10 w-20 h-20 p-2",
+                        attrs: {
+                          xmlns: "http://www.w3.org/2000/svg",
+                          "xml:space": "preserve",
+                          viewBox: "0 0 128 128",
+                        },
+                      },
+                      [
+                        _c("defs", [
+                          _c("path", {
+                            attrs: {
+                              id: "a",
+                              d: "M64 9.98C2.07 9.98.6 79.41.6 93.16c0 13.73 28.38 24.87 63.4 24.87 35.02 0 63.39-11.14 63.39-24.87 0-13.75-1.46-83.18-63.39-83.18z",
+                            },
+                          }),
+                        ]),
+                        _c("use", {
+                          attrs: {
+                            "xlink:href": "#a",
+                            overflow: "visible",
+                            fill: "#FCC21B",
+                          },
+                        }),
+                        _c("path", {
+                          attrs: {
+                            fill: "#2F2F2F",
+                            d: "M26.73 37.92c.13-.31 3.41-7.61 11.19-7.77h.05c7.81-.14 11.34 7.07 11.5 7.39.66 1.38.1 3.05-1.27 3.72-.36.19-.76.28-1.14.29-1.02.02-2.04-.55-2.52-1.56-.11-.2-2.21-4.33-6.47-4.24h-.02c-4.27.09-6.23 4.29-6.3 4.46-.64 1.4-2.27 2.02-3.65 1.39-1.36-.65-1.99-2.27-1.37-3.68z",
+                          },
+                        }),
+                        _c("path", {
+                          attrs: {
+                            fill: "#ED6C30",
+                            d: "M73.15 78.76c-8.87 5.68-21.92 5.45-31.46 2.15-5.08-1.82-12.39-6.74-15.49-14.49-1.35-3.36-1.56-8.99-.23-12.24 1.04-2.59 3.47-3.63 5.92-3.81 3.76-.27 8.34 3.17 12.09 4.45 7.07 2.43 13.82 2.37 22.04 1.38 5.28-.9 10.66-2.65 15.21.01 2.71 1.63 3.27 5.13 2.9 8.13-.56 4.49-4.19 10.07-10.98 14.42z",
+                          },
+                        }),
+                        _c("path", {
+                          attrs: {
+                            fill: "#2F2F2F",
+                            d: "M85.96 50.06c-.1.01-.2.01-.31.02-1.37.03-2.59-1-2.78-2.44-.03-.2-.85-5.56-5.62-7.06-4.87-1.51-8.63 2.59-8.67 2.63-1.03 1.15-2.77 1.22-3.89.19-1.11-1.04-1.2-2.81-.17-3.94.26-.29 6.18-6.77 14.36-4.22 8.19 2.57 9.41 11.32 9.46 11.7.19 1.51-.88 2.92-2.38 3.12z",
+                          },
+                        }),
+                        _c("g", [
+                          _c("path", {
+                            attrs: {
+                              fill: "#FFF",
+                              d: "M111.96 67.82c-.44 1.89-1.37 4.52-3.35 5.44-1.96.91-4.18.38-5.77-.96-1.97-1.64-2.42-3.92-2.59-6.33-.12-1.42-.09-2.81.01-3.93.27-2.91-.32-5.77-.12-8.61.06-.83.4-1.88 1.37-1.64.8.19 1.87 1.01 2.54 1.47 4.46 3.14 9.28 8.76 7.91 14.56z",
+                            },
+                          }),
+                        ]),
+                      ]
+                    ),
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "svg",
+              {
+                staticClass: "absolute z-10 w-20 h-20 p-2",
+                attrs: {
+                  xmlns: "http://www.w3.org/2000/svg",
+                  "xml:space": "preserve",
+                  viewBox: "0 0 128 128",
+                },
+                on: {
+                  click: function ($event) {
+                    return _vm.react("laugh")
+                  },
+                },
+              },
+              [
+                _c("defs", [
+                  _c("path", {
+                    attrs: {
+                      id: "a",
+                      d: "M64 9.98C2.07 9.98.6 79.41.6 93.16c0 13.73 28.38 24.87 63.4 24.87 35.02 0 63.39-11.14 63.39-24.87 0-13.75-1.46-83.18-63.39-83.18z",
+                    },
+                  }),
+                ]),
+                _c("use", {
+                  attrs: {
+                    "xlink:href": "#a",
+                    overflow: "visible",
+                    fill: "#FCC21B",
+                  },
+                }),
+                _c("path", {
+                  attrs: {
+                    fill: "#2F2F2F",
+                    d: "M26.73 37.92c.13-.31 3.41-7.61 11.19-7.77h.05c7.81-.14 11.34 7.07 11.5 7.39.66 1.38.1 3.05-1.27 3.72-.36.19-.76.28-1.14.29-1.02.02-2.04-.55-2.52-1.56-.11-.2-2.21-4.33-6.47-4.24h-.02c-4.27.09-6.23 4.29-6.3 4.46-.64 1.4-2.27 2.02-3.65 1.39-1.36-.65-1.99-2.27-1.37-3.68z",
+                  },
+                }),
+                _c("path", {
+                  attrs: {
+                    fill: "#ED6C30",
+                    d: "M73.15 78.76c-8.87 5.68-21.92 5.45-31.46 2.15-5.08-1.82-12.39-6.74-15.49-14.49-1.35-3.36-1.56-8.99-.23-12.24 1.04-2.59 3.47-3.63 5.92-3.81 3.76-.27 8.34 3.17 12.09 4.45 7.07 2.43 13.82 2.37 22.04 1.38 5.28-.9 10.66-2.65 15.21.01 2.71 1.63 3.27 5.13 2.9 8.13-.56 4.49-4.19 10.07-10.98 14.42z",
+                  },
+                }),
+                _c("path", {
+                  attrs: {
+                    fill: "#2F2F2F",
+                    d: "M85.96 50.06c-.1.01-.2.01-.31.02-1.37.03-2.59-1-2.78-2.44-.03-.2-.85-5.56-5.62-7.06-4.87-1.51-8.63 2.59-8.67 2.63-1.03 1.15-2.77 1.22-3.89.19-1.11-1.04-1.2-2.81-.17-3.94.26-.29 6.18-6.77 14.36-4.22 8.19 2.57 9.41 11.32 9.46 11.7.19 1.51-.88 2.92-2.38 3.12z",
+                  },
+                }),
+                _c("g", [
+                  _c("path", {
+                    attrs: {
+                      fill: "#FFF",
+                      d: "M111.96 67.82c-.44 1.89-1.37 4.52-3.35 5.44-1.96.91-4.18.38-5.77-.96-1.97-1.64-2.42-3.92-2.59-6.33-.12-1.42-.09-2.81.01-3.93.27-2.91-.32-5.77-.12-8.61.06-.83.4-1.88 1.37-1.64.8.19 1.87 1.01 2.54 1.47 4.46 3.14 9.28 8.76 7.91 14.56z",
+                    },
+                  }),
+                ]),
+              ]
+            ),
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "relative w-20 h-20" }, [
+            _vm.charmreact == 1
+              ? _c(
+                  "div",
+                  { staticClass: "absolute z-10 emote-icon w-20 h-20" },
+                  [
+                    _c(
+                      "svg",
+                      {
+                        staticClass: "absolute z-10 w-20 h-20 p-2",
+                        staticStyle: { "enable-background": "new 0 0 128 128" },
+                        attrs: {
+                          xmlns: "http://www.w3.org/2000/svg",
+                          viewBox: "0 0 128 128",
+                        },
+                      },
+                      [
+                        _c("path", {
+                          staticStyle: { fill: "#fcc21b" },
+                          attrs: {
+                            d: "M63.79 8.64C1.48 8.64 0 78.5 0 92.33c0 13.83 28.56 25.03 63.79 25.03 35.24 0 63.79-11.21 63.79-25.03 0-13.83-1.47-83.69-63.79-83.69z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#fcc21b" },
+                          attrs: {
+                            d: "M109.54 90.9c-9.5 3.41-19.98-1.4-23.44-10.78-3.44-9.37 1.43-19.74 10.93-23.17 9.47-3.41 19.98 1.42 23.45 10.79 3.44 9.39-1.46 19.76-10.94 23.16z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#fcc01c" },
+                          attrs: {
+                            d: "M109.31 90.27c-9.15 3.29-19.24-1.35-22.56-10.37-3.31-9.02 1.38-19 10.52-22.3 9.12-3.28 19.23 1.37 22.57 10.39 3.31 9.02-1.41 19-10.53 22.28z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#fcbe1c" },
+                          attrs: {
+                            d: "M109.07 89.63c-8.79 3.16-18.49-1.29-21.69-9.97C84.2 71 88.72 61.4 97.5 58.23c8.77-3.15 18.48 1.31 21.69 9.98 3.18 8.68-1.35 18.28-10.12 21.42z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#fbbb1d" },
+                          attrs: {
+                            d: "M108.84 89c-8.44 3.03-17.74-1.24-20.81-9.57-3.06-8.32 1.27-17.53 9.7-20.57 8.41-3.03 17.74 1.26 20.82 9.58 3.05 8.33-1.29 17.54-9.71 20.56z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#fbb91e" },
+                          attrs: {
+                            d: "M108.61 88.36c-8.08 2.9-17-1.19-19.93-9.17-2.93-7.97 1.22-16.79 9.3-19.7 8.06-2.9 16.99 1.21 19.94 9.18 2.91 7.98-1.25 16.8-9.31 19.69z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#fbb71e" },
+                          attrs: {
+                            d: "M108.37 87.73c-7.73 2.78-16.25-1.14-19.06-8.76-2.8-7.62 1.17-16.05 8.89-18.84 7.7-2.77 16.24 1.15 19.06 8.77 2.8 7.63-1.18 16.06-8.89 18.83z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#fbb51f" },
+                          attrs: {
+                            d: "M108.14 87.1c-7.37 2.65-15.5-1.09-18.18-8.36-2.67-7.27 1.11-15.31 8.48-17.97 7.35-2.64 15.5 1.1 18.19 8.37 2.66 7.27-1.14 15.32-8.49 17.96z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#fab220" },
+                          attrs: {
+                            d: "M107.9 86.46c-7.02 2.52-14.76-1.03-17.3-7.96-2.54-6.92 1.06-14.57 8.07-17.1 7-2.52 14.75 1.05 17.31 7.97 2.54 6.92-1.08 14.58-8.08 17.09z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#fab020" },
+                          attrs: {
+                            d: "M107.67 85.83c-6.66 2.39-14.01-.98-16.43-7.55-2.41-6.57 1.01-13.84 7.66-16.24 6.64-2.39 14 1 16.43 7.56 2.42 6.57-1.02 13.84-7.66 16.23z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#faae21" },
+                          attrs: {
+                            d: "M107.44 85.19c-6.31 2.26-13.26-.93-15.55-7.15-2.28-6.22.95-13.1 7.25-15.37 6.29-2.26 13.26.94 15.56 7.16 2.28 6.22-.97 13.1-7.26 15.36z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#faac22" },
+                          attrs: {
+                            d: "M107.2 84.56c-5.95 2.14-12.51-.88-14.68-6.75-2.15-5.87.9-12.36 6.84-14.5 5.93-2.13 12.51.89 14.68 6.76 2.16 5.86-.9 12.36-6.84 14.49z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#f9a922" },
+                          attrs: {
+                            d: "M106.97 83.92c-5.59 2.01-11.77-.82-13.8-6.35-2.03-5.51.85-11.62 6.44-13.64 5.58-2.01 11.76.84 13.8 6.35 2.02 5.53-.86 11.64-6.44 13.64z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#f9a723" },
+                          attrs: {
+                            d: "M106.74 83.29c-5.24 1.88-11.02-.77-12.92-5.94-1.9-5.16.79-10.88 6.03-12.77 5.23-1.88 11.02.78 12.93 5.95 1.88 5.16-.82 10.88-6.04 12.76z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#f9a524" },
+                          attrs: {
+                            d: "M106.5 82.65c-4.88 1.75-10.27-.72-12.05-5.54-1.77-4.81.74-10.14 5.62-11.91 4.87-1.75 10.27.73 12.05 5.55 1.77 4.82-.75 10.16-5.62 11.9z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#f9a324" },
+                          attrs: {
+                            d: "M106.27 82.02c-4.53 1.63-9.53-.67-11.17-5.14-1.64-4.46.68-9.41 5.21-11.04 4.52-1.62 9.52.68 11.17 5.14 1.64 4.47-.69 9.42-5.21 11.04z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#f8a025" },
+                          attrs: {
+                            d: "M106.03 81.39c-4.17 1.5-8.78-.62-10.29-4.74-1.51-4.11.63-8.67 4.8-10.17 4.16-1.5 8.77.63 10.3 4.74 1.51 4.11-.64 8.67-4.81 10.17z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#f89e26" },
+                          attrs: {
+                            d: "M105.8 80.75c-3.82 1.37-8.03-.56-9.42-4.33-1.38-3.76.58-7.93 4.39-9.31 3.81-1.37 8.03.57 9.42 4.34 1.39 3.76-.58 7.93-4.39 9.3z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#f89c26" },
+                          attrs: {
+                            d: "M105.57 80.12c-3.46 1.24-7.28-.51-8.54-3.93-1.25-3.41.52-7.19 3.98-8.44 3.46-1.24 7.28.52 8.55 3.93 1.25 3.41-.54 7.2-3.99 8.44z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#f89a27" },
+                          attrs: {
+                            d: "M105.33 79.48c-3.11 1.12-6.54-.46-7.67-3.53-1.13-3.06.47-6.45 3.57-7.58 3.1-1.11 6.53.47 7.67 3.53 1.14 3.07-.47 6.47-3.57 7.58z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#f79728" },
+                          attrs: {
+                            d: "M105.1 78.85c-2.75.99-5.79-.41-6.79-3.12s.42-5.72 3.17-6.71c2.75-.99 5.79.41 6.79 3.13.99 2.7-.43 5.71-3.17 6.7z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#f79528" },
+                          attrs: {
+                            d: "M104.87 78.21c-2.4.86-5.04-.35-5.91-2.72-.87-2.36.36-4.98 2.76-5.84 2.39-.86 5.04.36 5.92 2.72.85 2.36-.38 4.99-2.77 5.84z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#f79329" },
+                          attrs: {
+                            d: "M104.63 77.58c-2.04.73-4.3-.3-5.04-2.32-.74-2.01.31-4.24 2.35-4.98 2.04-.73 4.29.31 5.04 2.32.74 2.01-.31 4.25-2.35 4.98z",
+                          },
+                        }),
+                        _c("g", [
+                          _c("path", {
+                            staticStyle: { fill: "#fcc21b" },
+                            attrs: {
+                              d: "M31.54 90.9c-9.5 3.41-19.98-1.4-23.44-10.78-3.44-9.37 1.43-19.74 10.93-23.17 9.47-3.41 19.98 1.42 23.45 10.79 3.44 9.39-1.46 19.76-10.94 23.16z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#fcc01c" },
+                            attrs: {
+                              d: "M31.31 90.27c-9.15 3.29-19.24-1.35-22.56-10.37-3.31-9.02 1.38-19 10.52-22.3 9.12-3.28 19.23 1.37 22.57 10.39 3.31 9.02-1.41 19-10.53 22.28z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#fcbe1c" },
+                            attrs: {
+                              d: "M31.07 89.63c-8.79 3.16-18.49-1.29-21.69-9.97C6.2 71 10.72 61.4 19.5 58.23c8.77-3.15 18.48 1.31 21.69 9.98 3.18 8.68-1.35 18.28-10.12 21.42z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#fbbb1d" },
+                            attrs: {
+                              d: "M30.84 89c-8.44 3.03-17.74-1.24-20.81-9.57-3.06-8.32 1.27-17.53 9.7-20.57 8.41-3.03 17.74 1.26 20.82 9.58 3.05 8.33-1.29 17.54-9.71 20.56z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#fbb91e" },
+                            attrs: {
+                              d: "M30.61 88.36c-8.08 2.9-17-1.19-19.93-9.17-2.93-7.97 1.22-16.79 9.3-19.7 8.06-2.9 16.99 1.21 19.94 9.18 2.91 7.98-1.25 16.8-9.31 19.69z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#fbb71e" },
+                            attrs: {
+                              d: "M30.37 87.73c-7.73 2.78-16.25-1.14-19.06-8.76-2.8-7.62 1.17-16.05 8.89-18.84 7.7-2.77 16.24 1.15 19.06 8.77 2.8 7.63-1.18 16.06-8.89 18.83z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#fbb51f" },
+                            attrs: {
+                              d: "M30.14 87.1c-7.37 2.65-15.5-1.09-18.18-8.36-2.67-7.27 1.11-15.31 8.48-17.97 7.35-2.64 15.5 1.1 18.19 8.37 2.66 7.27-1.14 15.32-8.49 17.96z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#fab220" },
+                            attrs: {
+                              d: "M29.9 86.46c-7.02 2.52-14.76-1.03-17.3-7.96-2.54-6.92 1.06-14.57 8.07-17.1 7-2.52 14.75 1.05 17.31 7.97 2.54 6.92-1.08 14.58-8.08 17.09z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#fab020" },
+                            attrs: {
+                              d: "M29.67 85.83c-6.66 2.39-14.01-.98-16.43-7.55-2.41-6.57 1.01-13.84 7.66-16.24 6.64-2.39 14 1 16.43 7.56 2.42 6.57-1.02 13.84-7.66 16.23z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#faae21" },
+                            attrs: {
+                              d: "M29.44 85.19c-6.31 2.26-13.26-.93-15.55-7.15-2.28-6.22.95-13.1 7.25-15.37 6.29-2.26 13.26.94 15.56 7.16 2.28 6.22-.97 13.1-7.26 15.36z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#faac22" },
+                            attrs: {
+                              d: "M29.2 84.56c-5.95 2.14-12.51-.88-14.68-6.75-2.15-5.87.9-12.36 6.84-14.5 5.93-2.13 12.51.89 14.68 6.76 2.16 5.86-.9 12.36-6.84 14.49z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#f9a922" },
+                            attrs: {
+                              d: "M28.97 83.92c-5.59 2.01-11.77-.82-13.8-6.35-2.03-5.51.85-11.62 6.44-13.64 5.58-2.01 11.76.84 13.8 6.35 2.02 5.53-.86 11.64-6.44 13.64z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#f9a723" },
+                            attrs: {
+                              d: "M28.74 83.29c-5.24 1.88-11.02-.77-12.92-5.94-1.9-5.16.79-10.88 6.03-12.77 5.23-1.88 11.02.78 12.93 5.95 1.88 5.16-.82 10.88-6.04 12.76z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#f9a524" },
+                            attrs: {
+                              d: "M28.5 82.65c-4.88 1.75-10.27-.72-12.05-5.54-1.77-4.81.74-10.14 5.62-11.91 4.87-1.75 10.27.73 12.05 5.55 1.77 4.82-.75 10.16-5.62 11.9z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#f9a324" },
+                            attrs: {
+                              d: "M28.27 82.02c-4.53 1.63-9.53-.67-11.17-5.14-1.64-4.46.68-9.41 5.21-11.04 4.52-1.62 9.52.68 11.17 5.14 1.64 4.47-.69 9.42-5.21 11.04z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#f8a025" },
+                            attrs: {
+                              d: "M28.03 81.39c-4.17 1.5-8.78-.62-10.29-4.74-1.51-4.11.63-8.67 4.8-10.17 4.16-1.5 8.77.63 10.3 4.74 1.51 4.11-.64 8.67-4.81 10.17z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#f89e26" },
+                            attrs: {
+                              d: "M27.8 80.75c-3.82 1.37-8.03-.56-9.42-4.33-1.38-3.76.58-7.93 4.39-9.31 3.81-1.37 8.03.57 9.42 4.34 1.39 3.76-.58 7.93-4.39 9.3z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#f89c26" },
+                            attrs: {
+                              d: "M27.57 80.12c-3.46 1.24-7.28-.51-8.54-3.93-1.25-3.41.52-7.19 3.98-8.44 3.46-1.24 7.28.52 8.55 3.93 1.25 3.41-.54 7.2-3.99 8.44z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#f89a27" },
+                            attrs: {
+                              d: "M27.33 79.48c-3.11 1.12-6.54-.46-7.67-3.53-1.13-3.06.47-6.45 3.57-7.58 3.1-1.11 6.53.47 7.67 3.53 1.14 3.07-.47 6.47-3.57 7.58z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#f79728" },
+                            attrs: {
+                              d: "M27.1 78.85c-2.75.99-5.79-.41-6.79-3.12s.42-5.72 3.17-6.71c2.75-.99 5.79.41 6.79 3.13.99 2.7-.43 5.71-3.17 6.7z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#f79528" },
+                            attrs: {
+                              d: "M26.87 78.21c-2.4.86-5.04-.35-5.91-2.72-.87-2.36.36-4.98 2.76-5.84 2.39-.86 5.04.36 5.92 2.72.85 2.36-.38 4.99-2.77 5.84z",
+                            },
+                          }),
+                          _c("path", {
+                            staticStyle: { fill: "#f79329" },
+                            attrs: {
+                              d: "M26.63 77.58c-2.04.73-4.3-.3-5.04-2.32-.74-2.01.31-4.24 2.35-4.98 2.04-.73 4.29.31 5.04 2.32.74 2.01-.31 4.25-2.35 4.98z",
+                            },
+                          }),
+                        ]),
+                        _c("g", [
+                          _c("path", {
+                            staticStyle: { fill: "#2f2f2f" },
+                            attrs: {
+                              d: "M30.96 54.45c-.78 1.28-2.44 1.7-3.73.93-1.29-.77-1.71-2.42-.96-3.71.18-.31 4.6-7.62 14.37-7.62 9.78 0 14.2 7.31 14.39 7.62.76 1.29.32 2.97-.97 3.73-.44.26-.91.38-1.39.38-.92 0-1.83-.47-2.34-1.32-.13-.22-3.12-4.96-9.69-4.96-6.57-.01-9.54 4.74-9.68 4.95zM101 55.39c-.43.26-.91.38-1.37.38-.94 0-1.85-.49-2.36-1.34-.11-.2-3.08-4.94-9.66-4.94-6.69 0-9.66 4.89-9.69 4.94-.77 1.29-2.43 1.73-3.73.96-1.29-.76-1.73-2.44-.96-3.73.18-.31 4.6-7.62 14.38-7.62 9.77 0 14.18 7.31 14.36 7.62.76 1.3.32 2.97-.97 3.73z",
+                            },
+                          }),
+                        ]),
+                        _c("g", [
+                          _c("path", {
+                            staticStyle: { fill: "#ed6c30" },
+                            attrs: {
+                              d: "M84.57 168.14c-4.2-.92-9.28 2.92-17.17 4.51-1.24.25-2.35.34-3.38.33v20.31c12.59 0 20.53-6.19 23.38-10.51 5.33-8.08 2.96-13.38-2.83-14.64zM43.45 168.14c4.2-.92 9.28 2.92 17.17 4.51 1.24.25 2.35.34 3.38.33v20.31c-11.84 0-20.68-6.46-23.38-10.51-5.37-8.06-2.96-13.38 2.83-14.64z",
+                            },
+                          }),
+                        ]),
+                        _c("path", {
+                          staticStyle: { fill: "#ed6c30" },
+                          attrs: {
+                            d: "M96.46 68.26c-3.09-2.09-6.98-.71-10.42 0-9.58 1.98-18 2.06-22.04 2.06s-12.46-.08-22.04-2.06c-3.44-.71-7.33-2.09-10.42 0-3.92 2.65-1.03 12.15 5.14 18.57C40.41 90.71 49.29 98.24 64 98.24s23.59-7.53 27.32-11.41c6.17-6.42 9.05-15.92 5.14-18.57z",
+                          },
+                        }),
+                      ]
+                    ),
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "svg",
+              {
+                staticClass: "absolute z-10 w-20 h-20 p-2",
+                staticStyle: { "enable-background": "new 0 0 128 128" },
+                attrs: {
+                  xmlns: "http://www.w3.org/2000/svg",
+                  viewBox: "0 0 128 128",
+                },
+                on: {
+                  click: function ($event) {
+                    return _vm.react("charm")
+                  },
+                },
+              },
+              [
+                _c("path", {
+                  staticStyle: { fill: "#fcc21b" },
+                  attrs: {
+                    d: "M63.79 8.64C1.48 8.64 0 78.5 0 92.33c0 13.83 28.56 25.03 63.79 25.03 35.24 0 63.79-11.21 63.79-25.03 0-13.83-1.47-83.69-63.79-83.69z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#fcc21b" },
+                  attrs: {
+                    d: "M109.54 90.9c-9.5 3.41-19.98-1.4-23.44-10.78-3.44-9.37 1.43-19.74 10.93-23.17 9.47-3.41 19.98 1.42 23.45 10.79 3.44 9.39-1.46 19.76-10.94 23.16z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#fcc01c" },
+                  attrs: {
+                    d: "M109.31 90.27c-9.15 3.29-19.24-1.35-22.56-10.37-3.31-9.02 1.38-19 10.52-22.3 9.12-3.28 19.23 1.37 22.57 10.39 3.31 9.02-1.41 19-10.53 22.28z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#fcbe1c" },
+                  attrs: {
+                    d: "M109.07 89.63c-8.79 3.16-18.49-1.29-21.69-9.97C84.2 71 88.72 61.4 97.5 58.23c8.77-3.15 18.48 1.31 21.69 9.98 3.18 8.68-1.35 18.28-10.12 21.42z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#fbbb1d" },
+                  attrs: {
+                    d: "M108.84 89c-8.44 3.03-17.74-1.24-20.81-9.57-3.06-8.32 1.27-17.53 9.7-20.57 8.41-3.03 17.74 1.26 20.82 9.58 3.05 8.33-1.29 17.54-9.71 20.56z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#fbb91e" },
+                  attrs: {
+                    d: "M108.61 88.36c-8.08 2.9-17-1.19-19.93-9.17-2.93-7.97 1.22-16.79 9.3-19.7 8.06-2.9 16.99 1.21 19.94 9.18 2.91 7.98-1.25 16.8-9.31 19.69z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#fbb71e" },
+                  attrs: {
+                    d: "M108.37 87.73c-7.73 2.78-16.25-1.14-19.06-8.76-2.8-7.62 1.17-16.05 8.89-18.84 7.7-2.77 16.24 1.15 19.06 8.77 2.8 7.63-1.18 16.06-8.89 18.83z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#fbb51f" },
+                  attrs: {
+                    d: "M108.14 87.1c-7.37 2.65-15.5-1.09-18.18-8.36-2.67-7.27 1.11-15.31 8.48-17.97 7.35-2.64 15.5 1.1 18.19 8.37 2.66 7.27-1.14 15.32-8.49 17.96z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#fab220" },
+                  attrs: {
+                    d: "M107.9 86.46c-7.02 2.52-14.76-1.03-17.3-7.96-2.54-6.92 1.06-14.57 8.07-17.1 7-2.52 14.75 1.05 17.31 7.97 2.54 6.92-1.08 14.58-8.08 17.09z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#fab020" },
+                  attrs: {
+                    d: "M107.67 85.83c-6.66 2.39-14.01-.98-16.43-7.55-2.41-6.57 1.01-13.84 7.66-16.24 6.64-2.39 14 1 16.43 7.56 2.42 6.57-1.02 13.84-7.66 16.23z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#faae21" },
+                  attrs: {
+                    d: "M107.44 85.19c-6.31 2.26-13.26-.93-15.55-7.15-2.28-6.22.95-13.1 7.25-15.37 6.29-2.26 13.26.94 15.56 7.16 2.28 6.22-.97 13.1-7.26 15.36z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#faac22" },
+                  attrs: {
+                    d: "M107.2 84.56c-5.95 2.14-12.51-.88-14.68-6.75-2.15-5.87.9-12.36 6.84-14.5 5.93-2.13 12.51.89 14.68 6.76 2.16 5.86-.9 12.36-6.84 14.49z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#f9a922" },
+                  attrs: {
+                    d: "M106.97 83.92c-5.59 2.01-11.77-.82-13.8-6.35-2.03-5.51.85-11.62 6.44-13.64 5.58-2.01 11.76.84 13.8 6.35 2.02 5.53-.86 11.64-6.44 13.64z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#f9a723" },
+                  attrs: {
+                    d: "M106.74 83.29c-5.24 1.88-11.02-.77-12.92-5.94-1.9-5.16.79-10.88 6.03-12.77 5.23-1.88 11.02.78 12.93 5.95 1.88 5.16-.82 10.88-6.04 12.76z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#f9a524" },
+                  attrs: {
+                    d: "M106.5 82.65c-4.88 1.75-10.27-.72-12.05-5.54-1.77-4.81.74-10.14 5.62-11.91 4.87-1.75 10.27.73 12.05 5.55 1.77 4.82-.75 10.16-5.62 11.9z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#f9a324" },
+                  attrs: {
+                    d: "M106.27 82.02c-4.53 1.63-9.53-.67-11.17-5.14-1.64-4.46.68-9.41 5.21-11.04 4.52-1.62 9.52.68 11.17 5.14 1.64 4.47-.69 9.42-5.21 11.04z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#f8a025" },
+                  attrs: {
+                    d: "M106.03 81.39c-4.17 1.5-8.78-.62-10.29-4.74-1.51-4.11.63-8.67 4.8-10.17 4.16-1.5 8.77.63 10.3 4.74 1.51 4.11-.64 8.67-4.81 10.17z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#f89e26" },
+                  attrs: {
+                    d: "M105.8 80.75c-3.82 1.37-8.03-.56-9.42-4.33-1.38-3.76.58-7.93 4.39-9.31 3.81-1.37 8.03.57 9.42 4.34 1.39 3.76-.58 7.93-4.39 9.3z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#f89c26" },
+                  attrs: {
+                    d: "M105.57 80.12c-3.46 1.24-7.28-.51-8.54-3.93-1.25-3.41.52-7.19 3.98-8.44 3.46-1.24 7.28.52 8.55 3.93 1.25 3.41-.54 7.2-3.99 8.44z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#f89a27" },
+                  attrs: {
+                    d: "M105.33 79.48c-3.11 1.12-6.54-.46-7.67-3.53-1.13-3.06.47-6.45 3.57-7.58 3.1-1.11 6.53.47 7.67 3.53 1.14 3.07-.47 6.47-3.57 7.58z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#f79728" },
+                  attrs: {
+                    d: "M105.1 78.85c-2.75.99-5.79-.41-6.79-3.12s.42-5.72 3.17-6.71c2.75-.99 5.79.41 6.79 3.13.99 2.7-.43 5.71-3.17 6.7z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#f79528" },
+                  attrs: {
+                    d: "M104.87 78.21c-2.4.86-5.04-.35-5.91-2.72-.87-2.36.36-4.98 2.76-5.84 2.39-.86 5.04.36 5.92 2.72.85 2.36-.38 4.99-2.77 5.84z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#f79329" },
+                  attrs: {
+                    d: "M104.63 77.58c-2.04.73-4.3-.3-5.04-2.32-.74-2.01.31-4.24 2.35-4.98 2.04-.73 4.29.31 5.04 2.32.74 2.01-.31 4.25-2.35 4.98z",
+                  },
+                }),
+                _c("g", [
+                  _c("path", {
+                    staticStyle: { fill: "#fcc21b" },
+                    attrs: {
+                      d: "M31.54 90.9c-9.5 3.41-19.98-1.4-23.44-10.78-3.44-9.37 1.43-19.74 10.93-23.17 9.47-3.41 19.98 1.42 23.45 10.79 3.44 9.39-1.46 19.76-10.94 23.16z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#fcc01c" },
+                    attrs: {
+                      d: "M31.31 90.27c-9.15 3.29-19.24-1.35-22.56-10.37-3.31-9.02 1.38-19 10.52-22.3 9.12-3.28 19.23 1.37 22.57 10.39 3.31 9.02-1.41 19-10.53 22.28z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#fcbe1c" },
+                    attrs: {
+                      d: "M31.07 89.63c-8.79 3.16-18.49-1.29-21.69-9.97C6.2 71 10.72 61.4 19.5 58.23c8.77-3.15 18.48 1.31 21.69 9.98 3.18 8.68-1.35 18.28-10.12 21.42z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#fbbb1d" },
+                    attrs: {
+                      d: "M30.84 89c-8.44 3.03-17.74-1.24-20.81-9.57-3.06-8.32 1.27-17.53 9.7-20.57 8.41-3.03 17.74 1.26 20.82 9.58 3.05 8.33-1.29 17.54-9.71 20.56z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#fbb91e" },
+                    attrs: {
+                      d: "M30.61 88.36c-8.08 2.9-17-1.19-19.93-9.17-2.93-7.97 1.22-16.79 9.3-19.7 8.06-2.9 16.99 1.21 19.94 9.18 2.91 7.98-1.25 16.8-9.31 19.69z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#fbb71e" },
+                    attrs: {
+                      d: "M30.37 87.73c-7.73 2.78-16.25-1.14-19.06-8.76-2.8-7.62 1.17-16.05 8.89-18.84 7.7-2.77 16.24 1.15 19.06 8.77 2.8 7.63-1.18 16.06-8.89 18.83z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#fbb51f" },
+                    attrs: {
+                      d: "M30.14 87.1c-7.37 2.65-15.5-1.09-18.18-8.36-2.67-7.27 1.11-15.31 8.48-17.97 7.35-2.64 15.5 1.1 18.19 8.37 2.66 7.27-1.14 15.32-8.49 17.96z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#fab220" },
+                    attrs: {
+                      d: "M29.9 86.46c-7.02 2.52-14.76-1.03-17.3-7.96-2.54-6.92 1.06-14.57 8.07-17.1 7-2.52 14.75 1.05 17.31 7.97 2.54 6.92-1.08 14.58-8.08 17.09z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#fab020" },
+                    attrs: {
+                      d: "M29.67 85.83c-6.66 2.39-14.01-.98-16.43-7.55-2.41-6.57 1.01-13.84 7.66-16.24 6.64-2.39 14 1 16.43 7.56 2.42 6.57-1.02 13.84-7.66 16.23z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#faae21" },
+                    attrs: {
+                      d: "M29.44 85.19c-6.31 2.26-13.26-.93-15.55-7.15-2.28-6.22.95-13.1 7.25-15.37 6.29-2.26 13.26.94 15.56 7.16 2.28 6.22-.97 13.1-7.26 15.36z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#faac22" },
+                    attrs: {
+                      d: "M29.2 84.56c-5.95 2.14-12.51-.88-14.68-6.75-2.15-5.87.9-12.36 6.84-14.5 5.93-2.13 12.51.89 14.68 6.76 2.16 5.86-.9 12.36-6.84 14.49z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#f9a922" },
+                    attrs: {
+                      d: "M28.97 83.92c-5.59 2.01-11.77-.82-13.8-6.35-2.03-5.51.85-11.62 6.44-13.64 5.58-2.01 11.76.84 13.8 6.35 2.02 5.53-.86 11.64-6.44 13.64z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#f9a723" },
+                    attrs: {
+                      d: "M28.74 83.29c-5.24 1.88-11.02-.77-12.92-5.94-1.9-5.16.79-10.88 6.03-12.77 5.23-1.88 11.02.78 12.93 5.95 1.88 5.16-.82 10.88-6.04 12.76z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#f9a524" },
+                    attrs: {
+                      d: "M28.5 82.65c-4.88 1.75-10.27-.72-12.05-5.54-1.77-4.81.74-10.14 5.62-11.91 4.87-1.75 10.27.73 12.05 5.55 1.77 4.82-.75 10.16-5.62 11.9z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#f9a324" },
+                    attrs: {
+                      d: "M28.27 82.02c-4.53 1.63-9.53-.67-11.17-5.14-1.64-4.46.68-9.41 5.21-11.04 4.52-1.62 9.52.68 11.17 5.14 1.64 4.47-.69 9.42-5.21 11.04z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#f8a025" },
+                    attrs: {
+                      d: "M28.03 81.39c-4.17 1.5-8.78-.62-10.29-4.74-1.51-4.11.63-8.67 4.8-10.17 4.16-1.5 8.77.63 10.3 4.74 1.51 4.11-.64 8.67-4.81 10.17z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#f89e26" },
+                    attrs: {
+                      d: "M27.8 80.75c-3.82 1.37-8.03-.56-9.42-4.33-1.38-3.76.58-7.93 4.39-9.31 3.81-1.37 8.03.57 9.42 4.34 1.39 3.76-.58 7.93-4.39 9.3z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#f89c26" },
+                    attrs: {
+                      d: "M27.57 80.12c-3.46 1.24-7.28-.51-8.54-3.93-1.25-3.41.52-7.19 3.98-8.44 3.46-1.24 7.28.52 8.55 3.93 1.25 3.41-.54 7.2-3.99 8.44z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#f89a27" },
+                    attrs: {
+                      d: "M27.33 79.48c-3.11 1.12-6.54-.46-7.67-3.53-1.13-3.06.47-6.45 3.57-7.58 3.1-1.11 6.53.47 7.67 3.53 1.14 3.07-.47 6.47-3.57 7.58z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#f79728" },
+                    attrs: {
+                      d: "M27.1 78.85c-2.75.99-5.79-.41-6.79-3.12s.42-5.72 3.17-6.71c2.75-.99 5.79.41 6.79 3.13.99 2.7-.43 5.71-3.17 6.7z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#f79528" },
+                    attrs: {
+                      d: "M26.87 78.21c-2.4.86-5.04-.35-5.91-2.72-.87-2.36.36-4.98 2.76-5.84 2.39-.86 5.04.36 5.92 2.72.85 2.36-.38 4.99-2.77 5.84z",
+                    },
+                  }),
+                  _c("path", {
+                    staticStyle: { fill: "#f79329" },
+                    attrs: {
+                      d: "M26.63 77.58c-2.04.73-4.3-.3-5.04-2.32-.74-2.01.31-4.24 2.35-4.98 2.04-.73 4.29.31 5.04 2.32.74 2.01-.31 4.25-2.35 4.98z",
+                    },
+                  }),
+                ]),
+                _c("g", [
+                  _c("path", {
+                    staticStyle: { fill: "#2f2f2f" },
+                    attrs: {
+                      d: "M30.96 54.45c-.78 1.28-2.44 1.7-3.73.93-1.29-.77-1.71-2.42-.96-3.71.18-.31 4.6-7.62 14.37-7.62 9.78 0 14.2 7.31 14.39 7.62.76 1.29.32 2.97-.97 3.73-.44.26-.91.38-1.39.38-.92 0-1.83-.47-2.34-1.32-.13-.22-3.12-4.96-9.69-4.96-6.57-.01-9.54 4.74-9.68 4.95zM101 55.39c-.43.26-.91.38-1.37.38-.94 0-1.85-.49-2.36-1.34-.11-.2-3.08-4.94-9.66-4.94-6.69 0-9.66 4.89-9.69 4.94-.77 1.29-2.43 1.73-3.73.96-1.29-.76-1.73-2.44-.96-3.73.18-.31 4.6-7.62 14.38-7.62 9.77 0 14.18 7.31 14.36 7.62.76 1.3.32 2.97-.97 3.73z",
+                    },
+                  }),
+                ]),
+                _c("g", [
+                  _c("path", {
+                    staticStyle: { fill: "#ed6c30" },
+                    attrs: {
+                      d: "M84.57 168.14c-4.2-.92-9.28 2.92-17.17 4.51-1.24.25-2.35.34-3.38.33v20.31c12.59 0 20.53-6.19 23.38-10.51 5.33-8.08 2.96-13.38-2.83-14.64zM43.45 168.14c4.2-.92 9.28 2.92 17.17 4.51 1.24.25 2.35.34 3.38.33v20.31c-11.84 0-20.68-6.46-23.38-10.51-5.37-8.06-2.96-13.38 2.83-14.64z",
+                    },
+                  }),
+                ]),
+                _c("path", {
+                  staticStyle: { fill: "#ed6c30" },
+                  attrs: {
+                    d: "M96.46 68.26c-3.09-2.09-6.98-.71-10.42 0-9.58 1.98-18 2.06-22.04 2.06s-12.46-.08-22.04-2.06c-3.44-.71-7.33-2.09-10.42 0-3.92 2.65-1.03 12.15 5.14 18.57C40.41 90.71 49.29 98.24 64 98.24s23.59-7.53 27.32-11.41c6.17-6.42 9.05-15.92 5.14-18.57z",
+                  },
+                }),
+              ]
+            ),
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "relative w-20 h-20" }, [
+            _vm.cryreact == 1
+              ? _c(
+                  "div",
+                  { staticClass: "absolute z-10 emote-icon w-20 h-20" },
+                  [
+                    _c(
+                      "svg",
+                      {
+                        staticClass: "absolute z-10 w-20 h-20 p-2",
+                        staticStyle: { "enable-background": "new 0 0 128 128" },
+                        attrs: {
+                          xmlns: "http://www.w3.org/2000/svg",
+                          viewBox: "0 0 128 128",
+                        },
+                      },
+                      [
+                        _c("path", {
+                          staticStyle: { fill: "#fcc21b" },
+                          attrs: {
+                            d: "M-.2 93.42c0 13.88 28.65 25.11 63.99 25.11s64-11.23 64-25.11c0-13.87-1.47-83.95-64-83.95C1.27 9.47-.2 79.55-.2 93.42z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#2f2f2f" },
+                          attrs: {
+                            d: "M31.12 63.44c-.25 0-.49 0-.74-.01-1.52-.06-2.7-1.34-2.64-2.85.06-1.52 1.33-2.71 2.85-2.64 6.19.24 11.65-3.79 13.26-9.79.39-1.47 1.9-2.34 3.37-1.94 1.47.39 2.34 1.9 1.94 3.37-2.21 8.24-9.57 13.86-18.04 13.86zM96.47 63.44c-8.47 0-15.83-5.62-18.04-13.88-.39-1.47.48-2.97 1.94-3.37 1.47-.39 2.98.48 3.37 1.94 1.61 6 7.07 10.03 13.26 9.79 1.49-.06 2.79 1.12 2.85 2.64.06 1.52-1.12 2.8-2.64 2.85-.25.03-.49.03-.74.03z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#fff" },
+                          attrs: {
+                            d: "M6.93 67.54c1.04 4.69 4.1 7.61 6.68 8.41 2.89.89 5.51.46 7.38-1.2 2.37-2.11 3.19-5.84 2.33-10.51-1.57-8.39-.46-23.17-.45-23.31.04-.57-.24-1.09-.76-1.33-.5-.26-1.1-.16-1.52.22C6.25 52.86 5.87 62.78 6.93 67.54z",
+                          },
+                        }),
+                        _c("path", {
+                          staticStyle: { fill: "#ed6c30" },
+                          attrs: {
+                            d: "M84.84 68.79c-9.48 0-12.61 4.66-21.05 4.66s-11.57-4.66-21.05-4.66-17.16 6.66-17.16 14.88 7.68 14.88 17.16 14.88 12.61-4.66 21.05-4.66 11.57 4.66 21.05 4.66S102 91.88 102 83.66c0-8.21-7.68-14.87-17.16-14.87z",
+                          },
+                        }),
+                      ]
+                    ),
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "svg",
+              {
+                staticClass: "absolute z-10 w-20 h-20 p-2",
+                staticStyle: { "enable-background": "new 0 0 128 128" },
+                attrs: {
+                  xmlns: "http://www.w3.org/2000/svg",
+                  viewBox: "0 0 128 128",
+                },
+                on: {
+                  click: function ($event) {
+                    return _vm.react("cry")
+                  },
+                },
+              },
+              [
+                _c("path", {
+                  staticStyle: { fill: "#fcc21b" },
+                  attrs: {
+                    d: "M-.2 93.42c0 13.88 28.65 25.11 63.99 25.11s64-11.23 64-25.11c0-13.87-1.47-83.95-64-83.95C1.27 9.47-.2 79.55-.2 93.42z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#2f2f2f" },
+                  attrs: {
+                    d: "M31.12 63.44c-.25 0-.49 0-.74-.01-1.52-.06-2.7-1.34-2.64-2.85.06-1.52 1.33-2.71 2.85-2.64 6.19.24 11.65-3.79 13.26-9.79.39-1.47 1.9-2.34 3.37-1.94 1.47.39 2.34 1.9 1.94 3.37-2.21 8.24-9.57 13.86-18.04 13.86zM96.47 63.44c-8.47 0-15.83-5.62-18.04-13.88-.39-1.47.48-2.97 1.94-3.37 1.47-.39 2.98.48 3.37 1.94 1.61 6 7.07 10.03 13.26 9.79 1.49-.06 2.79 1.12 2.85 2.64.06 1.52-1.12 2.8-2.64 2.85-.25.03-.49.03-.74.03z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#fff" },
+                  attrs: {
+                    d: "M6.93 67.54c1.04 4.69 4.1 7.61 6.68 8.41 2.89.89 5.51.46 7.38-1.2 2.37-2.11 3.19-5.84 2.33-10.51-1.57-8.39-.46-23.17-.45-23.31.04-.57-.24-1.09-.76-1.33-.5-.26-1.1-.16-1.52.22C6.25 52.86 5.87 62.78 6.93 67.54z",
+                  },
+                }),
+                _c("path", {
+                  staticStyle: { fill: "#ed6c30" },
+                  attrs: {
+                    d: "M84.84 68.79c-9.48 0-12.61 4.66-21.05 4.66s-11.57-4.66-21.05-4.66-17.16 6.66-17.16 14.88 7.68 14.88 17.16 14.88 12.61-4.66 21.05-4.66 11.57 4.66 21.05 4.66S102 91.88 102 83.66c0-8.21-7.68-14.87-17.16-14.87z",
+                  },
+                }),
+              ]
+            ),
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "relative w-20 h-20" }, [
+            _vm.scarereact == 1
+              ? _c(
+                  "div",
+                  { staticClass: "absolute z-10 emote-icon w-20 h-20" },
+                  [
+                    _c(
+                      "svg",
+                      {
+                        staticClass: "absolute z-10 w-20 h-20 p-2",
+                        attrs: {
+                          xmlns: "http://www.w3.org/2000/svg",
+                          "xmlns:xlink": "http://www.w3.org/1999/xlink",
+                          "xml:space": "preserve",
+                          viewBox: "0 0 128 128",
+                        },
+                      },
+                      [
+                        _c("defs", [
+                          _c("path", {
+                            attrs: {
+                              id: "a",
+                              d: "M125.83 75.35c7.81-30.05-8.92-59.14-38.28-65.49C24.23-3.83-3.89 53.75.75 95.17c0 13.81 28.22 25.02 63.02 25.02 32.63 0 59.45-9.86 62.69-22.47.21-.84.32-1.7.32-2.56 0-6.56-4.13-7.55-.95-19.81z",
+                            },
+                          }),
+                        ]),
+                        _c(
+                          "linearGradient",
+                          {
+                            attrs: {
+                              id: "b",
+                              gradientUnits: "userSpaceOnUse",
+                              x1: "68.6055",
+                              y1: "65.3506",
+                              x2: "82.3065",
+                              y2: "10.2418",
+                            },
+                          },
+                          [
+                            _c("stop", {
+                              staticStyle: { "stop-color": "#fcc21b" },
+                              attrs: { offset: "0" },
+                            }),
+                            _c("stop", {
+                              staticStyle: { "stop-color": "#42ade7" },
+                              attrs: { offset: "1" },
+                            }),
+                          ],
+                          1
+                        ),
+                        _c("use", {
+                          attrs: {
+                            "xlink:href": "#a",
+                            overflow: "visible",
+                            fill: "url(#b)",
+                          },
+                        }),
+                        _c("path", {
+                          attrs: {
+                            fill: "#ED6C30",
+                            d: "M45.92 102.89c3.51 1.14 6.45 3.6 9.29 5.92 3.33 2.85 7.11 4.29 11.54 3.88 3.77-.35 7.42-2.04 9.8-5.17 6.58-8.68 1.86-20.47.03-23.73-3.98-6.64-10.02-11.64-16.86-14.44-3.65-1.53-8.15-2.67-12.39-2.86-10.12-.58-21.9 3.07-29.06 13.48-5.42 7.64-6.66 20.2 2.64 24.37 3.04 1.36 6.48 1.78 9.63.54 4.1-1.63 8.68-3.12 13.16-2.49.76.09 1.5.27 2.22.5z",
+                          },
+                        }),
+                        _c("path", {
+                          attrs: {
+                            fill: "#FFF",
+                            d: "M90.24 51.34c-1.62 8.91-9.61 14.92-17.83 13.42-8.24-1.5-13.59-9.94-11.95-18.85C62.08 37 70.06 31 78.29 32.5c8.23 1.5 13.58 9.93 11.95 18.84zM47.9 47.75c-3.27 8.16-11.43 12.57-18.21 9.85-6.81-2.72-9.66-11.54-6.38-19.7 3.27-8.16 11.41-12.57 18.21-9.85 6.79 2.72 9.64 11.55 6.38 19.7z",
+                          },
+                        }),
+                        _c("path", {
+                          attrs: {
+                            fill: "#2F2F2F",
+                            d: "M39.76 44.65c-.96 2.92-3.75 4.68-6.24 3.94-2.49-.74-3.72-3.71-2.76-6.63.95-2.92 3.74-4.69 6.23-3.94 2.48.74 3.72 3.71 2.77 6.63M78.75 49.62c-.39 3.32-2.97 5.79-5.78 5.54-2.8-.25-4.76-3.15-4.38-6.45.38-3.31 2.98-5.8 5.78-5.55 2.8.26 4.76 3.15 4.38 6.46",
+                          },
+                        }),
+                        _c("path", {
+                          attrs: {
+                            fill: "#FFF",
+                            d: "M109.26 85.9c-.16-5.26-5.42-13.74-6.4-13.85-1.02-.06-5.29 6.54-5.88 13.27-.55 4.83 2.18 8.27 6.02 8.23 4.23-.04 6.33-2.93 6.26-7.65z",
+                          },
+                        }),
+                      ],
+                      1
+                    ),
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "svg",
+              {
+                staticClass: "absolute z-10 w-20 h-20 p-2",
+                attrs: {
+                  xmlns: "http://www.w3.org/2000/svg",
+                  "xmlns:xlink": "http://www.w3.org/1999/xlink",
+                  "xml:space": "preserve",
+                  viewBox: "0 0 128 128",
+                },
+                on: {
+                  click: function ($event) {
+                    return _vm.react("scare")
+                  },
+                },
+              },
+              [
+                _c("defs", [
+                  _c("path", {
+                    attrs: {
+                      id: "a",
+                      d: "M125.83 75.35c7.81-30.05-8.92-59.14-38.28-65.49C24.23-3.83-3.89 53.75.75 95.17c0 13.81 28.22 25.02 63.02 25.02 32.63 0 59.45-9.86 62.69-22.47.21-.84.32-1.7.32-2.56 0-6.56-4.13-7.55-.95-19.81z",
+                    },
+                  }),
+                ]),
+                _c(
+                  "linearGradient",
+                  {
+                    attrs: {
+                      id: "b",
+                      gradientUnits: "userSpaceOnUse",
+                      x1: "68.6055",
+                      y1: "65.3506",
+                      x2: "82.3065",
+                      y2: "10.2418",
+                    },
+                  },
+                  [
+                    _c("stop", {
+                      staticStyle: { "stop-color": "#fcc21b" },
+                      attrs: { offset: "0" },
+                    }),
+                    _c("stop", {
+                      staticStyle: { "stop-color": "#42ade7" },
+                      attrs: { offset: "1" },
+                    }),
+                  ],
+                  1
+                ),
+                _c("use", {
+                  attrs: {
+                    "xlink:href": "#a",
+                    overflow: "visible",
+                    fill: "url(#b)",
+                  },
+                }),
+                _c("path", {
+                  attrs: {
+                    fill: "#ED6C30",
+                    d: "M45.92 102.89c3.51 1.14 6.45 3.6 9.29 5.92 3.33 2.85 7.11 4.29 11.54 3.88 3.77-.35 7.42-2.04 9.8-5.17 6.58-8.68 1.86-20.47.03-23.73-3.98-6.64-10.02-11.64-16.86-14.44-3.65-1.53-8.15-2.67-12.39-2.86-10.12-.58-21.9 3.07-29.06 13.48-5.42 7.64-6.66 20.2 2.64 24.37 3.04 1.36 6.48 1.78 9.63.54 4.1-1.63 8.68-3.12 13.16-2.49.76.09 1.5.27 2.22.5z",
+                  },
+                }),
+                _c("path", {
+                  attrs: {
+                    fill: "#FFF",
+                    d: "M90.24 51.34c-1.62 8.91-9.61 14.92-17.83 13.42-8.24-1.5-13.59-9.94-11.95-18.85C62.08 37 70.06 31 78.29 32.5c8.23 1.5 13.58 9.93 11.95 18.84zM47.9 47.75c-3.27 8.16-11.43 12.57-18.21 9.85-6.81-2.72-9.66-11.54-6.38-19.7 3.27-8.16 11.41-12.57 18.21-9.85 6.79 2.72 9.64 11.55 6.38 19.7z",
+                  },
+                }),
+                _c("path", {
+                  attrs: {
+                    fill: "#2F2F2F",
+                    d: "M39.76 44.65c-.96 2.92-3.75 4.68-6.24 3.94-2.49-.74-3.72-3.71-2.76-6.63.95-2.92 3.74-4.69 6.23-3.94 2.48.74 3.72 3.71 2.77 6.63M78.75 49.62c-.39 3.32-2.97 5.79-5.78 5.54-2.8-.25-4.76-3.15-4.38-6.45.38-3.31 2.98-5.8 5.78-5.55 2.8.26 4.76 3.15 4.38 6.46",
+                  },
+                }),
+                _c("path", {
+                  attrs: {
+                    fill: "#FFF",
+                    d: "M109.26 85.9c-.16-5.26-5.42-13.74-6.4-13.85-1.02-.06-5.29 6.54-5.88 13.27-.55 4.83 2.18 8.27 6.02 8.23 4.23-.04 6.33-2.93 6.26-7.65z",
+                  },
+                }),
+              ],
+              1
+            ),
+          ]),
+        ]),
       ]),
     ]),
   ])

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use Cache;
 use App\Models\User;
+use App\Models\UserImage;
 use App\Models\Party;
 use Illuminate\Http\Request;
 
@@ -56,6 +57,31 @@ class FollowsController extends Controller
 
         $followings = Auth::user()->follows;
         $followedBy = Auth::user()->followedBy;
+
+        foreach ($followings as $following) {
+
+            if (Cache::has('user-is-online-'.$following->id)) {
+                $following['isOnline'] = "True";
+            } else {
+                $following['isOnline'] = "False";
+            }
+
+            $followingImage = UserImage::find($following->id);
+            $following['image'] = $followingImage->file_path;
+        }   
+
+        foreach ($followedBy as $followed) {
+
+            if (Cache::has('user-is-online-'.$followed->id)) {
+                $followed['isOnline'] = "True";
+            } else {
+                $followed['isOnline'] = "False";
+            }
+
+            $followedImage = UserImage::find($followed->id);
+            $followed['image'] = $followedImage->file_path;
+        }   
+
         $friends = $followings->intersect($followedBy);
 
         $requests = $followedBy->whereNotIn('id', $followings->pluck('id'));
@@ -110,6 +136,12 @@ class FollowsController extends Controller
 
         //return "Accepted" . $user['id'];
 
+        $sender = User::findOrFail($user['id']);
+        $recipient = User::findOrFail($request->input('userToAccept'));
+
+        $sender->follows()->attach($recipient);
+
+
         return "User " . $user['id'] . " accepted Request of user " . $userToAccept;
     }
     //TODO
@@ -119,6 +151,10 @@ class FollowsController extends Controller
 
         //return $user['id'];
 
+        $sender = User::findOrFail($user['id']);
+        $recipient = User::findOrFail($request->input('userToDecline'));
+
+        $recipient->follows()->detach($sender);
 
         return "User " . $user['id'] . " declined Request of user " . $userToDecline;
     }

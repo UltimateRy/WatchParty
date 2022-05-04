@@ -21,38 +21,42 @@
         </div>
 
         <div class="w-[60rem]">
-            <div class="online-list party-object pt-9 max-w-7xl h-[58rem] mx-auto sm:px-6 lg:px-8 w:full shadow-lg bg-gray-200 sm:rounded-lg p-12">
-                <div class="bg-gray overflow-hidden text-primary p-4">
-                    <div v-for="friend in friends" :friend="friend" :key="friend.id">
+            <div class="online-list party-object pt-2 max-w-7xl h-[53rem] mx-auto  w:full bg-gray-200 sm:rounded-lg py-12">
+                <div class="bg-gray text-primary overflow-y-scroll  no-scrollbar pt-4">
+                    <div v-for="friend in friends" :friend="friend" :key="friend.id" class="px-5">
 
                         
 
-
-                        <input type="checkbox" :id="'friend'+friend.id" :name="'friend'+friend.id" :value="friend.name">
                         <label :for="'friend'+friend.id"> 
-                            {{friend.name}} 
+                            <input type="checkbox" :id="'friend'+friend.id" :name="friend.id" :value="friend.name">
+                        
+                            <div class="selectbox flex rounded-xl bg-white">
                             
-                            <div class="relative w-20 h-20 align-center" >
-                                <img class="rounded-full" v-bind:src="'../images/profile-images/DEFAULT.jpg'">
-                                <span v-if="friend.isOnline == 'True'">
-                                    <div class="absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-green-400 z-2"></div>
-                                </span>
-                                <span v-else>
-                                    <div class="absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-gray-400 z-2"></div>
-                                </span>
+                            
+                                <div class="relative w-20 h-20 align-center p-2" >
+                                    <img class="rounded-full" v-bind:src="'/images/profile-images/' + friend.image + '.jpg'">
+                                    <span v-if="friend.isOnline == 'True'">
+                                        <div class="absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-green-400 z-2"></div>
+                                    </span>
+                                    <span v-else>
+                                        <div class="absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-gray-400 z-2"></div>
+                                    </span>
+                                </div>
+
+                                <div class="p-6 text-xl"> {{friend.name}} </div>
                             </div>
                             
-                        </label><br>
+                        </label>
+                        <br>
                     </div>
                 </div>
             
-
-                <div>
-                    <button v-on:click="createParty"  class="float-left text-left bg-primary text-white py-2 px-6 rounded-full" 
-                        >CREATE
-                    </button>
-                    <p id="output"> Test </p>
-                </div>
+            </div>
+            <div class="py-8 w-full">
+                <button v-on:click="createParty"  class="float-left bg-primary text-white py-2 px-6 rounded-full w-full text-center text-2xl" 
+                    >CREATE
+                </button>
+                <p id="output">  </p>
             </div>
         </div>
     </div>
@@ -61,14 +65,13 @@
 <script>
     const default_layout = "default";
     export default {
-        props: ['movies', 'friends'],
+        props: ['movies', 'user', 'friends'],
         computed: {
             
         },
         data () {
             return {
                 optionText: null,
-     
             }
         },
         methods: {
@@ -79,6 +82,29 @@
             },
             createParty(event) {
                 console.log(this.optionText);
+
+                var array = []
+                var checkboxes = document.querySelectorAll('input[type=checkbox]:checked')
+
+                for (var i = 0; i < checkboxes.length; i++) {
+                    array.push(checkboxes[i].name)
+                }
+
+                console.log(array);
+
+                axios.post("/api/createparty", 
+                {
+                    user: this.user, 
+                    movie: this.optionText,
+                    friends: array,
+                    
+                })
+                .then((response) => {
+                    console.log(response);
+
+                    window.location.replace('../watchparty/' + response.data);
+
+                });
 
             }
         }
@@ -100,7 +126,7 @@
     }
 
     [type=radio]:checked + img {
-        outline: 8px solid #ad0000;
+        outline: 6px solid #ad0000;
     }
 
     .no-scrollbar::-webkit-scrollbar {
@@ -110,6 +136,23 @@
     .no-scrollbar {
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
+    }
+
+    [type=checkbox] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    [type=checkbox]:checked + div {
+        /*outline: 8px solid #ad0000;*/
+        background-color: rgb(253, 164, 131);
+    }
+
+    .selectbox > input[type="checkbox"]:checked {
+
+        outline: 8px solid #ad0000;
     }
 
 </style>

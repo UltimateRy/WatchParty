@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movie;
+use App\Models\MovieImage;
 use Illuminate\Http\Request;
 
 class MovieController extends Controller
@@ -15,6 +16,12 @@ class MovieController extends Controller
     public function index()
     {
         $movies = Movie::all();
+    
+        foreach ($movies as $movie) {
+            $movieImage = MovieImage::find($movie->id);
+            $movie['image'] = $movieImage->file_path;
+        }
+
         return view('movies.index', [
             'movies' => $movies
         ]);
@@ -79,11 +86,11 @@ class MovieController extends Controller
     public function show($id)
     {
         $movie = Movie::findOrFail($id);
-        //$movieImage = MovieImage::find($movie->id);
+        $movieImage = MovieImage::find($movie->id);
 
          return view('movies.show', [
               'movie' => $movie, 
-          //    'image' => $movieImage,
+              'movieImage' => $movieImage,
          ]);
 
     }

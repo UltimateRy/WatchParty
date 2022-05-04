@@ -13,7 +13,7 @@
                         <a v-bind:href="'/profiles/'+ user.id">
                             <div class="flex bg-gray-100 p-4 rounded-lg"> 
                                 <div class="relative w-20 h-20 align-center" >
-                                    <img class="rounded-full" v-bind:src="'images/profile-images/DEFAULT.jpg'">
+                                    <img class="rounded-full" v-bind:src="'/images/profile-images/' + user.image + '.jpg'">
                                     <span v-if="user.isOnline == 'True'">
                                         <div class="absolute top-0 right-0 h-4 w-4 my-1 border-2 border-white rounded-full bg-green-400 z-2"></div>
                                     </span>

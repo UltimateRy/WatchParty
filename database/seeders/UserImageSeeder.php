@@ -15,17 +15,17 @@ class UserImageSeeder extends Seeder
      */
     public function run()
     {
-        //$userImages = UserImage::factory()->count(13)->create();
+        $userImages = UserImage::factory()->count(13)->create();
 
         
 
-        for ($x = 1; $x <= 13; $x++) {
+        //for ($x = 1; $x <= 13; $x++) {
         
-            DB::table('user_images')->insert([
-                'id' => $x,
-                'file_path' => "DEFAULT",
-            ]);
+        //    DB::table('user_images')->insert([
+         //       'id' => $x,
+        //        'file_path' => "DEFAULT",
+        //    ]);
 
-        }
+        //}
     }
 }

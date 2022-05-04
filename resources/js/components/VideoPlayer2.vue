@@ -20,8 +20,6 @@
                     <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"/> 
             </video>
 
-            <!--button v-on:click="presetVid" class="float-left text-right bg-cyan-500 hover:bg-red-700 text-white py-2 px-6 rounded-full" >Load Preselected File</button-->
-
             <div class="flex gap-x-4 py-6">
                 <div class ="bg-white rounded-lg w-24">
                     <img v-bind:src="'../images/movie-images/' + movie.image + '.jpg'" class="card-image rounded-lg w-56">
@@ -63,24 +61,10 @@ export default {
 
             var playSelectedFile = function (event) {
                 alert('Did something!');
-                //var file = this.files[0]
-                //var type = file.type
-                //var videoNode = videojs('my-video')
-                //var canPlay = videoNode.canPlayType(type)
-                    
-                //var fileURL = URL.createObjectURL(file)
-                //console.log( fileURL );
-                //console.log( type );
-
-                //this.player.src({src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", type: type});
-                //player.currentTime(35);
             }
-            //var inputNode = document.getElementById('uploadedFile')
-            //inputNode.addEventListener('change', playSelectedFile, false)
         })()
             
         //THIS LINE DISABLES THE PLAY BUTTON
-        //COULD BE USED WHEN HOST PRIVILGES IS IMPLEMENTED
         //this.player.controlBar.playToggle.off("click");
 
         this.player.bigPlayButton.on('click', event => {
