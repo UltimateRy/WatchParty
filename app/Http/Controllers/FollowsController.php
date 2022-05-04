@@ -57,6 +57,23 @@ class FollowsController extends Controller
 
         $followings = Auth::user()->follows;
         $followedBy = Auth::user()->followedBy;
+        $friends = $followings->intersect($followedBy);
+
+        $requests = $followedBy->whereNotIn('id', $followings->pluck('id'));
+        
+        return view('friends', [
+            'user' => $user,
+            'requests' => $requests,
+            'friends' => $friends
+        ]);
+    }
+
+    public function indexFriendsWithOnline() {
+
+        $user = Auth::user();
+
+        $followings = Auth::user()->follows;
+        $followedBy = Auth::user()->followedBy;
 
         foreach ($followings as $following) {
 
@@ -91,6 +108,7 @@ class FollowsController extends Controller
             'requests' => $requests,
             'friends' => $friends
         ]);
+
     }
 
     public function indexFollowedBy() {

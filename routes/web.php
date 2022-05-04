@@ -30,7 +30,7 @@ use Illuminate\Http\Response;
 */
 
 
-//DASHBOARD AND FRIENDS ROUTES
+//DASHBOARD ROUTES
 
 Route::get('/', function () {
     return view('welcome');
@@ -39,35 +39,19 @@ Route::get('/', function () {
 Route::get('/home', [DashboardController::class, 'index'])
     ->name('dashboard')->middleware(['auth']);
 
-//FOLLOWING & FOLLOWERS
+//FRIENDS
 
-Route::get('/following', [FollowsController::class, 'indexWithOnline'])
-    ->name('following')->middleware(['auth']);
-
-Route::get('/followers', [FollowsController::class, 'indexFollowedBy'])
-    ->name('followers')->middleware(['auth']);
-
-Route::get('/friends', [FollowsController::class, 'indexFriends'])
+Route::get('/friends', [FollowsController::class, 'indexFriendsWithOnline'])
     ->name('friends')->middleware(['auth']);
-
-
-//USER ROUTE (ADMIN ONLY)
-
-Route::get('/users', [UserController::class, 'index'])
-    ->name('users.index')->middleware(['auth']);//, 'role']);
 
 //PROFILES ROUTES
 
 Route::get('/profiles/{id}', [ProfileController::class, 'show'])
     ->name('profiles.show')->middleware('auth');
 
-Route::get('/profiles/{id}/follow', [ProfileController::class, 'follow'])
-    ->name('profiles.follow')->middleware('auth');
-
-
 //MOVIE ROUTES
 
-Route::get('/movies', [MovieController::class, 'index']) //ADMINS ONLY???
+Route::get('/movies', [MovieController::class, 'index'])
     ->name('movies.index')->middleware('auth');
 
 Route::get('/movies/{id}', [MovieController::class, 'show'])
@@ -76,47 +60,16 @@ Route::get('/movies/{id}', [MovieController::class, 'show'])
 
 //PARTY ROUTES
 
-Route::get('/watchparty', [PartyController::class, 'index']) //ADMINS ONLY
-    ->name('parties.index')->middleware('auth');//, 'role']);
+Route::get('/watchparty', [PartyController::class, 'index'])
+    ->name('parties.index')->middleware('auth');
 
 Route::get('/watchparty/create', [PartyController::class, 'create'])
-    ->name('parties.create')->middleware('auth');//, 'role']);
+    ->name('parties.create')->middleware('auth');
 
 Route::get('/watchparty', [PartyController::class, 'store'])
-    ->name('parties.store')->middleware('auth');//, 'role']);
+    ->name('parties.store')->middleware('auth');
 
-Route::get('/watchparty/{id}', [PartyController::class, 'show']) //HERE THE USER WILL BE PROMPTED TO SELECT THEIR MOVIE FILE FOR THE PARTY AND
-    ->name('parties.show')->middleware('auth');//, 'role']); NEED TO MAKE SURE THE USER IS ALLOWED IN THE PARTY
-
-    /*
-Route::post('/send-message', function (Request $request){
-    
-    
-    //return 1;
-    //return response()->json($request->all());
-    //return  response()->json($request->input('user.username'));
-
-    //$user = User::findOrFail($id);
-    //$party = Party::findOrFail($id);
-    $message = $request->input('message');
-
-    //return $user_id . " : " . $party_id;
-
-    event(
-        new NewMessage(
-            $request->input('user.id'),
-            $request->input('party.id'),
-            $request->input('message')
-        )
-    );
-
-    return ["success" => true];
-    /*
-    return  response()->json($request->input('user.username'));
-
-    //return $request;
-    
-});
-*/
+Route::get('/watchparty/{id}', [PartyController::class, 'show']) 
+    ->name('parties.show')->middleware('auth');
 
 require __DIR__.'/auth.php';
